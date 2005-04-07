@@ -1,0 +1,122 @@
+Todoes met een uitroepteken komen zeker in die release, todoes zonder mogelijk
+0.1 Release = geen openbare release
+---
+Eerste release
+
+0.1.1 Release = geen openbare release
+-----
++ Betere Language support
++ Dynamisch paginas toevoegen aan navigatiebalk
++ Code checkup en database aangepast voor class user
+
+0.2 (PRE-ALPHA) Release = 9 maart 2005
+----
++ MULTI-LANGUAGE SYSTEEM UITGESCHAKELD
++ PostgreSQL (7.4 & 7.x) Support DISABLED
++ news systeem opgeschoond
+	* aantal berichten zichtbaar op 1 pagina
+		- nog niet voor threaded berichten
+	* nieuwe database
+	* categoriën zijn dynamisch
+	* headlines worden getoond
++ veel configureerbaarder
++ userconfig scherm
++ users kunnen geblokkeerd worden op naam én op IP
++ layout is 100% aanpasbaar
++ foutenopvang is verbeterd ( vooral dbfouten )
++ instalscript
++ bug fixes
+	* #00002
+	* #00003
+	* #00004
+	* #00005
+0.2.1 Release = 18 maart 2005 
+-----
++ fixes bug #00007
++ licentievoorwaarden toegevoegd
++ PostgreSQL support enabled ( fixes bug #00008 )
++ bug fix ( #00009 )
++ installscript geeft de geinstalleerde databases ( in de core) weer
++ installscript is vertaalbaar
++ standaard homelink in de navigatiebalk bij installatie
++ optionsscherm geeft de geinstalleerde themas, talen weer
+
+0.3 (ALPHA STATUS)
+----
++ houden van polls is mogelijk
++ wijzigen van ( eigen ) berichten
++ dynamisch maken van gerbuiker navigatie
++ gebruikerslijst toegevoegd met profiel van de gebruikers
++ bug fixes
+	* #000006
+	* #000010
++ Interne wijziging:: Error opvang
+	* Er zijn een aantal functies herschreven door deze wijziging
+TODO
+----
+!+ usersysteem uitbreiden
+	!* mail systeem ( activate = true )
+	!* help integratie ( eerste ideeen / versies )
+		!- bij foutmeldingen een help-link zetten
+		!- een FAQ pagina maken ( wordt verwezen door help link )
+			x verschillende onderdelen ( dynamisch )
+		!- alleen voor admins
+			x foutberichten uit de log bekijken + betekenis
+			!x FAQ vragen toevoegen
+		!- Error integratie veranderen
+			!x is_error ( $var )uitbreiden
+	!* BBCode
+		!- Quotes
+			x slimme quote ? als origineel bericht aangepast wordt ook de quote ??
+				optioneel makken? poll voeren op PHPHulp.nl en mozbrowser.nl ??
+		!- Opmaak ( b,i,u )
+		!- smileys
+	!* profiel bekijken + meer info over de gebruiker
+	!* zorgen dat de gebruiker kan instellen of zijn profiel openbaar is en of hij 
+		in de gebruikerslijst staat
+	* avatar
+	* automatisch inloggen
+	* wachtwoord onthouden
+	* groepen en rechten
+!+ Verwijder de commentnavigatie bij ViewThreaded == YES
+!+ layout mooier maken
++ nieuws RSS
++ betere ondersteuning voor meerdere fouten bij één bewerking
++ betere errorlog
++ newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
+
+0.4 
+----
+TODO
+----
++ admin schrijven
+	* blokkeren van gebruikers / ips
+	* admin van berichten ( geintegreerd in newssysteem )
+	* error logs bekijken
+	* paginas toevoegen
+
+0.5 ( BETA stauts )
+----
+TODO
+----
++ Forum
++ Admin forum schrijven
+
+Dromen zijn bedrog
+------------------
+TODO
+----
++ optie inbouwen dat er niet dubbelgepost wordt 
+	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )
++ Snelheid
++ XML database
+?+ ander soort config ( ini,XML )
++ class themes herschrijven
+	?* Extensies ?
+	* Eigen thema 'macros' ( bepaalde %strings laten vervangen door het theme )
+	* Een soort van functies maken die voor alle themas moeten werken ( om een layout te gebruiken
+		die in contentpage kan staan )
+
+1.0 ( Mature )
+---
++ Bugs only release

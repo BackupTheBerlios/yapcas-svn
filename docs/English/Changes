@@ -1,0 +1,47 @@
+Todoes with an "!" have an higher priority
+0.1 Release = not a public release
+---
+First release
+
+0.1.1 Release =  not a public release
+-----
++ Better Language support
++ Add pages dynamicaly to the navigation
++ Code checkup and changed database for users
+
+0.2 Release = 9 march 2005
+----
++ MULTI-LANGUAGE SYSTEM DISABLED
++ PostgreSQL (7.4 & 7.x) Support DISABLED
++ news systeem cleaned
+	* nulber of comments visible on one page
+		- not for threade
+	* new database
+	* categories are dynamic
+	* headlines visible
++ add more configuration
++ userconfig screen
++ users could be blocked on username AND IP
++ layout is 100% changeable
++ catching errors is better( mainly DB-errirs)
++ added installscript
++ bug fixes
+	* #00002
+	* #00003
+	* #00004
+	* #00005
+0.2.1
+-----
++ fixes bug #00007
++ add license
++ PostgreSQL support enabled ( fixes bug #00008 )
++ fix bug #00009)
++ installscript shows the installed core-databases
++ installscript is localizible
++ by installation a 'home'-link is added to the navigation
++ changeoptions screen show the installed languages,themes
+0.3.0
+-----
++ Bug fixes
+	* #000006
+	* #000010

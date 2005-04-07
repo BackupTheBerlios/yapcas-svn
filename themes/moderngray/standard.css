@@ -1,0 +1,180 @@
+.login {
+	  margin-bottom: 0em;
+}	
+
+.login div span {
+	  padding: 5px;
+	  font-size: 10pt;
+	  width: 3000px;
+}
+
+#banner {
+	  font-size: 20pt;
+	  top: 0px;
+	  text-align: center;
+	  border: 1px solid black;
+	  margin-bottom: 10px;
+	  background-color: #A9A9A9;
+	  clear: both;
+}
+
+#copyright {
+	  position: relative;
+	  font-size: 12pt;
+	  text-align: center;
+	  border: 1px solid black;
+	  clear: both;
+}
+
+#links {
+	  background-color: #FFFFFF;
+	  width: 20em;
+	  float: left;
+	  overflow: auto;
+}
+
+/*#rechts {
+	  background-color: #FFFFFF;
+	  width: 20em;
+	  float: right;
+	  overflow: auto;
+}*/
+
+#main {
+	  margin-left: 21em;
+	  margin-bottom: 1em;
+	  margin-right: 0em;
+}
+
+.error {
+	border: 1px solid red;
+	color: red;
+	margin-bottom: 0.5em;
+}
+
+.note {
+	border: 1px solid blue;
+	color: blue;
+	margin-bottom: 0.5em;
+}
+
+.warning {
+	border: 1px solid green;
+	color: green;
+	margin-bottom: 0.5em;
+}
+
+.box h2 {
+	  font-size: 15pt;
+	  text-align: center;
+	  background-color: #A9A9A9;
+	  margin-top: 0px;
+	  margin-bottom: 0px;
+	  border-bottom: 1px solid black;
+}
+
+.box p {
+	  font-size: 0.8em;
+	  margin-top: 0px;
+	  margin-bottom: 0px;
+	  background-color: #DCDCDC;
+}
+
+.box {
+	  background-color: #FFFFFF;
+	  border: 1px solid black;
+	  margin-bottom: 5px;
+}
+
+.nieuws h5{
+	  font-size: 10pt;
+	  height: 1.3em;
+	  /*background-color: gray;
+	  border-top: 1px solid black;*/
+	  margin-top: 0px;
+	  margin-bottom: 0px;
+}
+
+.news h6 {
+	  font-size: 10pt;
+	  height: 1.3em;
+	  /*background-color: gray;
+	  border-bottom: 1px solid black;*/
+	  margin-top: 0px;
+	  margin-bottom: 0px;
+}
+
+.news h3 {
+	  font-size: 15pt;
+	  text-align: center;
+	  background-color: #A9A9A9;
+	  margin-top: 0px;
+	  margin-bottom: 0px;
+}
+
+.news {
+	  /*background-color: #DCDCDC;*/
+	  border: 0px solid white;
+	  border-top: 1px solid black;
+	  margin-bottom: 8px;
+	  font-size: 12pt;
+}
+
+.date {
+	  /* niets */
+}
+
+.author {
+	  float: right;
+}
+
+.thread {
+	  margin-left: 25px;
+}
+
+.input {
+	  margin-left: 10%;
+	  margin-right: 10%;  
+	  width: 80%;
+}
+
+.input span input, .input span textarea  {
+	  border: 1px solid black;
+}
+
+span.error {
+	  border: 1px solid red;
+	  color: red;
+}
+
+span.bericht {
+	  position: relative;
+	  border: 1px solid green;
+	  color: blue;
+	  text-align: center;
+	  clear: both;
+}
+
+div.headline span.title {
+	text-decoration: underline;
+	color: black;
+}
+
+div.headline span.user {
+	font-weight: bold;
+	color: black;
+}
+
+div.headline span.date {
+	font-style: italic;
+	color: black;
+}
+
+div.headline a.message {
+	text-decoration: none;
+	color: black;
+}
+
+.thread {
+	margin-left: 1em;
+}

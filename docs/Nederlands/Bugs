@@ -1,0 +1,65 @@
+Bekende Fouten
+--------------
+#00001: 
+	Titel: Usersysteem vertoont problemen
+	Prioriteit: Hoog
+	Meer uitleg: Momenteel alleen op de site van sourceforge
+		Localhost werkt net zoals members.lycos.nl
+	Versies: 0.1-0.2	
+
+Fouten die zijn opgelost
+------------------------
+0.1.1
+-----
+Geen ;-)	
+0.2
+----
+#00002:
+	Titel: connection gesloten (MySQL4)
+	Uitleg: Als de datbaseverbinding onverwachts (fout in de code) wordt gesloten werkt het systeem niet meer.
+	Workarround: wordt terug automatisch terug geopend bij het versturen van een query // geen goede oplossing
+#00003:
+	Titel: Niet ingelogd
+	Pririteit: Laag
+	Meer Uitleg: Als je een newsbericht post en je bent niet ingelogd krijg je pas een waarschuwing nadat
+		de gebruiker het bericht heeft gepost.
+	Versies: 0.1-0.1.1 
+#00004:
+	Titel: Hacking
+	Prioriteit: ZEER HOOG ( SEQURITY )
+	Meer uitleg: een hacker kan de sessie-variabelen aanpassen enzo een 'root' gebruiker worden
+	Versies: 0.1-0.1.1
+#00005
+	Titel: update #reacties en Username
+	Prioriteit: Middel
+	Meer uitleg: het aantal reacties worden niet geupdated en de username wordt gegeven als een number
+	Versies: 0.1-0.1.1
+0.2.1
+-----
+#00007:
+	Titel: Multi-language
+	Prioriteit: ZEER HOOG ( geen security )
+	Meer uitleg: Door een slechte organisatie van het talen-systeem wordt deze functie uitgeschakeld
+	Versies: 0.2
+#00008:
+	Titel: PostgreSQL
+	Prioriteit: ZEER HOOG ( geen security )
+	Meer uitleg: PostgreSQL is niet ondersteund, terwijl dit toch mogelijk 
+	Versies: 0.2
+#00009
+	Titel: Threaded
+	Prioriteit: ZEER HOOG ( geen security )
+	Meer uitleg: De berichten kunnen alleen maar threaded weergeven worden
+	Versies: 0.2
+0.3.0
+-----
+#00006:
+	Titel: Veel queries
+	Prioriteit: Middel
+	Meer uitleg: Er worden veel database queries uitgevoerd ( per pagina soms 4 of meer keer dezelfde config )
+		dit zou zo weinig mogelijk moeten worden
+	Versies: 0.2 vooral maar ook 0.1-0.1.1
+#00010:
+	Titel: Timezone
+	Meer uitleg: Er werd een fout tijdszone gebruikt.
+	Versies: 0.1 - 0.2.1

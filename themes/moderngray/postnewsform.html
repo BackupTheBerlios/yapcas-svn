@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>%title</title>
+		<link rel="stylesheet" type="text/css" href="%css" />
+	</head>
+	<body>
+		<div id="banner">%title</div>
+		<div id="links">%navigation.html %loginform.html</div>
+		<div id="main">
+			%error
+			%warning
+			%note 
+			<div class="box">
+				<h2>
+					%postnews.lang
+				</h2>
+				<p>
+					<object>
+						<form class="login" action="%postnews.action" method="%postnews.method">
+							<p class="input">
+								%subject.lang : 
+								<input type="text" size="50" maxlength="255" name="subject" />
+							</p>
+							<p class="input">
+								%newsmessage.lang <br />
+								<textarea name="message" cols="80" rows="20"></textarea>
+							</p>
+							<p class="input">	
+								%category.lang<br />
+								<select name="category">
+									%categories
+								</select>
+							</p>
+							<p class="input">
+								<input type="submit" value="%post.lang" />
+							</p>
+						</form>
+					</object>
+				</p>
+			</div>
+		 	%contentpage
+		 </div>
+		<p id="copyright">
+			<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>
+		</p>
+	</body>
+</html>
