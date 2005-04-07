@@ -15,7 +15,7 @@
 */
 	$this->name = 'ModernGray';
 	$this->version = '0.1';
-	$this->version_cms = '0.2.0';
+	$this->version_cms = '0.2.1+svn3';
 	$this->css[1] = 'standard.css';
 	$this->alternativecss[1] = 'alt.css';
 	
@@ -58,4 +58,16 @@
 	$this->polllink = '<a href="%poll.link" >%poll.question</a><br />';
 	$this->userlink = '<a href="%link.url" class="user">%link.shown_name</a> <br />';
 	$this->touserinfolink = '<a href="%user.url" class="user">%user.name</a> <br />';
+	$smiley['text'] = ':)';
+	$smiley['output'] = '<img src="%image.smiley_lachen.png" />';
+	$this->smilies[] = $smiley;
+	$smiley['text'] = ';)';
+	$smiley['output'] = '<img src="%image.smiley_knipoog.png" />';
+	$this->smilies[] = $smiley;
+	
+	$this->quote = '<p class="quote">%text</p>';
+	$this->i = '<span class="i">%text</span>';
+	$this->u = '<span class="u">%text</span>';
+	$this->b = '<span class="b">%text</span>';
+
 ?>

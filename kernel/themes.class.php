@@ -172,9 +172,9 @@
 				foreach ( $newsmessage as $news ) {	
 					$link = 'news.php?action=viewcomments&amp;id=' . $news['id'];
 					$tempoutput = $this->getfile ( 'themes/' . $this->themedir . '/news.html' );		
-					$tempoutput = ereg_replace ( '%news.subject',$news['subject'],$tempoutput );
+					$tempoutput = ereg_replace ( '%news.subject',$this->replacerichtext ( $news['subject'],false ),$tempoutput );
 					$tempoutput = ereg_replace ( '%news.author',$news['author'],$tempoutput );
-					$tempoutput = ereg_replace ( '%news.message',$news['message'],$tempoutput );
+					$tempoutput = ereg_replace ( '%news.message',$this->replacerichtext ( $news['message'] ),$tempoutput );
 					$tempoutput = ereg_replace ( '%news.image',$news['image'],$tempoutput );
 					$tempoutput = ereg_replace ( '%image.alt',$news['alternate'],$tempoutput );
 					$tempoutput = ereg_replace ( '%news.date',setdate ( $news['date'] ),$tempoutput );
@@ -401,6 +401,19 @@
 			
 		}
 		
+		function replacesmilies ( $output ) {
+			foreach ( $this->smilies as $smiley ) {
+				$output = ereg_replace ( $smiley['text'],$smiley['output'],$output );
+			}
+			$output = $this->replaceimages ( $output );
+			return $output;
+		}
+		
+		function replaceimages ( $output )  {
+			$output = preg_replace ( '#%image.(.+?)#','themes/' . $this->themedir . '/images/\\1',$output );
+			return $output;
+		}
+		
 		function replace_all ( $page ) {
 			//global $GLOBALS['lang'];
 			$output = $page;
@@ -517,6 +530,7 @@
 			$output = ereg_replace ( '%showselectedpoll',$this->showpoll (),$output );
 			$output = ereg_replace ( '%user.links',$this->loaduserlinks (),$output );
 			$output = ereg_replace ( '%viewusers.list',$this->viewuserlist (),$output );
+			$output = $this->replaceimages ( $output );
 			return $output;
 		}
 		
@@ -560,9 +574,9 @@
 		
 		function replacecomment ( $comment ) {
 			$output = $this->getfile ( 'themes/' . $this->themedir . '/newscomment.html' );
-			$output = ereg_replace ( '%comment.subject',$comment['subject'],$output );
+			$output = ereg_replace ( '%comment.subject',$this->replacerichtext ( $comment['subject'],false ),$output );
 			$output = ereg_replace ( '%comment.author',$comment['author'],$output );
-			$output = ereg_replace ( '%comment.message',$comment['message'],$output );
+			$output = ereg_replace ( '%comment.message',$this->replacerichtext ( $comment['message'] ),$output );
 			$output = ereg_replace ( '%comment.date',setdate ( $comment['date'] ),$output );
 			$link = 'news.php?action=postcommentform&amp;id_comment=' . $comment['id'] . '&amp;id_news=' . $comment['id_news'];
 			$output = ereg_replace ( '%comment.newcommentlink',$link,$output );
@@ -643,6 +657,24 @@
 			}
 		}
 		
+		function replaceubb ( $input ) {
+			$output = preg_replace ( '#\\[quote\\](.+?)\\[/quote\\]#',ereg_replace ( '%text','\\1',$this->quote ),$input );
+			$output = preg_replace ( '#\\[b\\](.+?)\\[/b\\]#',ereg_replace ( '%text','\\1',$this->b ),$output );
+			$output = preg_replace ( '#\\[i\\](.+?)\\[/i\\]#',ereg_replace ( '%text','\\1',$this->i ),$output );
+			$output = preg_replace ( '#\\[u\\](.+?)\\[/u\\]#',ereg_replace ( '%text','\\1',$this->u ),$output );
+			return $output;
+		}
+		
+		function replacerichtext ( $input,$useubb = true ) {
+			$output = strip_tags ( $input );
+			$output = nl2br ( $output );
+			$output = $this->replacesmilies ( $output );
+			if ( $useubb == true ) {
+				$output = $this->replaceubb ( $output );
+			}
+			return $output;
+		}
+		
 		function shownewsmessage () {
 			if ( empty ( $_GET['id'] ) ) {
 				return NULL;
@@ -655,9 +687,9 @@
 				} else {
 					$link = 'comments.php?id=' . $news['id'];
 					$output = $this->getfile ( 'themes/' . $this->themedir . '/newsmessage.html' );		
-					$output = ereg_replace ( '%news.subject',$news['subject'],$output );
+					$output = ereg_replace ( '%news.subject',$this->replacerichtext ( $news['subject'],false ),$output );
 					$output = ereg_replace ( '%news.author',$news['author'],$output );
-					$output = ereg_replace ( '%news.message',$news['message'],$output );
+					$output = ereg_replace ( '%news.message',$this->replacerichtext ( $news['message'] ),$output );
 					//$output = ereg_replace ( '%news.image',$news['image'],$output );
 					$output = ereg_replace ( '%news.date',setdate ( $news['date'] ),$output );
 					$output = ereg_replace ( '%news.comments',$news['comments'] . '&nbsp;' . $GLOBALS['lang']->news->plural_comment,$output );

@@ -155,6 +155,22 @@ span.bericht {
 	  clear: both;
 }
 
+div.message p.quote {
+	border: 2px dotted blue;
+	color: green;
+}
+
+div.message .u {
+	text-decoration: underline;
+}
+
+div.message .i {
+	font-style: italic;
+}
+div.message .b {
+	font-weight: bold;
+}
+
 div.headline span.title {
 	text-decoration: underline;
 	color: black;

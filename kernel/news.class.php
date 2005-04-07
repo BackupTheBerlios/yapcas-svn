@@ -195,7 +195,7 @@
 					$date = getUTCtime ();
 					$language = $GLOBALS['user']->getlanguage ();
 					$username = $GLOBALS['user']->getname ();
-					$message = nl2br ( $_POST['message'] );
+					$message = $_POST['message'];
 					$sql = "INSERT into news (id,subject,message,language,comments,author,date,category) values (DEFAULT,'$_POST[subject]','$message','$language','0','$username','$date','$_POST[category]') ";
 					$query = $GLOBALS['database']->query ( $sql );
 					if ( errorSDK::is_error ( $query ) ) {
@@ -219,7 +219,7 @@
 			
 		function editcomment ( $newvalues ) {
 			$sql = "UPDATE " . TBL_COMMENTS . " SET ".  FIELD_NEWS_MESSAGE 
-				. "='" . nl2br ( $newvalues['message'] ) . "' , " . FIELD_NEWS_SUBJECT . "='" 
+				. "='" . $newvalues['message'] . "' , " . FIELD_NEWS_SUBJECT . "='" 
 				. $newvalues['subject'] . "' WHERE id='" . $_GET['id'] . "'";
 			$query = $GLOBALS['database']->query ( $sql );
 			if ( errorSDK::is_error ( $query ) ) {
@@ -235,7 +235,7 @@
 					// preparing the message and all of its data
 					$date = getUTCtime ();
 					$user = $_SESSION['name'];
-					$message = nl2br ( $input['message'] ); // switch \n to <br />
+					$message = $input['message']; // switch \n to <br />
 					
 					// this is bad code // make me better PLEASE
 					// FIXME

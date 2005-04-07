@@ -2,7 +2,7 @@
 	// some version constants
 	define ( 'majorversion', 0 );
 	define ( 'minorversion', 2 );
-	define ( 'patchlevel', 0 );
+	define ( 'patchlevel', 1+svn3 );
 	define ( 'version', majorversion . '.' . minorversion . '.' . patchlevel );
 	define ( 'NO','N' );
 	define ( 'YES','Y' );
