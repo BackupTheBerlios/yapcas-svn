@@ -36,7 +36,7 @@
 		$dir = "themes/";
 		if ( $handle = opendir ( $dir ) ) {
 			while ( false !== ( $file = readdir ( $handle ) ) ) {
-				if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != 'CVS' ) ) {
+				if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != '.svn' ) ) {
 					array_push ( $themes,$file );
 				}
 			}
@@ -50,7 +50,7 @@
 		$dir = "kernel/databases/";
 		if ( $handle = opendir ( $dir ) ) {
 			while ( false !== ( $file = readdir ( $handle ) ) ) {
-				if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != 'CVS' ) ) {
+				if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != '.svn' ) ) {
 					array_push ( $databases,$file );
 				}
 			}
@@ -64,7 +64,7 @@
 		$dir = "lang/";
 		if ( $handle = opendir ( $dir ) ) {
 			while ( false !== ( $file = readdir ( $handle ) ) ) {
-				if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != 'CVS' ) ) {
+				if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != '.svn' ) ) {
 					array_push ( $languages,$file );
 				}
 			}

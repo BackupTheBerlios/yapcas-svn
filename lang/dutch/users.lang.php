@@ -62,4 +62,7 @@
 	$this->users->logged_out_new_password = 'U bent nu uitgelogd, log opnieuw in met je nieuwe wachtwoord';
 	$this->users->blocked = 'Uw account is geblokkeerd, u kunt niet meer inloggen.';
 	$this->users->not_activated = 'Uw account is niet geactiveerd, u kunt niet inloggen voordat u uw account heeft geactiveerd';
+	$this->users->not_valid_user = 'Deze gebruiker bestaat niet';
+	$this->users->not_public_profile = 'Deze gebruiker heeft geen publiek profiel';
+	$this->users->not_public_contact_info = 'Deze gebruiker laat geen contact info zien';
 ?>

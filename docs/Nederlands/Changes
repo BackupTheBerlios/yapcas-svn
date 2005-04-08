@@ -47,6 +47,11 @@ Eerste release
 + wijzigen van ( eigen ) berichten
 + dynamisch maken van gerbuiker navigatie
 + gebruikerslijst toegevoegd met profiel van de gebruikers
++ ubb is mogelijk in berichten ( b,u,i,quote )
++ html tags worden niet meer getoond in berichten
++ smilies zijn mogelijk in berichten
++ de gebruiker kan instellen of zijn profiel openbaar is en of hij 
+	in de gebruikerslijst staat en of hij zijn contactinfo laat zien
 + bug fixes
 	* #000006
 	* #000010
@@ -65,15 +70,8 @@ TODO
 			!x FAQ vragen toevoegen
 		!- Error integratie veranderen
 			!x is_error ( $var )uitbreiden
-	!* BBCode
-		!- Quotes
-			x slimme quote ? als origineel bericht aangepast wordt ook de quote ??
-				optioneel makken? poll voeren op PHPHulp.nl en mozbrowser.nl ??
-		!- Opmaak ( b,i,u )
-		!- smileys
 	!* profiel bekijken + meer info over de gebruiker
-	!* zorgen dat de gebruiker kan instellen of zijn profiel openbaar is en of hij 
-		in de gebruikerslijst staat
+	* ubb nested bug fixen
 	* avatar
 	* automatisch inloggen
 	* wachtwoord onthouden
@@ -110,6 +108,7 @@ TODO
 	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )
 + Snelheid
 + XML database
+?+ slimme quotes
 ?+ ander soort config ( ini,XML )
 + class themes herschrijven
 	?* Extensies ?

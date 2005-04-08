@@ -94,5 +94,7 @@
 			$theme->themefile ( 'viewuserprofile.html',true  );
 			$database->close ();
 			break;
+		default:
+			$theme->redirect ( 'index.php' );
 	} // switch
 ?>

@@ -381,7 +381,7 @@
 		}
 		
 		function viewuserlist () {
-			$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS . " ORDER by " . FIELD_USERS_NAME . " asc ";
+			$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS . " WHERE " . FIELD_USERS_PUBLIC_USER . "='Y' ORDER by " . FIELD_USERS_NAME . " asc ";
 			$query = $GLOBALS['database']->query ( $sql );
 			if ( ! errorSDK::is_error ( $query ) ) {
 				$output = NULL;
@@ -805,22 +805,31 @@
 		
 		function viewprofile () {
 			if ( isset ( $_GET['user'] ) ) {
-				$username = $_GET['user'];
+				$profile = $GLOBALS['user']->getotherprofile ( $_GET['user'] );
+				if ( ! errorSDK::is_error ( $profile ) ) {
+					$output = $this->getfile ( 'themes/' . $this->themedir . '/profile.html' );
+					$output = ereg_replace ( '%user.name',$profile[FIELD_USERS_NAME],$output );
+					$output = ereg_replace ( '%user.job',$profile[FIELD_USERS_PROFILE_JOB],$output );
+					$output = ereg_replace ( '%user.icq',$profile[FIELD_USERS_PROFILE_ICQ],$output );
+					$output = ereg_replace ( '%user.aim',$profile[FIELD_USERS_PROFILE_AIM],$output );
+					$output = ereg_replace ( '%user.msn',$profile[FIELD_USERS_PROFILE_MSN],$output );
+					$output = ereg_replace ( '%user.yahoo',$profile[FIELD_USERS_PROFILE_YAHOO],$output );
+					$output = ereg_replace ( '%user.intrests',$profile[FIELD_USERS_PROFILE_INTRESTS],$output );
+					$output = ereg_replace ( '%user.website',$profile[FIELD_USERS_PROFILE_WEBSITE],$output );
+					$output = ereg_replace ( '%user.adress',$profile[FIELD_USERS_PROFILE_ADRESS],$output );
+					$output = ereg_replace ( '%user.email',$profile[FIELD_USERS_EMAIL],$output );
+					$output = ereg_replace ( '%user.jabber',$profile[FIELD_USERS_PROFILE_JABBER],$output );
+					return $output;
+				} else {
+					return $this->error ( $profile );
+				}
 			} else {
-				$username = '';
-			}
-			$sql = "SELECT * FROM " . TBL_USERS . " WHERE " 
-				. FIELD_USERS_NAME . "='" . $username . "' LIMIT 1";
-			$query = $GLOBALS['database']->query ( $sql );
-			if ( ! errorSDK::is_error ( $query ) ) {
-				$user = $GLOBALS['database']->fetch_array ( $query );
-				$output = ereg_replace ( '%user.name',$user['name'],$this->getfile ( 'themes/' . $this->themedir . '/profile.html' ) );
-				return $output;
-			} else {
-				return $this->error ( $query );
+				$error = new errorSDK ();
+				$error->succeed = false;
+				$error->error = $GLOBALS['lang']->users->form_not_filled_in;
+				return $this->error ( $error );
 			}
 		}
-		
 		
 		function themefile ( $file,$mustlogin = false,$basic = false) {
 			if ( ( $mustlogin == true ) AND ( $this->user->loggedin () != true ) ) {

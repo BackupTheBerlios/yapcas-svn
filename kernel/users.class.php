@@ -76,6 +76,61 @@
 			}
 		}
 		
+		function getotherprofile ( $username ) {
+			$sql = "SELECT * FROM " . TBL_USERS . " WHERE " 
+				. FIELD_USERS_NAME . "='" . $username . "' AND " . FIELD_USERS_PUBLIC_USER . "='Y' LIMIT 1";
+			$query = $GLOBALS['database']->query ( $sql );
+			if ( ! errorSDK::is_error ( $query ) ) {
+				if ( $GLOBALS['database']->num_rows ( $query ) == 1 ) {
+					$user = $GLOBALS['database']->fetch_array ( $query );
+					if ( $user[FIELD_USERS_PUBLIC_PROFILE] == YES ) {
+						$sql = "SELECT * FROM " . TBL_USERS_PROFILE . " WHERE " 
+							. FIELD_USERS_PROFILE_NAME . "='" . $username . "' LIMIT 1";
+						$query = $GLOBALS['database']->query ( $sql );
+						if ( ! errorSDK::is_error ( $query ) ) {
+							$profile = $GLOBALS['database']->fetch_array ( $query );
+							$userprofile[FIELD_USERS_NAME] = $user[FIELD_USERS_NAME];
+							$userprofile[FIELD_USERS_PROFILE_JOB] = $profile[FIELD_USERS_PROFILE_JOB];
+							$userprofile[FIELD_USERS_PROFILE_INTRESTS] = $profile[FIELD_USERS_PROFILE_INTRESTS];
+							$userprofile[FIELD_USERS_PROFILE_WEBSITE] = $profile[FIELD_USERS_PROFILE_WEBSITE];
+							if ( $user[FIELD_USERS_PUBLIC_CONTACT_INFO] == YES ) {
+								$userprofile[FIELD_USERS_PROFILE_AIM] = $profile[FIELD_USERS_PROFILE_AIM];
+								$userprofile[FIELD_USERS_PROFILE_MSN] = $profile[FIELD_USERS_PROFILE_MSN];
+								$userprofile[FIELD_USERS_PROFILE_YAHOO] = $profile[FIELD_USERS_PROFILE_YAHOO];
+								$userprofile[FIELD_USERS_EMAIL] = $user[FIELD_USERS_EMAIL];
+								$userprofile[FIELD_USERS_PROFILE_ICQ] = $profile[FIELD_USERS_PROFILE_ICQ];
+								$userprofile[FIELD_USERS_PROFILE_ADRESS] = $profile[FIELD_USERS_PROFILE_ADRESS];
+								$userprofile[FIELD_USERS_PROFILE_JABBER] = $profile[FIELD_USERS_PROFILE_JABBER];
+							} else {
+								$userprofile[FIELD_USERS_PROFILE_AIM] = $GLOBALS['lang']->users->not_public_contact_info;
+								$userprofile[FIELD_USERS_PROFILE_MSN] = $GLOBALS['lang']->users->not_public_contact_info;
+								$userprofile[FIELD_USERS_PROFILE_YAHOO] = $GLOBALS['lang']->users->not_public_contact_info;
+								$userprofile[FIELD_USERS_PROFILE_EMAIL] = $GLOBALS['lang']->users->not_public_contact_info;
+								$userprofile[FIELD_USERS_PROFILE_ICQ] = $GLOBALS['lang']->users->not_public_contact_info;
+								$userprofile[FIELD_USERS_PROFILE_ADRESS] = $GLOBALS['lang']->users->not_public_contact_info;
+								$userprofile[FIELD_USERS_PROFILE_JABBER] = $GLOBALS['lang']->users->not_public_contact_info;
+							}
+							return $userprofile;
+						} else {
+							return $query;
+						}
+					} else {
+						$error = new errorSDK ();
+						$error->succeed = false;
+						$error->error = $GLOBALS['lang']->users->not_public_profile;
+						return $error;
+					}
+				} else {
+					$error = new errorSDK ();
+					$error->succeed = false;
+					$error->error = $GLOBALS['lang']->users->not_valid_user;
+					return $error;
+				}
+			} else {
+				return $query;
+			}
+		}
+		
 		function getips () {
 			$sql = " SELECT  " . FIELD_USERS_IP . " FROM " . TBL_USERS 
 				. " WHERE " . FIELD_USERS_NAME . "='" . $this->getname () . "' LIMIT 1";

@@ -1,6 +1,7 @@
 <?php
 
 	define ( 'TBL_USERS',TBL_PREFIX . 'users' );
+	define ( 'TBL_USERS_PROFILE',TBL_PREFIX . 'user_profile' );
 	define ( 'FIELD_USERS_NAME','name' );
 	define ( 'FIELD_USERS_PASSWORD','password' );
 	define ( 'FIELD_USERS_TYPE','type' );
@@ -13,8 +14,22 @@
 	define ( 'FIELD_USERS_THREADED','threaded' );
 	define ( 'FIELD_USERS_LANGUAGE','language' );
 	define ( 'FIELD_USERS_IP','ip' );
+	define ( 'FIELD_USERS_PUBLIC_USER','public_user' );
+	define ( 'FIELD_USERS_PUBLIC_PROFILE','public_profile' );
+	define ( 'FIELD_USERS_PUBLIC_CONTACT_INFO','public_contact_info' );
 	define ( 'FIELD_USERS_POSTSONPAGE','postsonpage' );
 	define ( 'FIELD_USERS_HEADLINES','headlines' );
+	
+	define ( 'FIELD_USERS_PROFILE_NAME','name' );
+	define ( 'FIELD_USERS_PROFILE_JOB','job' );
+	define ( 'FIELD_USERS_PROFILE_AIM','aim' );
+	define ( 'FIELD_USERS_PROFILE_ICQ','icq' );
+	define ( 'FIELD_USERS_PROFILE_MSN','msn' );
+	define ( 'FIELD_USERS_PROFILE_YAHOO','yahoo' );
+	define ( 'FIELD_USERS_PROFILE_JABBER','jabber' );
+	define ( 'FIELD_USERS_PROFILE_INTRESTS','intrests' );
+	define ( 'FIELD_USERS_PROFILE_WEBSITE','website' );
+	define ( 'FIELD_USERS_PROFILE_ADRESS','adress' );
 	
 	define ( 'TBL_IPBLOCKS',TBL_PREFIX .'ipblocks' );
 	define ( 'FIELD_IPBLOCKS_IP','ip' );
