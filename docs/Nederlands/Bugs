@@ -7,6 +7,13 @@ Bekende Fouten
 		Localhost werkt net zoals members.lycos.nl
 	Versies: 0.1-0.2	
 
+#00011:
+	Titel: ubbcode nested
+	Prioriteit: Laag
+	Meer uitleg: als 2 dezelfde tags, die niet genset mogen worden , per ongeluk gensest worden,
+		dan is de uitvoer verkeerd.
+	Versies: 0.3 
+
 Fouten die zijn opgelost
 ------------------------
 0.1.1

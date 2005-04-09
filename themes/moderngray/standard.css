@@ -155,8 +155,9 @@ span.bericht {
 	  clear: both;
 }
 
-div.message p.quote {
+div.message div.quote {
 	border: 2px dotted blue;
+	margin-left: 20px;
 	color: green;
 }
 

@@ -50,6 +50,7 @@ Eerste release
 + ubb is mogelijk in berichten ( b,u,i,quote )
 + html tags worden niet meer getoond in berichten
 + smilies zijn mogelijk in berichten
++ profiel is uitgebreid
 + de gebruiker kan instellen of zijn profiel openbaar is en of hij 
 	in de gebruikerslijst staat en of hij zijn contactinfo laat zien
 + bug fixes
@@ -70,8 +71,6 @@ TODO
 			!x FAQ vragen toevoegen
 		!- Error integratie veranderen
 			!x is_error ( $var )uitbreiden
-	!* profiel bekijken + meer info over de gebruiker
-	* ubb nested bug fixen
 	* avatar
 	* automatisch inloggen
 	* wachtwoord onthouden
@@ -115,6 +114,7 @@ TODO
 	* Eigen thema 'macros' ( bepaalde %strings laten vervangen door het theme )
 	* Een soort van functies maken die voor alle themas moeten werken ( om een layout te gebruiken
 		die in contentpage kan staan )
++ fix bug #00011
 
 1.0 ( Mature )
 ---

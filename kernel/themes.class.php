@@ -657,12 +657,10 @@
 			}
 		}
 		
-		function replaceubb ( $input ) {
-			$output = preg_replace ( '#\\[quote\\](.+?)\\[/quote\\]#',ereg_replace ( '%text','\\1',$this->quote ),$input );
-			$output = preg_replace ( '#\\[b\\](.+?)\\[/b\\]#',ereg_replace ( '%text','\\1',$this->b ),$output );
-			$output = preg_replace ( '#\\[i\\](.+?)\\[/i\\]#',ereg_replace ( '%text','\\1',$this->i ),$output );
-			$output = preg_replace ( '#\\[u\\](.+?)\\[/u\\]#',ereg_replace ( '%text','\\1',$this->u ),$output );
-			return $output;
+		function replaceubb ( $text,$ubbtag,$htmlopen,$htmlclose ) {
+			$text = preg_replace ( '#\[' . $ubbtag . '\]#' , $htmlopen,$text );
+			$text = preg_replace ( '#\[/' . $ubbtag . '\]#',$htmlclose,$text );
+			return $text;
 		}
 		
 		function replacerichtext ( $input,$useubb = true ) {
@@ -670,7 +668,10 @@
 			$output = nl2br ( $output );
 			$output = $this->replacesmilies ( $output );
 			if ( $useubb == true ) {
-				$output = $this->replaceubb ( $output );
+				$output = $this->replaceubb ( $output,'quote',$this->quote['open'],$this->quote['close'] );
+				$output = $this->replaceubb ( $output,'b',$this->b['open'],$this->b['close'] );
+				$output = $this->replaceubb ( $output,'u',$this->u['open'],$this->u['close'] );
+				$output = $this->replaceubb ( $output,'i',$this->i['open'],$this->i['close'] );
 			}
 			return $output;
 		}
@@ -862,3 +863,4 @@
 		}
 	} // layout
 ?>
+

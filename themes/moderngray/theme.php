@@ -65,9 +65,13 @@
 	$smiley['output'] = '<img src="%image.smiley_knipoog.png" />';
 	$this->smilies[] = $smiley;
 	
-	$this->quote = '<p class="quote">%text</p>';
-	$this->i = '<span class="i">%text</span>';
-	$this->u = '<span class="u">%text</span>';
-	$this->b = '<span class="b">%text</span>';
+	$this->quote['open'] = '<div class="quote">';
+	$this->quote['close'] = '</div>';
+	$this->i['open'] = '<span class="i">';
+	$this->i['close'] = '</span>';
+	$this->u['open'] = '<span class="u">';
+	$this->u['close'] = '</span>';
+	$this->b['open'] = '<span class="b">';
+	$this->b['close'] = '</span>';
 
 ?>
