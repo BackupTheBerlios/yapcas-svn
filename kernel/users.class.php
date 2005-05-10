@@ -172,7 +172,7 @@
 											. " WHERE " . FIELD_IPBLOCKS_IP . "='" . $ip
 											. "' LIMIT 1";
 										$query = $GLOBALS['database']->query ( $sql,false );	
-										if ( ! errorSDK::is_error ( $query ) ) {
+										if ( errorSDK::is_error ( $query ) ) {
 											$error = $query;
 										} else {
 											if ( $GLOBALS['database']->num_rows ( $query ) != 0 ) {
@@ -182,56 +182,61 @@
 									}
 									
 									if ( isset ( $error ) ) {
-										$error = $query;
+										$queryerror = $query;
+									} else {
+										$queryerror = NULL;
 									}
 									if ( $blocked == false ) {
 										$_SESSION[SESSION_NAME] = $user[FIELD_USERS_NAME];
 										$_SESSION[SESSION_TYPE] = $user[FIELD_USERS_TYPE];
 										$_SESSION[SESSION_PASSWORD] = $user[FIELD_USERS_PASSWORD];
-										return true;
+										$return = new errorSDK ();
+										$return->succeed = true;
+										$return->message = $GLOBALS['lang']->users->logged_in;
+										return array ( $return,$queryerror );
 									} else {
 										$error = new errorSDK ();
 										$error->succeed = false;
 										$error->error = $GLOBALS['lang']->users->blocked;
-										return $error;
+										return array ( $error,$queryerror );
 									}
 								} else {
 									$error = new errorSDK ();
 									$error->succeed = false;
 									$error->error = $GLOBALS['lang']->users->blocked;
-									return $error;
+									return array ( $error );
 								}
 							} else {
 								$error = new errorSDK ();
 								$error->succeed = false;
 								$error->error = $GLOBALS['lang']->users->not_activated;
-								return $error;
+								return array ( $error );
 							}
 						} else {
 							$error = new errorSDK ();
 							$error->succeed = false;
 							$error->error = $GLOBALS['lang']->users->wrong_password;
-							return $error;
+							return array ( $error );
 						}
 					} else {
 						$error = new errorSDK ();
 						$error->succeed = false;
 						$error->error = $GLOBALS['lang']->users->wrong_username;
-						return $error;
+						return array ( $error );
 					}
 				} else {
-					return $query;
+					return array ( $query );
 				}
 			} else {
 				$error = new errorSDK ();
 				$error->succeed = false;
 				$error->error = $GLOBALS['lang']->users->form_not_filled_in; 
-				return $error;
+				return array ( $error );
 			}
 		} // function login
 		
 		function logout () {
-			$error = new error;
+			$error = new errorSDK;
 			if ( ! $this->loggedin () ) {
 				$error->succeed = false;
 				$error->database = false;				
@@ -264,69 +269,77 @@
 								if ( $GLOBALS['database']->num_rows ( $query ) == 0 ) {
 									// i think everything is OK
 									// user can be put into the db
-									// mh check firts check of activating the user is needed
-									if ( $GLOBALS['config']->users->activate == false ) {
-										// get some standard config options
-										$name = $inputuser[POST_NAME];
-										$password = md5 ( $inputuser[POST_PASSWORD1] );
-										$email = $inputuser[POST_EMAIL];
-										$type = 'normal';
-										$language = $this->getlanguage ();
-										$theme = $this->gettheme ();
-										$threaded = $this->getthreaded ();
-										$postsonpage = $this->getpostsonpage ();
-										$timezone = $this->gettimezone ();
-										$timeformat = $this->gettimeformat ();
-										$headlines = $this->getheadlines ();
-										$ip  = IP_USER;
-										$sql = "INSERT INTO " .  TBL_USERS . " (" . FIELD_USERS_NAME .',' . FIELD_USERS_PASSWORD . ',' . FIELD_USERS_EMAIL .',' 
-											. FIELD_USERS_TYPE .','.FIELD_USERS_LANGUAGE.','.FIELD_USERS_THEME.','.FIELD_USERS_THREADED.
-											','.FIELD_USERS_POSTSONPAGE.','.FIELD_USERS_TIMEZONE.','.FIELD_USERS_TIMEFORMAT
-											.','.FIELD_USERS_HEADLINES.','.FIELD_USERS_IP.") VALUES ('$name', '$password', '$email', '$type', 
-											'$language', '$theme', '$threaded', '$postsonpage','$timezone','$timeformat','$headlines','$ip')";
-										echo 'SQL:: ' . $sql;
-										$query = $GLOBALS['database']->query ( $sql );
-										if ( ! errorSDK::is_error ( $query ) ) {
-											return true;
-										} else {
-											return $query;
-										} 
+									// get some standard config options
+									$name = $inputuser[POST_NAME];
+									$password = md5 ( $inputuser[POST_PASSWORD1] );
+									$email = $inputuser[POST_EMAIL];
+									$type = 'normal';
+									$language = $this->getlanguage ();
+									$theme = $this->gettheme ();
+									$threaded = $this->getthreaded ();
+									$postsonpage = $this->getpostsonpage ();
+									$timezone = $this->gettimezone ();
+									$timeformat = $this->gettimeformat ();
+									$headlines = $this->getheadlines ();
+									$ip  = IP_USER;
+									
+									if ( $GLOBALS['config']->users->activate == true ) {
+										$activated = NO;
 									} else {
-										// FIXME
-										// IMPLEMENT ME
-										echo 'NYI';
+										$activated = YES;
+									}
+									
+									$sql = "INSERT INTO " .  TBL_USERS . " (" . FIELD_USERS_NAME .',' . FIELD_USERS_PASSWORD . ',' . FIELD_USERS_EMAIL .',' 
+										. FIELD_USERS_TYPE .','.FIELD_USERS_LANGUAGE.','.FIELD_USERS_THEME.','.FIELD_USERS_THREADED.
+										','.FIELD_USERS_POSTSONPAGE.','.FIELD_USERS_TIMEZONE.','.FIELD_USERS_TIMEFORMAT . ',' . FIELD_USERS_ACTIVATE
+										.','.FIELD_USERS_HEADLINES.','.FIELD_USERS_IP.") VALUES ('$name', '$password', '$email', '$type', 
+										'$language', '$theme', '$threaded', '$postsonpage','$timezone','$timeformat','$activated','$headlines','$ip')";
+									$query = $GLOBALS['database']->query ( $sql );
+									if ( ! errorSDK::is_error ( $query ) ) {
+										$error = new errorSDK ();
+										$error->succeed = true;
+										
+										if ( $GLOBALS['config']->users->activate == true ) {
+											$error->message = $GLOBALS['lang']->users->registerd_not_activated;
+										} else {
+											$error->message = $GLOBALS['lang']->users->registerd_activated;
+											// do not forget to send a mail
+											//mail ();
+										}
+										return array ( $error );
+									} else {
+										return array ( $query );
 									}
 								} else {
 									$error = new errorSDK ();
 									$error->succeed = false;
 									$error->error = 
 										$GLOBALS['lang']->users->email_already_registered;
-									return $error;
+									return array ( $error );
 								}
 							} else {
-								return $query;
+								return array ( $query );
 							}
 						} else {
 							$error = new errorSDK ();
 							$error->succeed = false;
-							$error->error = $error->error = 
-								$GLOBALS['lang']->users->username_already_registered;
-							return $error;
+							$error->error = $GLOBALS['lang']->users->username_already_registered;
+							return array ( $error );
 						}
 					} else {
-						return $query;
+						return array ( $query );
 					}
 				} else {
-					$error = new errorSDK;
+					$error = new errorSDK ();
 					$error->succeed = false;
 					$error->error = $GLOBALS['lang']->users->pasw_not_equel;
-					return $error;
+					return array ( $error );
 				}
 			} else {
 				$error = new errorSDK ();
 				$error->succeed = false;
 				$error->error = $GLOBALS['lang']->users->form_not_filled_in;
-				return $error;
+				return array ( $error );
 			}
 		} // function register
 		

@@ -44,9 +44,9 @@
 			break;
 			
 		case 'register':
-			$error = $user->register ( $_POST );
+			$errors = $user->register ( $_POST );
 			$database->close ();
-			$theme->redirect ( error_handling ( $error,'index.php?','users.php?action=registerform',$lang->users->register_instructions,$lang->users->not_registerd ) );
+			$theme->redirect ( error_handling ( $errors,'index.php?','users.php?action=registerform' ) );
 			break;
 		
 		case 'sendpassword':

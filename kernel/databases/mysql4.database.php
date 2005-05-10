@@ -29,7 +29,7 @@
 		} // function error
 		
 		function connect () {
-			$error = new error ();
+			$error = new errorSDK ();
 			$this->connection = mysql_connect ( $this->config->database->host,$this->config->database->user, $this->config->database->password );
 			if ( $this->connection == false ) {
 				$error->succeed = false;

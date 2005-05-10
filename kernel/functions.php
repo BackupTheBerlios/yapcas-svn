@@ -117,25 +117,44 @@
 		}
 	}
 	
-	function error_handling ( $error,$baselinksucceed,$baselinkfailed,$messagesucceed,$messagefailed ) {
-			global $database;
-			switch ( $error->succeed ) {
-				case false:
-					$link = $baselinkfailed;
-					switch ( $error->fatal ) {
-						case true:
-							$link .= '&error=' . $messagefailed . ': ' .  $error->error;
-							break;
-						case false:
-							$link .= '&warning=' . $error->error . '&note=' . $messagesucceed;
-							break;
-					} 
+	function error_handling ( $errors,$baselinksucceed,$baselinkfailed ) {
+			foreach ( $errors as $error ) {
+				if ( $error->succeed == true ) {
+					array_unshift ( $errors,$error ); // be sure that succeed messafe is at begin
 					break;
-				case true:
-					$link = $baselinksucceed;
-					$link .= '&note=' . $messagesucceed;
-					break;
+				}
 			}
+			
+			foreach ( $errors as $error ) {
+				if ( isset ( $link ) ) {
+					if ( $error->succeed == true ) {
+						$link .= '&note=' . $error->message;
+					} else {
+						if ( $error->fatal == false ) {
+							$link .= '&warning=' . $error->error;
+						} else {
+							$link .= '&error=' . $error->error;
+						}
+					}
+				} else {
+					if ( $error->succeed == true ) {
+						$link = $baselinksucceed;
+						$link .= '&note=' . $error->message;
+					} else {
+						if ( $error->fatal == false ) {
+							// should never happen since there is a succeed message, 
+							// $link will be set
+							//FIXME: give errors to log
+							$link = $baselinksucceed;
+							$link .= '&warning=' . $error->error;
+						} else {
+							$link = $baselinkfailed;
+							$link .= '&error=' . $error->error;
+						}
+					}
+				}
+			}
+			header ( 'Location: ' . $link );
 			return $link;
 	}
 	
@@ -161,16 +180,5 @@
 		$time = time ();
 		$UTCtime = $time - ( $sitetimezone * 60 * 60 );
 		return $UTCtime;
-	}
-	
-	class error {
-		function error () {
-			$this->database = false;
-			$this->error = NULL;
-			$this->succeed = true; 
-			$this->value = NULL;
-			$this->fatal = true;
-		} 
-	}
-	
+	}	
 ?>

@@ -41,7 +41,8 @@
 	$this->users->username_already_registered = 'Deze gebruikersnaam is reeds in gebruik, kies een andere naam';
 	$this->users->email_already_registered = 'Dit emailadres is reeds in gebruik, kies een andere emailadres';
 	$this->users->pasw_not_equel = 'De 2 wachtwoorden zijn niet gelijk';
-	$this->users->register_instructions = 'U bent nu gerigistreerd, u krijgt verdere uitleg';
+	$this->users->registerd_activated = 'U bent nu gerigistreerd, u kunt nu inloggen';
+	$this->users->registerd_not_activated = 'U bent nu gerigistreerd, u krijgt een mail met verdere instructies om in te kunnen loggen';
 	$this->users->wrong_username = 'Verkeerde geberuikersnaam';
 	$this->users->wrong_password = 'Verkeerd wachtwoord';
 	$this->users->lost_password_question = 'Wachtwoord vergeten?';
