@@ -50,9 +50,11 @@ Eerste release
 + ubb is mogelijk in berichten ( b,u,i,quote )
 + html tags worden niet meer getoond in berichten
 + smilies zijn mogelijk in berichten
-+ profiel is uitgebreid
++ profiel is uitgebreid (contacmogelijkheden)
 + de gebruiker kan instellen of zijn profiel openbaar is en of hij 
 	in de gebruikerslijst staat en of hij zijn contactinfo laat zien
++ FAQ pagina
++ Er wordt naar verwezen via foutmeldingen
 + bug fixes
 	* #000006
 	* #000010
@@ -63,9 +65,8 @@ TODO
 !+ usersysteem uitbreiden
 	!* mail systeem ( activate = true )
 	!* help integratie ( eerste ideeen / versies )
-		!- bij foutmeldingen een help-link zetten
-		!- een FAQ pagina maken ( wordt verwezen door help link )
-			x verschillende onderdelen ( dynamisch )
+		!- installscript database laten invullen
+		!- foutmeldingen nummers geven
 		!- alleen voor admins
 			x foutberichten uit de log bekijken + betekenis
 			!x FAQ vragen toevoegen
@@ -103,6 +104,7 @@ Dromen zijn bedrog
 ------------------
 TODO
 ----
++ interne berichten sturen (+ melding geven)
 + optie inbouwen dat er niet dubbelgepost wordt 
 	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )
 + Snelheid

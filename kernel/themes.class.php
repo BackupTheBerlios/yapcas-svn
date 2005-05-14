@@ -23,6 +23,7 @@
 		
 		function theme () {
 			define ('TBL_PREFIX','');
+			define ('ERROR_LINK','./help.php#error');
 			global $lang;
 			error_reporting ( E_ALL );
 			if ( isinstalled () ) {
@@ -291,23 +292,29 @@
 			if ( ! empty ( $_GET[ $what ] ) ) {
 				switch ( $loglevel ) {
 					case 'warning':
-						return ereg_replace ( '%warning', $_GET[ $what ], $this->warningmessage );
+						$output =  ereg_replace ( '%warning', $_GET[ $what ], $this->warningmessage );
 						break;
 					case 'db_warning':
-						return ereg_replace ( '%warning', $_GET[ $what ], $this->warningmessage );
+						$output = ereg_replace ( '%warning', $_GET[ $what ], $this->warningmessage );
 						break;
 					case 'error':
-						return ereg_replace ( '%error', $_GET[ $what ], $this->errormessage );
+						$output = ereg_replace ( '%error', $_GET[ $what ], $this->errormessage );
 						break;
 					case 'db_error':
-						return ereg_replace ( '%db_error', $_GET[ $what ], $this->db_errormessage );
+						$output = ereg_replace ( '%db_error', $_GET[ $what ], $this->db_errormessage );
 						break;
 					case 'note':
-						return ereg_replace ( '%note', $_GET[ $what ], $this->notemessage );
+						$output = ereg_replace ( '%note', $_GET[ $what ], $this->notemessage );
 						break;
 					case 'empty':
 						return $_GET[ $what ];
 				}
+				if (!empty($_GET[ERROR_NUMBER])) {
+					$output = ereg_replace ('%link',ERROR_LINK . $_GET[ERROR_NUMBER],$output);
+				} else {
+					$output = ereg_replace ('%link',NULL,$output);
+				}
+				return $output;
 			} else {
 				return NULL;
 			}
@@ -832,6 +839,38 @@
 			}
 		}
 		
+		function helpindex () {
+			$output = NULL;
+			foreach (errorSDK::getHelpIndex ($this->database) as $title) {
+				$output .= $title;
+			}
+			return $output;
+		}
+		
+		function helpcontent () {
+			$output = NULL;
+			foreach (errorSDK::getHelpIndex ($this->database) as $index) {
+				echo '<h1>'.$index.'</h1>';
+				$question = errorSDK::getQuestionsByIndex ($this->database,$index);
+				if (! errorSDK::is_error ($question)) {
+					$tmpoutput = $this->helpqa;
+					$tmpoutput = ereg_replace ('%question',$question[FIELD_HELPQUESTION_QUESTION],$tmpoutput);
+					$tmpoutput = ereg_replace ('%answer',$question[FIELD_HELPQUESTION_ANSWER],$tmpoutput);
+					$output .= $tmpoutput;  
+				} else {
+					$output .= $this->error ($question);
+				}
+			}
+			return $output;
+		}
+		
+		function help () {
+			$output = $this->getfile ('themes/' . $this->themedir . '/helpcontent.html');
+			$output = ereg_replace ('%helpindex.main',$this->helpindex (),$output);
+			$output = ereg_replace ('%helpcontent.main',$this->helpcontent (),$output);
+			return $output;
+		}
+		
 		function themefile ( $file,$mustlogin = false,$basic = false) {
 			if ( ( $mustlogin == true ) AND ( $this->user->loggedin () != true ) ) {
 				$this->redirect ( 'index.php?warning=' . $GLOBALS['lang']->users->must_login );
@@ -857,6 +896,7 @@
 				$output = ereg_replace ( '%editcommentform.html',$this->editcommentform (),$output );
 				$output = ereg_replace ( '%shortviewcurrentpoll.html',$this->shortviewcurrentpoll (),$output );
 				$output = ereg_replace ( '%profile.html',$this->viewprofile (), $output);
+				$output = ereg_replace ( '%helpcontent.html',$this->help (), $output);
 			}
 			$output = $this->replace_all ( $output );
 			echo $output;

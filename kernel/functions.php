@@ -124,7 +124,7 @@
 					break;
 				}
 			}
-			
+			unset ($link); // be sure $link is not set
 			foreach ( $errors as $error ) {
 				if ( isset ( $link ) ) {
 					if ( $error->succeed == true ) {
@@ -153,6 +153,7 @@
 						}
 					}
 				}
+				$link = $link . '&errorid=' . $error->number;
 			}
 			header ( 'Location: ' . $link );
 			return $link;
