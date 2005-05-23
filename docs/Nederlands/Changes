@@ -60,6 +60,8 @@ Eerste release
 	* #000010
 + Interne wijziging:: Error opvang
 	* Er zijn een aantal functies herschreven door deze wijziging
++ Interne wijziging:: configopties
+	* configopties is nu veel geavanceerder, ook is site.config.php gewijzigd
 TODO
 ----
 !+ usersysteem uitbreiden
@@ -79,9 +81,9 @@ TODO
 !+ Verwijder de commentnavigatie bij ViewThreaded == YES
 !+ layout mooier maken
 + nieuws RSS
-+ betere ondersteuning voor meerdere fouten bij één bewerking
 + betere errorlog
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
++ config->writeOut (); schrijven
 
 0.4 
 ----
@@ -118,6 +120,6 @@ TODO
 		die in contentpage kan staan )
 + fix bug #00011
 
-1.0 ( Mature )
+1.0 ( Stable )
 ---
 + Bugs only release

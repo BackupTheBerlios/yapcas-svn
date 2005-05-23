@@ -1,39 +1,22 @@
 <?php
-	$this->safety->error_reporting = E_ALL;
-	/* options are	
-		E_NONE // use this for live-applications
-		E_ALL // use this ONLY for testing purpose and NOT on live-applications
-	*/
-			
-	$this->database->type = MySQL4;
-	/* options are
-		MySQL4
-		PostgreSQL // Only 7.4 & 7.x supported
-		MySQL3 // Unsupported!!!
-		XML // NYI (Not Yet Implemented)
-	*/
-	$this->database->host = 'localhost';
-	$this->database->user = 'nathan';
-	$this->database->password = 'TuxPHP';
-	$this->database->name = 'yapcas';
-			
-	$this->news->enable_threaded = true;
-	$this->news->standard->view = threaded;
-	$this->news->standard->postsonpage = 20;
-	
-	
-	$this->site->timezone = +2;	
-	$this->site->timeformat = 'H:i:s d/m/Y';	
-	$this->site->name = 'YaPC(a)S';
-	$this->site->description = 'Yet another PHP Content (admin) System';
-	$this->site->copyright = '&copy; 2004-2005 Nathan Samson';
-	$this->site->language = 'dutch';
-	$this->site->theme = 'moderngray';
-	$this->news->postsonpage = 10;
-	$this->news->headlines = 20;
-	$this->users->activate = false;
-	/*
-		if set true, the user must activate his account by regestring and change email
-		only false is implemented
-	*/
+	// general
+	$config['general']['timezone'] = 2;
+	$config['general']['timeformat'] = 'H:i:s d/m/y';
+	$config['general']['sitename'] = 'YaPC(a)S';
+	$config['general']['description'] = 'Yet another PHP Content (admin) System';
+	$config['general']['language'] = 'dutch';
+	$config['general']['theme'] = 'moderngray';
+	$config['general']['databasetype'] = MySQL4;
+	$config['general']['errorreporting'] = E_ALL;
+
+	// database
+	$config['database']['host'] = 'localhost';
+	$config['database']['user'] = 'nathan';
+	$config['database']['password'] = 'TuxPHP';
+	$config['database']['name'] = 'yapcas';
+
+	// news
+	$config['news']['headlines'] = 10;
+	$config['news']['postsonpage'] = 5;
+	$config['news']['threaded'] = true;
 ?>

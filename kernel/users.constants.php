@@ -2,6 +2,7 @@
 
 	define ( 'TBL_USERS',TBL_PREFIX . 'users' );
 	define ( 'TBL_USERS_PROFILE',TBL_PREFIX . 'user_profile' );
+	define ( 'TBL_IPBLOCKS',TBL_PREFIX .'ipblocks' );
 	define ( 'FIELD_USERS_NAME','name' );
 	define ( 'FIELD_USERS_PASSWORD','password' );
 	define ( 'FIELD_USERS_TYPE','type' );
@@ -19,7 +20,6 @@
 	define ( 'FIELD_USERS_PUBLIC_CONTACT_INFO','public_contact_info' );
 	define ( 'FIELD_USERS_POSTSONPAGE','postsonpage' );
 	define ( 'FIELD_USERS_HEADLINES','headlines' );
-	
 	define ( 'FIELD_USERS_PROFILE_NAME','name' );
 	define ( 'FIELD_USERS_PROFILE_JOB','job' );
 	define ( 'FIELD_USERS_PROFILE_AIM','aim' );
@@ -30,13 +30,9 @@
 	define ( 'FIELD_USERS_PROFILE_INTRESTS','intrests' );
 	define ( 'FIELD_USERS_PROFILE_WEBSITE','website' );
 	define ( 'FIELD_USERS_PROFILE_ADRESS','adress' );
-	
-	define ( 'TBL_IPBLOCKS',TBL_PREFIX .'ipblocks' );
 	define ( 'FIELD_IPBLOCKS_IP','ip' );
-	
 	define ( 'PASSWORD_LENGTH',8 );
 	define ( 'IP_USER',$_SERVER['REMOTE_ADDR'] );
-
 	define ( 'SESSION_NAME','name' );
 	define ( 'SESSION_PASSWORD','password' );
 	define ( 'SESSION_TYPE','type' );	
@@ -55,7 +51,7 @@
 	define ( 'POST_LANGUAGE','language' );
 	define ( 'POST_NEW_PASSWORD1','new_password1' );
 	define ( 'POST_NEW_PASSWORD2','new_password12' );
-	
+
 	define ( 'get_registererror','register_error' ); // will be removed soon
 	define ( 'get_loginerror','login_error' ); // will be removed soon
 	define ( 'get_sendpassworderror','sendpassword_error' ); // will be removed soon
@@ -74,7 +70,6 @@
 	define ( 'cookie_headlines','headlines' );
 	define ( 'cookie_postsonpage','postsonpage' );
 	define ( 'cookie_threaded','threaded' );
-	
 	define ( 'form_method','post' );
 	define ( 'sendpassword_action','users.php?action=sendpassword' );
 	define ( 'sendpasswordform_action','users.php?action=sendpasswordform' );

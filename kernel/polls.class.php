@@ -17,8 +17,10 @@
 */
 
 	class polls {
-		function polls () {
-			include ( 'kernel/polls.constants.php' );
+		function polls (&$config) {
+			include ('kernel/polls.constants.php');
+
+			$this->config = $config;
 		} /* function polss */
 	
 		function getidcurrentpollbylanguage ( $language ) {
@@ -76,7 +78,7 @@
 			if ( ( isset ( $info['voted_on'] ) ) ) {
 				// get current voted info
 				if ( $this->userhasvoted () == false ) {
-					$id = $this->getidcurrentpollbylanguage ( $GLOBALS['user']->getlanguage () );
+					$id = $this->getidcurrentpollbylanguage ($this->config->getConfigByNameType('general/language',TYPE_STRING));
 					if ( ! errorSDK::is_error ( $id ) ) {
 						$sql = "SELECT " . FIELD_POLL_RESULTS . " FROM " . TBL_POLLS . " WHERE " 
 							. FIELD_POLL_ID  . "='" . $id . "' LIMIT 1";
@@ -150,7 +152,7 @@
 			$cookie = false;
 			$ip = false;
 			$user = false;
-			$idcurpoll = $this->getidcurrentpollbylanguage ( $GLOBALS['user']->getlanguage () ); 
+			$idcurpoll = $this->getidcurrentpollbylanguage ($this->config->getConfigByNameType('general/language',TYPE_STRING)); 
 			// check cookie
 			if ( isset ( $_COOKIE[COOKIE_POLL] ) ) {
 				if ( $_COOKIE[COOKIE_POLL] == $idcurpoll ) {
