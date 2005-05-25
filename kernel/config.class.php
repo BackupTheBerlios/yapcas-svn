@@ -48,8 +48,8 @@ function checkType ($content,$type,$config) {
 	if (($utype == $type) or ($type == TYPE_UKNOWN)){
 		return true;
 	} else {
-		throw new exceptionlist ("Type is wrong" . 
-			apperror (__FILE__ . ': ' . __FUNCTION__ . ': ' . __LINE__,$config));
+		throw new exceptionlist ("Type is wrong", 
+			__FILE__ . ': ' . __FUNCTION__ . ': ' . __LINE__);
 	}
 } /* function checkType ($content,$type,$config) */
 
@@ -60,9 +60,9 @@ function parseConfigName ($name,$config) {
 		$tmparray['namevar'] = $tmparray[1];
 		return $tmparray;
 	} else {
-		throw new exceptionlist ("Configname could not be parsed" . 
-			apperror (': ' . $name. ':' . __FILE__.': ' . __FUNCTION__ . ': ' . 
-			__LINE__,$config));
+		throw new exceptionlist ("Configname could not be parsed", 
+			': ' . $name. ':' . __FILE__.': ' . __FUNCTION__ . ': ' . 
+			__LINE__);
 	}
 } /* function parseConfigName ($name,$config) */
 
@@ -77,9 +77,8 @@ class config {
 	private function addToConfigTree ($content,$section,$namevar,$type) {
 		if (isset ($this->configtree[$section])) {
 			if (!is_array ($this->configtree[$section])) {
-				throw new exceptionlist ("Section is not an array, but already set".
-					apperror (': ' . $section .':' . __FILE__ . ': ' .
-					__FUNCTION__ . ': ' . __LINE__,$this));
+				throw new exceptionlist ("Section is not an array, but already set",
+					': '.$section .':'.__FILE__.': '.__FUNCTION__.': '.__LINE__);
 			}
 		}
 		if (!isset ($this->configtree[$section][$namevar])) {
@@ -92,9 +91,9 @@ class config {
 				throw $e;
 			}
 		} else {
-			throw new exceptionlist ("Config already set".
-					apperror (': ' . $section . '/' . $namevar .':' .
-					__FILE__ . ': ' . __FUNCTION__ . ': ' . __LINE__,$this));
+			throw new exceptionlist ("Config already set",
+					': ' . $section . '/' . $namevar .':' .__FILE__ . ': ' .
+					__FUNCTION__ . ': ' . __LINE__);
 		}
 	} /* function addToConfigTree ($content,$section,$namevar,$type) */
 
@@ -120,9 +119,9 @@ class config {
 					return $result;
 				}
 			} else {
-				throw new exceptionlist ("File does not exists".
-					apperror (': ' . $file .':' .
-					__FILE__ . ': ' . __FUNCTION__ . ': ' . __LINE__,$this));
+				throw new exceptionlist ("File does not exists",
+					': ' . $file .':' .__FILE__ . ': ' . __FUNCTION__ . ': ' .
+					__LINE__);
 			}
 		}
 		catch (exceptionlist $e) {
@@ -204,9 +203,8 @@ class config {
 						}
 						break;
 					default:
-						throw new exceptionlist ("Item does not exists".
-							apperror (': ' . $item .':' .
-							__FILE__ . ': ' . __FUNCTION__ . ': ' . __LINE__,$this));
+						throw new exceptionlist ("Item does not exists",
+							': '.$item.':'.__FILE__.': '.__FUNCTION__.': '.__LINE__);
 						}
 				$i++;
 			}

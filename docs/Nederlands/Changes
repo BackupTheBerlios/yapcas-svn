@@ -112,7 +112,6 @@ TODO
 + Snelheid
 + XML database
 ?+ slimme quotes
-?+ ander soort config ( ini,XML )
 + class themes herschrijven
 	?* Extensies ?
 	* Eigen thema 'macros' ( bepaalde %strings laten vervangen door het theme )

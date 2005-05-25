@@ -15,95 +15,91 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+if (! defined ('EXCEPTION_CLASS')) {
+	include ('kernel/exception.class.php');
+}
 
 class database {
-	function database (&$config) {
-		$this->config = $config;
+	public function __construct (&$config) {
+		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/host',0);
+		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/user',0);
+		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/password',0);
+		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/name',0);
 
-		$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/host',0);
-		$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/user',0);
-		$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/password',0);
-		$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/name',0);
+		$this->config = $config;
 	} /* function database (&$config) */
 
-	function error () {
+	private function error () {
 		if ($this->config->getConfigByNameType ('general/errorreporting',TYPE_INT) == E_ALL) {
 			return mysql_errno () . ': ' . mysql_error () . ' ';
-		} else {
-			return $GLOBALS['lang']->database->internal_error;
 		}
 	} /* function error () */
 
-	function connect () {
-		$error = new errorSDK ();
+	public function connect () {
 		$this->connection = mysql_connect (
 			$this->config->getConfigByNameType ('database/host',TYPE_STRING),
 			$this->config->getConfigByNameType ('database/user',TYPE_STRING),
 			$this->config->getConfigByNameType ('database/password',TYPE_STRING));
 		if ($this->connection == false) {
-			$error->succeed = false;
-			$error->error = $this->error ();
+			throw new exceptionlist ("No database connection established", 
+				': '.$this->error ().': '.__FILE__.': '.__FUNCTION__.': '.
+				__LINE__,1,true,true);
 		} else {
-			$error->succeed = mysql_select_db (
-				$this->config->getConfigByNameType('database/name',TYPE_STRING),$this->connection );
-			$error->error = $this->error ();
+			$succeed = mysql_select_db (
+				$this->config->getConfigByNameType('database/name',TYPE_STRING),
+				$this->connection );
+			if ($succeed == true) {
+				return true;
+			} else {
+				throw new exceptionlist ("No database could be selected",
+					': '.$this->error ().': '.__FILE__.': '.__FUNCTION__.': '.
+					__LINE__,2,true,true);
+			}
 		}
-		mysql_info ($this->connection);
-		return $error;
 	} /* function connect () */
 
-	function close () {
+	public function close () {
 		mysql_close ($this->connection);
 	} /* function close () */
 
-	function sql2mysql ($sql) {
+	private function sql2mysql ($sql) {
 		if (ereg ( '( serial )',$sql)) {
 			$sql = ereg_replace ('( serial )',' int AUTO_INCREMENT ',$sql);
 		}
 		return $sql;
 	} /* function sql2mysql ($sql) */
 
-	function query ($sql,$fatal = true) {
+	public function query ($sql,$fatal = true) {
 		//echo "SQL: " . $sql . '<br />';
-		$error = new errorSDK ();
 		if (!isset ($this->connection)) {
-			$error->succeed = false;
-			$error->database = true;
-			$error->fatal = true;
-			$error->error = $GLOBALS['lang']->no_connection;
-			return $error;
+			throw new exceptionlist ("No database connection",': '.$sql.': '.
+				__FILE__.': '.__FUNCTION__.': '.__LINE__,$fatal,-1,true);
 		} else {
 			$sql = $this->sql2mysql ($sql);
-			$result = mysql_query ($sql, $this->connection);
+			$result = mysql_query ($sql,$this->connection);
 			if ($result == false) {
-				$error->succeed = false;
-				$error->error = $this->error () . $sql . '<br />';
-				$error->fatal = $fatal;
-				$error->database = true;
-				return $error;
+				throw new exceptionlist ("Query not executed",': '.$this->error ().
+					': '.$sql.': '.__FILE__.': '.__FUNCTION__.': '.__LINE__,$fatal,3,true);
 			} else {
 				return $result;
 			}
 		}
 	} /* function query ($sql,$fatal = true) */
 
-	function fetch_array ($result) {
-		if ($result == false) {
-		// echo $lang->Fatal_error;
-		} else {
-			return mysql_fetch_array ($result,MYSQL_BOTH);
-		}
+	public function fetch_array ($result) {
+		return mysql_fetch_array ($result,MYSQL_BOTH); // MYSQL_BOTH is the standard
 	} /* function fetch_array ($result) */
 
-	function  list_tables () {
-		return mysql_list_tables ($this->config->getConfigByNameType('database/name',TYPE_STRING));
+	public function list_tables () {
+		return mysql_list_tables ($this->config->getConfigByNameType('database/name',
+			TYPE_STRING));
 	} /* function list_tables () */
 
-	function table_name ($result,$i) {
+	public function table_name ($result,$i) {
 		return mysql_table_name ($result,$i);
 	} /* function table_name ($result,$i) */
 
-	function get_all_tables () {
+	public function get_all_tables () {
 		$tables_list = $this->list_tables ();
 		$tables = NULL;
 		$i = 0;
@@ -117,10 +113,11 @@ class database {
 
 	//DEPRECATED
 	function countresults ($result) {
+		echo 'DEPRECATED';
 		return $this->num_rows ($result);
 	} /* function countresults ($result) */
 
-	function num_rows ($result) {
+	public function num_rows ($result) {
 		return mysql_num_rows ($result);
 	} /* function num_rows ($result) */
 } /* class database */

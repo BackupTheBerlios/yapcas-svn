@@ -46,9 +46,9 @@ include ('kernel/error.constants.php');
 		}
 		
 		function getQuestionsByIndex ($database,$index) {
-			$return = array ();
+			/*$return = array ();
 			$sql = "SELECT " . FIELD_HELPQUESTION_INDEX . " FROM " . TBL_HELPQUESTION . " WHERE " . FIELD_HELPQUESTION_INDEX . "='tes' LIMIT 1";
-			$sql .= 
+			//$sql .= 
 			$query = $database->query ($sql);
 			if (! errorSDK::is_error($query)) {
 				while ($question = $database->fetch_array ($query)) {
@@ -59,7 +59,7 @@ include ('kernel/error.constants.php');
 				return $query;
 			}
 			return $return; 
-			
+			*/
 		}
 		
 	} /* class error */

@@ -17,8 +17,11 @@ function apperror ($str,$config = '') {
 } /* function apperror ($1,$2 ='',$3 = '') */
 
 class exceptionlist extends Exception {
-	public function __construct ($message,$code = -1) {
+	public function __construct ($message,$debuginfo,$code = -1,$fatal = true,$db = false) {
 		$this->next = NULL;
+		$this->fatal = $fatal;
+		$this->db = $db;
+		$this->debuginfo = $debuginfo;
 		// make sure everything is assigned properly
 		parent::__construct ($message, $code);
 	} /* public function __construct($message,$code = -1) */
