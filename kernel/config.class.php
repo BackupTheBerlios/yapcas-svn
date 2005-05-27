@@ -33,14 +33,19 @@ define ('YES','Y');
 define ('NO','N');
 
 function checkType ($content,$type,$config) {
-	if (is_bool ($content)) {
+	// stupid hack, if an integer value == 0, it is send as a bool
+	if ((is_bool($content)) and ($type == TYPE_INT)) {	
+		$utype = TYPE_INT;
+	} else if (is_bool ($content)) {
 		$utype = TYPE_BOOL;
-	} else if (is_int ($content)) {
+	} else if ((is_int ($content)) or (is_numeric ($content))) {
 		$utype = TYPE_INT;
 	} else if (is_float ($content)) {
 		$utype = TYPE_FLOAT;
 	} else if (is_string ($content)) {
 		$utype = TYPE_STRING;
+	} else if (is_bool ($content)) {
+		$utype = TYPE_BOOL;
 	} else {
 		$utype = TYPE_UKNOWN;
 	}
@@ -48,6 +53,8 @@ function checkType ($content,$type,$config) {
 	if (($utype == $type) or ($type == TYPE_UKNOWN)){
 		return true;
 	} else {
+		echo '<br>' . $content . '<br />';
+		echo $utype . '::' . $type;
 		throw new exceptionlist ("Type is wrong", 
 			__FILE__ . ': ' . __FUNCTION__ . ': ' . __LINE__);
 	}
@@ -66,8 +73,22 @@ function parseConfigName ($name,$config) {
 	}
 } /* function parseConfigName ($name,$config) */
 
+function convertToStandard (&$content) {
+	// Y and N are database-values
+	if ($content == YES) {
+		settype ($content,'bool');
+		return true;
+	} else if ($content == NO) {
+		settype ($content,'bool');
+		return false;
+	} else {
+		// noting needs to be changed
+		return $content;
+	}
+} /* function convertToStandard (&$content) */
+
 class config {
-	public function config () {
+	public function __construct () {
 		$this->configtree = array ();
 	} /* function config () */
 
@@ -83,8 +104,8 @@ class config {
 		}
 		if (!isset ($this->configtree[$section][$namevar])) {
 			try {
-				checkType ($content,$type,$this);
-				$this->configtree[$section][$namevar] = $content;
+				checkType (convertToStandard ($content),$type,$this);
+				$this->configtree[$section][$namevar] = convertToStandard ($content);
 				return true;
 			} 
 			catch (exceptionlist $e) {
@@ -103,7 +124,7 @@ class config {
 		a name looks like this
 		'sectionname/nameofvar'
 	*/
-	public function addConfigByFileName ($file,$type,$name,$standard) {
+	public function addConfigByFileName ($file,$type,$name,$standard = 0) {
 		try {
 			$configOption = parseConfigName ($name,$this);
 			// $name parsed correctly 

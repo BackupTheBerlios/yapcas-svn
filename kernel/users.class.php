@@ -15,23 +15,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+if (!defined ('USE_YAPCASUSER')) {
+	define ('USE_YAPCASUSER',true);
+}
+
+if (!defined ('EXCEPTION_CLASS')) {
+	include ('kernel/exception.class.php');
+}
+
 class user { 
-	function user ($database) {
-		include_once ( 'kernel/users.constants.php' );
+	public function __construct ($database) {
+		include_once ('kernel/users.constants.php');
 		$this->database = $database;
 
-		//FIXME can errors return
-		$this->languageconfig = $this->getdbconfig (FIELD_USERS_LANGUAGE);
-		$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_TIMEZONE);
-		$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_TIMEFORMAT);
-		$this->threadedconfig = $this->getdbconfig (FIELD_USERS_THREADED);
-		$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_POSTSONPAGE);
-		$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_HEADLINES);
-		$this->themeconfig = $this->getdbconfig (FIELD_USERS_THEME);
-	} /* function user ($database) */
+		try {
+			$this->languageconfig = $this->getdbconfig (FIELD_USERS_LANGUAGE);
+			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_TIMEZONE);
+			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_TIMEFORMAT);
+			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_THREADED);
+			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_POSTSONPAGE);
+			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_HEADLINES);
+			$this->themeconfig = $this->getdbconfig (FIELD_USERS_THEME);
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function __construct ($database) */
 
-	function getconfig ($what) {
-		switch ($config) {
+	public function getconfig ($what) {
+		switch ($what) {
 			case 'language':
 				return $this->languageconfig;
 				break;
@@ -53,22 +65,27 @@ class user {
 			case 'theme':
 				return $this->themeconfig;
 				break;
+			case 'email':
+				return $this->getEmail ();
+				break;
+			case 'name':
+				return $this->getName ();
+				break;
 			default:
-				// FIXME
-				return 0;
+				echo $what;
+				throw new exceptionlist ('Uknown userconfig',NULL,-1);
 		}
-	} /* getconfig ($wat) */
+	} /* public getconfig ($wat) */
 
-	function validlogin () {
-		$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS;
-		$sql .= " WHERE " . FIELD_USERS_NAME . "='" . $_SESSION[SESSION_NAME]; 
-		$sql .= "' AND " . FIELD_USERS_PASSWORD . "='" .$_SESSION[SESSION_PASSWORD];
-		$sql .= "' AND " . FIELD_USERS_TYPE . "='" . $_SESSION[SESSION_TYPE] . "'";
-		$query = $this->database->query ( $sql );
-		if (errorSDK::is_error ($query)) {
-			session_unset ();
-			return false;
-		} else {
+	private function validlogin () {
+		try {
+			// this check of a hacker did not change the sessions on the server
+			// to get another username or a type
+			$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS;
+			$sql .= " WHERE " . FIELD_USERS_NAME . "='" . $_SESSION[SESSION_NAME]; 
+			$sql .= "' AND " . FIELD_USERS_PASSWORD . "='" .$_SESSION[SESSION_PASSWORD];
+			$sql .= "' AND " . FIELD_USERS_TYPE . "='" . $_SESSION[SESSION_TYPE] . "'";
+			$query = $this->database->query ($sql);
 			if ($this->database->num_rows ($query) == 0) {
 				session_unset ();
 				return false;
@@ -76,12 +93,16 @@ class user {
 				return true;
 			}
 		}
-	} /* function validlogin () */
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* private function validlogin () */
 
-	function getotherprofile ( $username ) {
+	// FIXME rewrite this function
+	public function getotherprofile ($username) {
 		$sql = "SELECT * FROM " . TBL_USERS . " WHERE " 
 			. FIELD_USERS_NAME . "='" . $username . "' AND " . FIELD_USERS_PUBLIC_USER . "='Y' LIMIT 1";
-		$query = $GLOBALS['database']->query ( $sql );
+		$query = $GLOBALS['database']->query ($sql);
 		if ( ! errorSDK::is_error ( $query ) ) {
 			if ( $GLOBALS['database']->num_rows ( $query ) == 1 ) {
 				$user = $GLOBALS['database']->fetch_array ( $query );
@@ -133,28 +154,59 @@ class user {
 		}
 	}
 
-	function getips () {
-		$sql = " SELECT  " . FIELD_USERS_IP . " FROM " . TBL_USERS 
-			. " WHERE " . FIELD_USERS_NAME . "='" . $this->getname () . "' LIMIT 1";
-		$query = $GLOBALS['database']->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $query;
-		} else {
-			$user = $GLOBALS['database']->fetch_array ( $query );
+	public function getips () {
+		try {
+			$sql = "SELECT  " . FIELD_USERS_IP . " FROM " . TBL_USERS 
+				. " WHERE " . FIELD_USERS_NAME . "='" . $this->getname () . "' LIMIT 1";
+			$query = $this->database->query ($sql);
+			$user = $this->database->fetch_array ($query);
 			$ips = explode ( ',',$user[FIELD_USERS_IP] );
 			return $ips;
 		}
-	}
+		catch (listexception $e) {
+			throw $e;
+		}
+	} /* public function getips () */
 
-	function loggedin () {
-		if ( ! empty ( $_SESSION[SESSION_NAME] ) ) {
-			return $this->validlogin (); // this checks of the user has not hacked the session vars and make him a root or other user
+	public function loggedin () {
+		if (!empty ($_SESSION[SESSION_NAME])) {
+			try {
+				$validlogin = $this->validlogin (); 
+				// this checks of the user has not hacked the session vars and make him a root or other user
+				return $validlogin;
+			}
+			catch (listexception $e) {
+				throw $e;
+			}
 		} else {
 			return false;
 		}
-	} // function loggedin
+	} /* public function loggedin () */
 
-	function login ( $inpuser ) {
+	public function login ($name,$password) {
+		try {
+			$sql = 'SELECT * FROM ' . TBL_USERS;
+			$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' .$name. '\'';
+			$query = $this->database->query ($sql);
+			if ($this->database->num_rows ($query) != 1) {
+				throw new exceptionlist ('User does not exists',NULL,4);
+			}
+			// since we have only __one__ result it must not be in a loop
+			$user = $this->database->fetch_array ($query);
+			if ($user[FIELD_USERS_PASSWORD] != md5($password)) {
+				throw new exceptionlist ('Your password is wrong',NULL,5);
+			}
+			$_SESSION[SESSION_NAME] = $user[FIELD_USERS_NAME];
+			$_SESSION[SESSION_TYPE] = $user[FIELD_USERS_TYPE];
+			$_SESSION[SESSION_PASSWORD] = $user[FIELD_USERS_PASSWORD];
+			return true;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function login ($name,$password) */
+
+	/*function login ( $inpuser ) {
 		if ( ! ( ( empty ( $inpuser[POST_NAME] ) ) or ( empty ( $inpuser[POST_PASSWORD] ) ) ) ) {
 			// get the user info out of the database
 			$sql = 'SELECT * FROM ' .  TBL_USERS . ' WHERE ' . FIELD_USERS_NAME . '=\'' . $inpuser[POST_NAME] . '\' LIMIT 1';
@@ -235,7 +287,7 @@ class user {
 			$error->error = $GLOBALS['lang']->users->form_not_filled_in; 
 			return array ( $error );
 		}
-	} // function login
+	} // function login */
 
 	function logout () {
 		$error = new errorSDK;
@@ -435,22 +487,23 @@ class user {
 	 	return $error;
 	 } // function lostpasw
  
-	 function getname () {
-		if ( ! $this->loggedin () ) {
+	private function getName () {
+		if (!$this->loggedin ()) {
 			return NULL;
 		} else {
 			return $_SESSION[SESSION_NAME];
 		}
-	}
+	} /* private function getName () */
 
-	function getemail () {
+	private function getEmail () {
 		return 'email';
-		if ( ! $this->loggedin () ) {
+		if (!$this->loggedin ()) {
 			return NULL;
 		} else {
+			// FIXME
 			return 'email';
 		}
-	}
+	} /* private function getEmail () */
 
 	function getdbconfig ($db_field) {
 		if ($this->loggedin () == true) {

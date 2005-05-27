@@ -198,9 +198,10 @@ class news {
 	function postnews ( $inputuser ) {
 		if ( $this->user->loggedin () ) {
 			if ( ! ( ( empty ( $inputuser['subject'] ) ) or ( empty ( $inputuser['message'] ) ) or ( empty ( $_POST['category'] ) ) ) ) {
-				$date = getUTCtime ();
-				$language = $GLOBALS['user']->getlanguage ();
-				$username = $GLOBALS['user']->getname ();
+				// FIXME news may not handle functions out of functions.php
+				$date = getUTCtime ($this->config);
+				$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
+				$username = $this->config->getConfigByNameType ('user/name',TYPE_STRING);
 				$message = $_POST['message'];
 				$sql = "INSERT into news (id,subject,message,language,comments,author,date,category) values (DEFAULT,'$_POST[subject]','$message','$language','0','$username','$date','$_POST[category]') ";
 				$query = $GLOBALS['database']->query ( $sql );
@@ -239,7 +240,8 @@ class news {
 		if ( $GLOBALS['user']->loggedin () ) {
 			if ( ! ( empty ( $input['subject'] ) ) or ( empty ( $input['message'] ) ) ) {
 				// preparing the message and all of its data
-				$date = getUTCtime ();
+				// FIXME news may not handle functions out of functions.php
+				$date = getUTCtime ($this->config);
 				$user = $_SESSION['name'];
 				$message = $input['message']; // switch \n to <br />
 				

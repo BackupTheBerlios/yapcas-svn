@@ -24,7 +24,7 @@ class theme {
 	var $database;
 	var $user;*/
 
-	function theme () {
+	function __construct () {
 		error_reporting (E_ALL);
 		define ('TBL_PREFIX','');
 		define ('ERROR_LINK','./help.php#error');
@@ -268,7 +268,6 @@ class theme {
 				$retlink .= $temp;
 			}
 		}
-
 		return $retlink;
 	}
 	
@@ -598,6 +597,7 @@ class theme {
 			//remove all newlines ( to avoid problmes with next line )
 			$output = preg_replace ( '#\{loggedin\}(.+?)\{/loggedin}#','',$output );
 			$output = preg_replace ( '#\{notloggedin\}(.+?)\{/notloggedin\}#','\\1',$output );
+			$output = ereg_replace ( '%user.links',$this->loaduserlinks (),$output );
 			$output = ereg_replace ( '%users.lang',$GLOBALS['lang']->users->user,$output );
 			$output = ereg_replace ( '%logout.lang',$GLOBALS['lang']->users->logout,$output );
 			$output = ereg_replace ( '%changeoptionsform.lang',$GLOBALS['lang']->users->changeoptions,$output );
@@ -616,7 +616,7 @@ class theme {
 		$link = 'news.php?action=postcommentform&amp;id_comment=' . $comment['id'] . '&amp;id_news=' . $comment['id_news'];
 		$output = ereg_replace ( '%comment.newcommentlink',$link,$output );
 		$output = ereg_replace ( '%comment.newcomment',$GLOBALS['lang']->news->give_a_comment,$output );
-		if ( $comment['author']  == $this->user->getname () ) {
+		if ( $comment['author']  == $this->config->getConfigByNameType ('user/name',TYPE_STRING)) {
 			$output = ereg_replace ( '%edit.button',$this->newstheme->editbutton,$output );
 			$output = ereg_replace ( '%link','news.php?action=editcommentform&amp;id=' . $comment['id'],$output );
 		} else {

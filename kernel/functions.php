@@ -15,6 +15,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+if (!defined ('EXCEPTION_CLASS')) {
+	include ('kernel/exception.class.php');
+}
+
 class lang {
 	function updatelang ( $l ) {
 		include ('lang/'. $l .'/news.lang.php');
@@ -159,12 +163,12 @@ function error_handling ( $errors,$baselinksucceed,$baselinkfailed ) {
 		return $link;
 }
 
-function loadall () {	  
+function loadall () {
 	session_start ();
-	include_once ( 'kernel/themes.class.php' );	
-	include ( 'kernel/constants.php' );	
+	include_once ( 'kernel/themes.class.php' );
+	include ( 'kernel/constants.php' );
 	global $theme; 
-	$theme = new theme ();		
+	$theme = new theme ();
 }
 
 function setdate ($time) {
@@ -175,11 +179,28 @@ function setdate ($time) {
 	return date ($timeformat,$time);
 }
 
-function getUTCtime () {
-	global $config;
-	$sitetimezone = $config->site->timezone;
-	$time = time ();
-	$UTCtime = $time - ( $sitetimezone * 60 * 60 );
-	return $UTCtime;
-}	
+function getUTCtime (&$config) {
+	try {
+		$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/servertimezone');
+		$sitetimezone = $config->getConfigByNameType ('general/servertimezone',TYPE_INT);
+		$time = time ();
+		$UTCtime = $time - ($sitetimezone * 60 * 60);
+		return $UTCtime;
+	}
+	catch (exceptionlist $e) {
+		throw $e;
+	}
+}
+
+function catch_error ($exc,$link,$message,$moreinf) {
+	if ($exc->fatal) {
+		$link .= 'error=' . $message . $exc->getMessage ();
+	} else {
+		$link .= 'warning=' . $message . $exc->getMessage ();
+	}
+	if ($moreinf == true) {
+		$link .= $exc->debuginfo;
+	}
+	return $link;
+}
 ?>

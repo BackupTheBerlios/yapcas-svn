@@ -15,6 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+if (!defined ('EXCEPTION_CLASS')) {
+	include ('kernel/exception.class.php');
+}
 include ('kernel/functions.php');
 loadall ();
 
@@ -23,14 +26,28 @@ if (!empty ($_GET['action'])) {
 } else {
 	$theme->redirect ('index.php');
 }
-
+try {
+	$errorrep = $config->getConfigByNameType ('general/errorreporting',TYPE_INT);
+}
+catch (exceptionlist $e) {
+	// this is a big errror so $errorep = true
+	$link = catch_error ($e,'index.php?','you are not logged in',true);
+	$theme->redirect ($link);
+}
 switch ($action) {
 	case 'login':
-		$error = $user->login ( $_POST );
-		$database->close ();
-		$link = error_handling ($error,'index.php?','index.php?',
-			$lang->users->logged_in,$lang->users->not_logged_in);
-		$theme->redirect ($link);
+		try {
+			$user->login ($_POST[POST_NAME],$_POST[POST_PASSWORD]);
+			$database->close ();
+			$theme->redirect ('index.php?message=loggedin');
+		}
+		catch (exceptionlist $e) {
+			$database->close ();
+			// FIXME
+			// save some loginthings like username in a cookie and retrieve them later??
+			$link = catch_error ($e,'index.php?','you are not logged in',$errorrep);
+			$theme->redirect ($link);
+		}
 		break;
 	case 'logout':
 		$error = $user->logout ();
@@ -64,7 +81,7 @@ switch ($action) {
 		$theme->themefile ('changeoptionsform.html',true);
 		$database->close ();
 		break;
-	case 'changeoptions':
+	/*case 'changeoptions':
 		$user->setconfig (FIELD_USERS_THEME,$_POST[POST_THEME] ;
 		$user->setconfig (FIELD_USERS_THREADED,$user->convert_config2db (CONFIG_THREADED,$_POST[POST_THREADED]));
 		$user->setconfig (FIELD_USERS_LANGUAGE,$_POST[POST_LANGUAGE]);
@@ -84,7 +101,7 @@ switch ($action) {
 			$link =  'users.php?action=changeoptionsform&note=' . $lang->users->options_are_saved;
 			$theme->redirect ($link);
 		}
-		break;
+		break;*/
 	case 'viewuserlist':
 		$theme->themefile ('viewuserlist.html',true);
 		$database->close ();

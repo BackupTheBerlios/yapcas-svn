@@ -1,6 +1,7 @@
 <?php
 	// general
-	$config['general']['timezone'] = 2;
+	$config['general']['servertimezone'] = 2;
+	$config['general']['timezone'] = 1; // I think the most of my site users live in GB
 	$config['general']['timeformat'] = 'H:i:s d/m/y';
 	$config['general']['sitename'] = 'YaPC(a)S';
 	$config['general']['description'] = 'Yet another PHP Content (admin) System';
