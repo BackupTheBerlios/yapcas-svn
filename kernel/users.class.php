@@ -185,17 +185,51 @@ class user {
 
 	public function login ($name,$password) {
 		try {
+			$exception = NULL;
 			$sql = 'SELECT * FROM ' . TBL_USERS;
 			$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' .$name. '\'';
 			$query = $this->database->query ($sql);
 			if ($this->database->num_rows ($query) != 1) {
-				throw new exceptionlist ('User does not exists',NULL,4);
+				$exception = new exceptionlist ('User does not exists',NULL,4);
 			}
 			// since we have only __one__ result it must not be in a loop
 			$user = $this->database->fetch_array ($query);
 			if ($user[FIELD_USERS_PASSWORD] != md5($password)) {
-				throw new exceptionlist ('Your password is wrong',NULL,5);
+				$e = new exceptionlist ('Your password is wrong',NULL,5);
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
 			}
+			if ($exception != NULL) {
+				throw $exception;
+			}
+			if ($user[FIELD_USERS_BLOCKED] == YES) {
+				throw new exceptionlist ('Your username is blocked');
+			}
+			if ($user[FIELD_USERS_ACTIVATE] == NO) {
+				throw new exceptionlist ('Your username is not (yet) activated,' .
+				'check your mail to activate it');
+			}
+			$userip = $user[FIELD_USERS_IP];
+			$userip = explode (',',$userip);
+			if (!in_array (IP_USER,$userip)) {
+				$userip[] = IP_USER;
+			}
+			foreach ($userip as $ip) {
+				$sql = 'SELECT ' . FIELD_IPBLOCKS_IP  . ' FROM ' . TBL_IPBLOCKS;
+				$sql .= ' WHERE ' . FIELD_IPBLOCKS_IP . '=\'' . $ip . '\'';
+				$sql .= 'LIMIT 1';
+				$query = $this->database->query ($sql,false);
+				if ($this->database->num_rows ($query) != 0) {
+					throw new exceptionlist ('Your IP is blocked');
+				}
+			}
+			$sql = 'UPDATE ' . TBL_USERS;
+			$sql .= ' SET ' . FIELD_USERS_IP . '=\'' . implode(',',$userip) . '\'';
+			$sql .= 'WHERE ' . FIELD_USERS_NAME . '=\'' . $name . '\'';
+			$this->database->query ($sql,false);
 			$_SESSION[SESSION_NAME] = $user[FIELD_USERS_NAME];
 			$_SESSION[SESSION_TYPE] = $user[FIELD_USERS_TYPE];
 			$_SESSION[SESSION_PASSWORD] = $user[FIELD_USERS_PASSWORD];
@@ -289,112 +323,69 @@ class user {
 		}
 	} // function login */
 
-	function logout () {
-		$error = new errorSDK;
-		if ( ! $this->loggedin () ) {
-			$error->succeed = false;
-			$error->database = false;
-			$error->error = $GLOBALS['lang']->users->not_logged_in;
-		} else {
-			unset ( $_SESSION[SESSION_NAME] );
-			unset ( $_SESSION[SESSION_TYPE] );
-			unset ( $_SESSION[SESSION_PASSWORD] );
-			session_unset();
-			$error->succeed = true;
-		}
-		return $error;
-	} // function logout
-
-	function register ($inputuser,$activate) {
-		if (!((empty ($inputuser[POST_NAME])) or (empty ($inputuser[POST_EMAIL]))or 
-		(empty ($inputuser[POST_PASSWORD1])) or (empty ($inputuser[POST_PASSWORD2])))){
-			if ($inputuser[POST_PASSWORD1] == $inputuser[POST_PASSWORD2]) {
-				// check username alreade exists
-				$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS . " WHERE " 
-					. FIELD_USERS_NAME . "='"  . $inputuser[POST_NAME] . "' LIMIT 1";
-				$query = $GLOBALS['database']->query ( $sql );
-				if (!errorSDK::is_error ($query)) {
-					if ($GLOBALS['database']->num_rows ($query) == 0) {
-						// check email already exists
-						$sql = "SELECT " . FIELD_USERS_EMAIL . " FROM " . TBL_USERS . " WHERE " 
-							. FIELD_USERS_EMAIL . "='"  . $inputuser[POST_EMAIL] . "' LIMIT 1";
-						$query = $GLOBALS['database']->query ( $sql );
-						if (!errorSDK::is_error ($query)) {
-							if ($GLOBALS['database']->num_rows ($query) == 0) {
-								// i think everything is OK
-								// user can be put into the db
-								// get some standard config options
-								$name = $inputuser[POST_NAME];
-								$password = md5 ($inputuser[POST_PASSWORD1]);
-								$email = $inputuser[POST_EMAIL];
-								$type = 'normal';
-								$language = $this->getlanguage ();
-								$theme = $this->gettheme ();
-								$threaded = $this->getthreaded ();
-								$postsonpage = $this->getpostsonpage ();
-								$timezone = $this->gettimezone ();
-								$timeformat = $this->gettimeformat ();
-								$headlines = $this->getheadlines ();
-								$ip  = IP_USER;
-
-								if ($activate == true ) {
-									$activated = NO;
-								} else {
-									$activated = YES;
-								}
-
-								$sql = "INSERT INTO " .  TBL_USERS . " (" . FIELD_USERS_NAME .',' . FIELD_USERS_PASSWORD . ',' . FIELD_USERS_EMAIL .',' 
-									. FIELD_USERS_TYPE .','.FIELD_USERS_LANGUAGE.','.FIELD_USERS_THEME.','.FIELD_USERS_THREADED.
-									','.FIELD_USERS_POSTSONPAGE.','.FIELD_USERS_TIMEZONE.','.FIELD_USERS_TIMEFORMAT . ',' . FIELD_USERS_ACTIVATE
-									.','.FIELD_USERS_HEADLINES.','.FIELD_USERS_IP.") VALUES ('$name', '$password', '$email', '$type', 
-									'$language', '$theme', '$threaded', '$postsonpage','$timezone','$timeformat','$activated','$headlines','$ip')";
-								$query = $GLOBALS['database']->query ( $sql );
-								if (!errorSDK::is_error ($query)) {
-									$error = new errorSDK ();
-									$error->succeed = true;
-									if ($activatr == true ) {
-										$error->message = $GLOBALS['lang']->users->registerd_not_activated;
-									} else {
-										$error->message = $GLOBALS['lang']->users->registerd_activated;
-										// do not forget to send a mail
-										//mail ();
-									}
-									return array ($error);
-								} else {
-									return array ($query);
-								}
-							} else {
-								$error = new errorSDK ();
-								$error->succeed = false;
-								$error->error = 
-									$GLOBALS['lang']->users->email_already_registered;
-								return array ( $error );
-							}
-						} else {
-							return array ( $query );
-						}
-					} else {
-						$error = new errorSDK ();
-						$error->succeed = false;
-						$error->error = $GLOBALS['lang']->users->username_already_registered;
-						return array ( $error );
-					}
-				} else {
-					return array ( $query );
-				}
+	public function logout () {
+		try {
+			if (!$this->loggedin ()) {
+				throw new exceptionlist ("Not logged in",NULL,7);
 			} else {
-				$error = new errorSDK ();
-				$error->succeed = false;
-				$error->error = $GLOBALS['lang']->users->pasw_not_equel;
-				return array ( $error );
+				unset ($_SESSION[SESSION_NAME]);
+				unset ($_SESSION[SESSION_TYPE]);
+				unset ($_SESSION[SESSION_PASSWORD]);
+				session_unset();
+				return true;
 			}
-		} else {
-			$error = new errorSDK ();
-			$error->succeed = false;
-			$error->error = $GLOBALS['lang']->users->form_not_filled_in;
-			return array ( $error );
 		}
-	} // function register
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function logout () */
+
+	public function register ($username,$password,$controlpass,$email,$activate,$language,
+	$theme,$threaded,$postsonpage,$timeformat,$timezone,$headlines) {
+			try {
+				if ($password != $controlpass) {
+					throw new exceptionlist ("Passwords are not the same");
+				}
+				// check username alreade exists
+				$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS;
+				$sql .= " WHERE " . FIELD_USERS_NAME . "='"  . $username . '\'';
+				$sql .= " LIMIT 1";
+				$query = $this->database->query ($sql);
+				if ($GLOBALS['database']->num_rows ($query) != 0) {
+					throw new exceptionlist ("User already exists, use another usrename");
+				}
+				// check email already exists
+				$sql = "SELECT " . FIELD_USERS_EMAIL . " FROM " . TBL_USERS;
+				$sql .= " WHERE " . FIELD_USERS_EMAIL . "='"  . $email . "'";
+				$sql .= 'LIMIT 1';
+				$query = $this->database->query ($sql);
+				if ($this->database->num_rows ($query) != 0) {
+					throw new exceptionlist ("Email is already registerd, use another email");
+				}
+				// i think everything is OK
+				// user can be put into the db
+				// get some standard config options
+				$name = $username;
+				$password = md5 ($password);
+				$type = 'normal';
+				$ip  = IP_USER;
+				if ($activate == true ) {
+					$activated = NO;
+				} else {
+					$activated = YES;
+				}
+				$sql = "INSERT INTO " .  TBL_USERS . " (" . FIELD_USERS_NAME .',' . FIELD_USERS_PASSWORD . ',' . FIELD_USERS_EMAIL .',' 
+					. FIELD_USERS_TYPE .','.FIELD_USERS_LANGUAGE.','.FIELD_USERS_THEME.','.FIELD_USERS_THREADED.
+					','.FIELD_USERS_POSTSONPAGE.','.FIELD_USERS_TIMEZONE.','.FIELD_USERS_TIMEFORMAT . ',' . FIELD_USERS_ACTIVATE
+					.','.FIELD_USERS_HEADLINES.','.FIELD_USERS_IP.") VALUES ('$name', '$password', '$email', '$type',
+					'$language', '$theme', '$threaded', '$postsonpage','$timezone','$timeformat','$activated','$headlines','$ip')";
+				$query = $this->database->query ($sql);
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function register ($username,$password,$controlpass,$email,$activate,$language,
+	$theme,$threaded,$postsonpage,$timeformat,$timezone,$headlines) */
 
 	function setnewpassword ( $password1,$password2 ) {
 		$error = new error ();

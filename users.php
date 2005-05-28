@@ -39,7 +39,7 @@ switch ($action) {
 		try {
 			$user->login ($_POST[POST_NAME],$_POST[POST_PASSWORD]);
 			$database->close ();
-			$theme->redirect ('index.php?message=loggedin');
+			$theme->redirect ('index.php?note=you are logged in');
 		}
 		catch (exceptionlist $e) {
 			$database->close ();
@@ -50,21 +50,57 @@ switch ($action) {
 		}
 		break;
 	case 'logout':
-		$error = $user->logout ();
-		$database->close ();
-		$link =error_handling ($error,'index.php?','index.php?',
-			$lang->users->logged_out,$lang->users->not_logged_out);
-		$theme->redirect ($redirect);
+		try {
+			$user->logout ();
+			$database->close ();
+			$theme->redirect ('index.php?note=you are logged out');
+		}
+		catch (exceptionlist $e) {
+			$database->close ();
+			$link = catch_error ($e,'index.php?','you are not logged out',$errorrep);
+			$theme->redirect ($link);
+		}
 		break;
 	case 'registerform':
-		$theme->themefile ('registerform.html');
-		$database->close ();
+		try {
+			$theme->themefile ('registerform.html');
+			$database->close ();
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'index.php?','you can\'t open this page',$errorrep);
+			$theme->redirect ($link);
+		}
 		break;
 	case 'register':
-		$errors = $user->register ($_POST);
-		$database->close ();
-		$link = error_handling ($errors,'index.php?','users.php?action=registerform');
-		$theme->redirect ($link); 
+		try {
+			$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail');
+			$language = $config->getConfigByNameType ('general/language',TYPE_STRING);
+			$utheme = $config->getConfigByNameType ('general/theme',TYPE_STRING);
+			$threaded = $config->getConfigByNameType ('news/threaded',TYPE_BOOL);
+			convertToDatabase ($threaded);
+			$postsonpage = $config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+			$timeformat = $config->getConfigByNameType ('general/timeformat',TYPE_STRING);
+			$timezone = $config->getConfigByNameType ('general/timezone',TYPE_INT);
+			$headlines = $config->getConfigByNameType ('news/headlines',TYPE_INT);
+			$activatemail = $config->getConfigByNameType ('user/activatemail',
+				TYPE_BOOL);
+			$user->register ($_POST[POST_NAME],$_POST[POST_PASSWORD1],
+				$_POST[POST_PASSWORD2],$_POST[POST_EMAIL],$activatemail,$language,
+				$utheme,$threaded,$postsonpage,$timeformat,$timezone,$headlines);
+			$database->close ();
+			if ($activatemail == true) {
+				$link = 'index.php?note=You are now registerd, check your mail';
+			} else {
+				$link = 'index.php?note=You are now registerd';
+			}
+			$theme->redirect ($link); 
+		}
+		catch (exceptionlist $e) {
+			//echo 'output';
+			$link = catch_error ($e,'users.php?action=registerform&',
+				'You are not registerd',$errorrep);
+			$theme->redirect ($link); 
+		}
 		break;
 	case 'sendpassword':
 		$error = $user->lostpasw (); 
@@ -81,8 +117,8 @@ switch ($action) {
 		$theme->themefile ('changeoptionsform.html',true);
 		$database->close ();
 		break;
-	/*case 'changeoptions':
-		$user->setconfig (FIELD_USERS_THEME,$_POST[POST_THEME] ;
+	case 'changeoptions':
+		/*$user->setconfig (FIELD_USERS_THEME,$_POST[POST_THEME] ;
 		$user->setconfig (FIELD_USERS_THREADED,$user->convert_config2db (CONFIG_THREADED,$_POST[POST_THREADED]));
 		$user->setconfig (FIELD_USERS_LANGUAGE,$_POST[POST_LANGUAGE]);
 		$user->setconfig (FIELD_USERS_EMAIL,$_POST[POST_EMAIL]);
@@ -100,8 +136,8 @@ switch ($action) {
 			$database->close ();
 			$link =  'users.php?action=changeoptionsform&note=' . $lang->users->options_are_saved;
 			$theme->redirect ($link);
-		}
-		break;*/
+		}*/
+		break;
 	case 'viewuserlist':
 		$theme->themefile ('viewuserlist.html',true);
 		$database->close ();

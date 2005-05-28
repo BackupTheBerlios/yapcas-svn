@@ -20,4 +20,7 @@
 	$config['news']['headlines'] = 10;
 	$config['news']['postsonpage'] = 5;
 	$config['news']['threaded'] = true;
+
+	// user
+	$config['user']['activatemail'] = false;
 ?>

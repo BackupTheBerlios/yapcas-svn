@@ -32,7 +32,7 @@ define ('TYPE_UKNOWN',-1); // I do not care type
 define ('YES','Y');
 define ('NO','N');
 
-function checkType ($content,$type,$config) {
+function checkType ($content,$type) {
 	// stupid hack, if an integer value == 0, it is send as a bool
 	if ((is_bool($content)) and ($type == TYPE_INT)) {	
 		$utype = TYPE_INT;
@@ -77,15 +77,20 @@ function convertToStandard (&$content) {
 	// Y and N are database-values
 	if ($content == YES) {
 		settype ($content,'bool');
-		return true;
+		$content = true;
 	} else if ($content == NO) {
 		settype ($content,'bool');
-		return false;
-	} else {
-		// noting needs to be changed
-		return $content;
+		$content = false;
 	}
 } /* function convertToStandard (&$content) */
+
+function convertToDatabase (&$content) {
+	if ($content == true) {
+		$content = YES;
+	} else if ($content == false) {
+		$content = NO;
+	}
+} /* function convertToDatabase (&$content) */
 
 class config {
 	public function __construct () {
@@ -104,8 +109,9 @@ class config {
 		}
 		if (!isset ($this->configtree[$section][$namevar])) {
 			try {
-				checkType (convertToStandard ($content),$type,$this);
-				$this->configtree[$section][$namevar] = convertToStandard ($content);
+				convertToStandard ($content);
+				checkType ($content,$type);
+				$this->configtree[$section][$namevar] = $content;
 				return true;
 			} 
 			catch (exceptionlist $e) {
@@ -254,7 +260,7 @@ class config {
 			$section = $configOption['section'];
 			$namevar = $configOption['namevar'];
 			if (isset($this->configtree[$section][$namevar])) {
-				checkType($this->configtree[$section][$namevar],$type,$this);
+				checkType($this->configtree[$section][$namevar],$type);
 				return $this->configtree[$section][$namevar];
 			} else {
 				throw new exceptionlist ("Config does not exists".

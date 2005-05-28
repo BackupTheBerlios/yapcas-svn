@@ -194,12 +194,12 @@ function getUTCtime (&$config) {
 
 function catch_error ($exc,$link,$message,$moreinf) {
 	if ($exc->fatal) {
-		$link .= 'error=' . $message . $exc->getMessage ();
+		$link .= 'error=' . $message . ': ' . $exc->getMessage ();
 	} else {
-		$link .= 'warning=' . $message . $exc->getMessage ();
+		$link .= 'warning=' . 'You action can be not completed: ' . $exc->getMessage ();
 	}
 	if ($moreinf == true) {
-		$link .= $exc->debuginfo;
+		$link .= ': ' . $exc->debuginfo;
 	}
 	return $link;
 }
