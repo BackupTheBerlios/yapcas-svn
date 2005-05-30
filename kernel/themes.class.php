@@ -211,7 +211,19 @@ class theme {
 				$output .= $tempoutput;
 			}
 			$tempoutput = $this->getfile ( 'themes/' . $this->themedir . '/newsnavigator.html' );
-			$offset = $this->news->getlimit ('allnews');
+			if (! isset ($_GET[GET_OFFSET])) {
+				$offset = NULL;
+			} else {
+				$offset = $_GET[GET_OFFSET];
+			}
+
+			if (! isset ($_GET[GET_CATEGORY])) {
+				$category = NULL;
+			} else {
+				$category = $_GET[GET_CATEGORY];
+			}
+
+			$offset = $this->news->getLimitNews ($offset,$category);
 			if ( $offset['previous'] < 0 ) {
 				$tempoutput = preg_replace ( '#%ifprev0(.+?)%/ifprev0#', '\\1', $tempoutput );
 				// change prev0 in somthing usefull
@@ -306,7 +318,7 @@ class theme {
 		if ( errorSDK::is_error ( $query ) ) {
 			$this->error ( $query );
 		} else {
-			if ( $this->database->countresults ( $query ) == 1 ) {
+			if ( $this->database->num_rows ( $query ) == 1 ) {
 				while ( $page = $this->database->fetch_array ( $query ) ) {
 					return $page['content'];
 				}
@@ -627,7 +639,7 @@ class theme {
 	
 	function startthread ( $threadstart ) {
 		$output = $this->replacecomment ( $threadstart );
-		foreach ( $this->news->getthreadfollows ( $threadstart ) as $threadfollow ) {
+		foreach ( $this->news->getthreadfollows ($_GET[GET_NEWSID], $threadstart ) as $threadfollow ) {
 			$output .= $this->openthread;
 			$output .= $this->startthread ( $threadfollow );
 			$output .= $this->closethread;
@@ -649,7 +661,16 @@ class theme {
 	}
 	
 	function commentnavigator () {
-		$offset = $this->news->getlimit ( 'comments' );
+		if (! isset ($_GET[GET_OFFSET])) {
+			$offset = NULL;
+		} else {
+			$offset = $_GET[GET_OFFSET];
+		}
+
+		if (! isset ($_GET[GET_NEWSID])) {
+			throw new exceptionlist ('News id is not set');
+		}
+		$offset = $this->news->getLimitComments ($_GET[GET_NEWSID],$offset);
 		$output = $this->getfile ( 'themes/' .  $this->themedir . '/commentnavigator.html' );
 		if ( $offset['previous'] < 0 ) {
 			$output = preg_replace ( '#%ifprev0(.+?)%/ifprev0#', '\\1', $output );
@@ -677,12 +698,12 @@ class theme {
 	}
 	
 	function showcomments () {
-		if ( empty ( $_GET['id'] ) ) {
+		if ( empty ( $_GET[GET_NEWSID] ) ) {
 			return NULL;
 		} else {
 			$output = NULL;
 			if ($this->config->getConfigByNameType('news/threaded',TYPE_BOOL) == YES) {
-				foreach ( $this->news->startthreads () as $threadstart ) {
+				foreach ( $this->news->startthreads ($_GET[GET_NEWSID]) as $threadstart ) {
 					$output .= $this->startthread ( $threadstart );
 				}
 			} else {

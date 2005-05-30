@@ -32,6 +32,7 @@ try {
 catch (exceptionlist $e) {
 	// this is a big errror so $errorep = true
 	$link = catch_error ($e,'index.php?','you are not logged in',true);
+	$database->close ();
 	$theme->redirect ($link);
 }
 switch ($action) {

@@ -16,7 +16,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
 class news {
-	function news ($database,$user,&$config) {
+	public function __construct ($database,$user,&$config) {
 		include ('kernel/news.constants.php');
 		$this->database = $database;
 		$this->user = $user;
@@ -28,275 +28,277 @@ class news {
 			array('postsonpage',$this->user,'postsonpage','site.config.php'),
 			'news/postsonpage',TYPE_INT);
 		$this->config = $config;
-	} // function news ($database,$user,&$config)
+	} /* public function __construct ($database,$user,&$config) */
 
-	function headlines ( $output ) {
-		$limit = $this->config->getConfigByNameType ('news/headlines',TYPE_INT);
-		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-		if ( ! empty ( $_GET['category'] ) ) {
-			$category = $_GET['category'];
-			$sql = "SELECT id,subject, message, author, date, category FROM news WHERE category='$category' AND language='$language' ORDER by date desc LIMIT $limit";
-		} else {
-			$category = NULL;
-			$sql = "SELECT id,subject, message, author, date, category FROM news WHERE language='$language' ORDER by date desc LIMIT $limit";
-		}
-		$query = $this->database->query ( $sql );
-		if ( ! errorSDK::is_error ( $query ) ) {
+	public function headlines ($outputmethod,$category = NULL) {
+		try {
+			$limit = $this->config->getConfigByNameType ('news/headlines',TYPE_INT);
+			$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
+			$fields = array (FIELD_NEWS_ID,FIELD_NEWS_SUBJECT,FIELD_NEWS_MESSAGE,
+				FIELD_NEWS_AUTHOR,FIELD_NEWS_DATE,FIELD_NEWS_CATEGORY);
+			$strfields = implode (',',$fields);
+			$sql = 'SELECT ' . $strfields . ' FROM ' . TBL_NEWS;
+			$sql .= ' WHERE ' . FIELD_NEWS_LANGUAGE . '=\'' . $language . '\'';
+			if (! empty ($category)) {
+				$sql .= ' AND ' . FIELD_NEWS_CATEGORY . '=\'' . $category . '\'';
+			}
+			$sql .= 'ORDER by ' . FIELD_NEWS_DATE . ' desc LIMIT ' . $limit;
+			$query = $this->database->query ($sql);
 			$return = array ();
-			while ( $headline =  $this->database->fetch_array ( $query ) ) {
-				switch ( $output ) {
+			while ($headline = $this->database->fetch_array ($query)) {
+				switch ($outputmethod) {
 					case 'rss':
-						$this->rss ();
+						// FIXME TODO
+						// $this->rss ();
 						break;
-					case 'show': 
-						array_push ( $return,$headline);
+					case 'show':
+						array_push ($return,$headline);
 						break;
 				}
 			}
 			return $return;
-		} else {
-			return $query;
 		}
-	} // function headlines
-	
-	function getlimit ( $where ) {
-		if ( empty ( $_GET['offset'] ) ) {
-			$limit['offset'] = 0;
-		} else {
-			$limit['offset'] = $_GET['offset'];
+		catch (exceptionlist $e) {
+			throw $e;
 		}
-		switch ( $where ) {
-			case 'allnews': 
-				$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-				$limit['limit'] = $this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
-				if ( ! empty ( $_GET['category'] ) ) {
-					$sql = "SELECT id FROM news WHERE language='$language' AND category='$_GET[category]'";
-				} else {
-					$sql = "SELECT id FROM news WHERE language='$language'";
-				}
-				$query = $this->database->query ( $sql );
-				if ( errorSDK::is_error ( $query ) ) {
-					return $query; // it is an error
-				} else {
-					$limit['total'] = $this->database->countresults ( $query );
-					$limit['previous'] = $limit['offset'] - $limit['limit'];
-					$limit['next'] = $limit['offset'] + $limit['limit'];
-					return $limit;
-				}
-				break;
-			case 'comments': 
-				$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
-				$limit_limit = $this->config->getConfigByNameType('news/postsonpage',TYPE_INT);
-				$limit['limit'] = $limit_limit;
-				$sql = "SELECT id FROM comments WHERE id_news='$_GET[id]'";
-				$query = $this->database->query ( $sql );
-				if ( errorSDK::is_error ( $query ) ) {
-					return $query;
-				} else {
-					$limit['total'] = $this->database->num_rows ( $query );
-					$userpostsonpage = $this->config->getConfigByNameType('news/postsonpage',TYPE_INT);
-					$limit['previous'] = $limit['offset'] - $userpostsonpage;
-					$limit['next'] = $limit['offset'] + $userpostsonpage;
-					return $limit;
-				}
-				break;
-		} // switch
-	} // function getlimit
-	
-	function showallnews () {
-		$limit = $this->getlimit ( 'allnews' );
-		if ( errorSDK::is_error ( $limit ) ) {
-			echo 'LIMIT' . $limit;
+	} /* public function headlines ($outputmethod,$category = NULL) */
+
+	public function getLimitNews ($offset = NULL,$category = NULL) {
+		try {
+			if (empty ($offset)) {
+				$limit['offset'] = 0;
+			} else {
+				$limit['offset'] = $offset;
+			}
+			$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
+			$limit['limit'] =
+				$this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+			$postsonpage = $this->config->getConfigByNameType (
+				'news/postsonpage',TYPE_INT);
+			$sql = 'SELECT ' . FIELD_NEWS_ID . ' FROM ' . TBL_NEWS;
+			$sql .= ' WHERE ' . FIELD_NEWS_LANGUAGE . '=\'' . $language . '\'';
+			if (! empty ($category)) {
+				$sql .= ' AND category=\'' . $category . '\'';
+			}
+			$query = $this->database->query ($sql);
+			$limit['total'] = $this->database->num_rows ($query);
+			$limit['previous'] = $limit['offset'] - $limit['limit'];
+			$limit['next'] = $limit['offset'] + $limit['limit'];
 			return $limit;
-		} else {
+		}
+		catch (exceptionlist $e) {
+			echo $e->debuginfo;
+			throw $e;
+		}
+	} /* public function getLimitNews ($offset = NULL,$category = NULL) */
+
+	public function getLimitComments ($newsid,$offset = NULL) {
+		try {
+			if (empty ($offset)) {
+				$limit['offset'] = 0;
+			} else {
+				$limit['offset'] = $offset;
+			}
+			$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
+			$limit['limit'] =
+				$this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+			$postsonpage = $this->config->getConfigByNameType (
+				'news/postsonpage',TYPE_INT);
+			$sql = 'SELECT ' . FIELD_NEWS_ID . ' FROM  ' . TBL_COMMENTS;
+			$sql .= ' WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $newsid . '\'';
+			$query = $this->database->query ($sql);
+			$limit['total'] = $this->database->num_rows ($query);
+			$userpostsonpage = $this->config->getConfigByNameType('news/postsonpage',TYPE_INT);
+			$limit['previous'] = $limit['offset'] - $userpostsonpage;
+			$limit['next'] = $limit['offset'] + $userpostsonpage;
+			return $limit;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function getLimitComments ($offset = NULL,$category = NULL) */
+
+	public function showallnews ($offset = NULL,$category = NULL) {
+		try {
+			$limit = $this->getLimitNews ($offset,$category);
 			$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-			if ( ! empty ( $_GET['category'] ) ) {
-				$sql = "SELECT * FROM news INNER JOIN categories ON ( news.category = categories.name ) WHERE news.language='$language' AND category='$_GET[category]' ORDER by date desc  LIMIT $limit[limit] OFFSET $limit[offset]";
-			} else {
-				$sql = "SELECT * FROM news INNER JOIN categories ON ( news.category = categories.name ) WHERE news.language='$language' ORDER by date desc LIMIT $limit[limit] OFFSET $limit[offset]";
+			$sql = 'SELECT * FROM ' . TBL_NEWS . ' INNER JOIN ' . TBL_CATEGORIES;
+			$sql .= ' ON (' . TBL_NEWS . '.' . FIELD_NEWS_CATEGORY . '=';
+			$sql .= TBL_CATEGORIES . '.' . FIELD_CATEGORIES_NAME . ')';
+			$sql .= 'WHERE ' . TBL_NEWS . '.' . FIELD_NEWS_LANGUAGE . '=\'' . $language . '\'';
+			if (! empty ($category)) {
+				$sql .= ' AND ' . FIELD_NEWS_CATEGORY . '=\'' . $category . '\' ';
 			}
-			$query = $this->database->query ( $sql );
-			$i = 0;
-			if ( errorSDK::is_error ( $query ) ) {
-				return $query;
-			} else {
-				$output = array ();
-				while ( $news = $this->database->fetch_array ( $query ) ) {
-					array_push ( $output, $news );
-				}   
-				return $output;
+			$sql .= ' ORDER by ' . FIELD_NEWS_DATE . ' desc ';
+			$sql .= 'LIMIT ' . $limit['limit'] . ' OFFSET ' . $limit['offset'];
+			$query = $this->database->query ($sql);
+			// $i = 0;
+			$output = array ();
+			while ($news = $this->database->fetch_array ($query)) {
+				array_push ($output,$news);
 			}
-		}		
-	} // function allnews
+			return $output;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function showallnews ($offset = NULL,$category = NULL) */
 
-	function getthreadfollows ( $comment ) {
-		$sql = "SELECT * FROM comments WHERE id_news='$_GET[id]' AND id_on_comment='$comment[id]' AND comment_on_news='0' ORDER by date asc";
-		$query = $this->database->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $query;
-		} else {
+	public function getthreadfollows ($idnews,$comment) {
+		try {
+			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
+			$sql .= ' WHERE id_news=\'' . $idnews .'\'';
+			$sql .= ' AND ' . FIELD_COMMENTS_ID_ON_COMMENT . '=\'' . $comment[FIELD_COMMENTS_ID] . '\'';
+			$sql .= ' AND ' . FIELD_COMMENTS_ID_NEWS . '=\'' . NO .'\'';
+			$sql .= ' ORDER by ' . FIELD_COMMENTS_DATE . ' asc';
+			$query = $this->database->query ($sql);
 			$comments = array ();
-			while ( $comment_on_comment = $this->database->fetch_array ( $query ) ) {
-				array_push ( $comments, $comment_on_comment );
+			while ($comment_on_comment = $this->database->fetch_array ($query)) {
+				array_push ($comments,$comment_on_comment);
 			}
 			return $comments;
 		}
-	}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function getthreadfollows ($idnews,$comment) */
 
-	function startthreads () {
-		$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
-		$sql = "SELECT * FROM comments WHERE id_news='$_GET[id]' AND comment_on_news='1' ORDER by date asc";
-		$query = $this->database->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $query;
-		} else {
+	public function startthreads ($idnews) {
+		try {
+			$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
+			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
+			$sql .= ' WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews . '\'';
+			$sql .= ' AND ' . FIELD_COMMENTS_ON_NEWS . '=\''. YES . '\'';
+			$sql .= 'ORDER by ' . FIELD_COMMENTS_DATE . ' asc';
+			$query = $this->database->query ($sql);
+			$comments = array ();
+			while ($comment = $this->database->fetch_array ($query)) {
+				array_push ($comments,$comment);
+			}
+			return $comments;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function startthreads ($idnews) */
+
+	public function getcomment ($id) {
+		try {
+			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
+			$sql .= ' WHERE ' . FIELD_COMMENTS_ID . '=\'' . $id .'\'';
+			$query = $this->database->query ($sql);
+			return $this->database->fetch_array ($query);
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function getcomment ($id) */
+
+	public function getallcomments ($idnews,$offset = NULL) {
+		try {
+			$language = $this->config->getConfigByNameType ('general/language',
+				TYPE_STRING);
+			$limit = $this->getLimitComments ($idnews,$offset);
+			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
+			$sql .= 'WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews .'\'';
+			$sql .= ' ORDER by ' . FIELD_COMMENTS_DATE . ' asc ';
+			$sql .= 'LIMIT ' . $limit['limit'] . ' OFFSET ' . $limit['offset'];
+			$query = $this->database->query ($sql);
 			$comments = array ();
 			while ( $comment = $this->database->fetch_array ( $query) ) {
 				array_push ( $comments, $comment );
 			}
 			return $comments;
 		}
-	}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function getallcomments ($idnews,$offset = NULL) */
 
-	function getcomment ( $id ) {
-		$sql = "SELECT * FROM comments WHERE id='" . $id ."'";
-		$query = $this->database->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $error;
-		} else {
-			$comment = $this->database->fetch_array ( $query );
-			return $comment;
+	public function getnews ($id) {
+		try {
+			$sql = 'SELECT * FROM ' . TBL_NEWS;
+			$sql .= ' WHERE ' . FIELD_NEWS_ID . '=\''. $id .'\'';
+			$query = $this->database->query ($sql);
+			return $this->database->fetch_array ($query);
 		}
-	}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function getnews ($id) */
 
-	function getallcomments () {
-		$language = $this->user->getlanguage ();
-		$limit = $this->getlimit ( 'comments' );
-		$sql = "SELECT * FROM comments WHERE id_news='$_GET[id]' ORDER by date asc LIMIT $limit[limit] OFFSET $limit[offset]";
-		$query = $this->database->query ( $sql );
-		if ( ! errorSDK::is_error ( $query ) ) {
-			$comments = array ();
-			while ( $comment = $this->database->fetch_array ( $query) ) {
-				array_push ( $comments, $comment );
-			}
-			return $comments;
-		} else {
-			return $query;
-		}
-	}
-
-	function getnews () {
-		$sql = "SELECT * FROM news WHERE id='$_GET[id]'";
-		$query = $this->database->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $query;
-		} else {
-			return $this->database->fetch_array ( $query );
-		}
-	}
-		
-	function postnews ( $inputuser ) {
-		if ( $this->user->loggedin () ) {
-			if ( ! ( ( empty ( $inputuser['subject'] ) ) or ( empty ( $inputuser['message'] ) ) or ( empty ( $_POST['category'] ) ) ) ) {
-				// FIXME news may not handle functions out of functions.php
-				$date = getUTCtime ($this->config);
-				$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-				$username = $this->config->getConfigByNameType ('user/name',TYPE_STRING);
-				$message = $_POST['message'];
-				$sql = "INSERT into news (id,subject,message,language,comments,author,date,category) values (DEFAULT,'$_POST[subject]','$message','$language','0','$username','$date','$_POST[category]') ";
-				$query = $GLOBALS['database']->query ( $sql );
-				if ( errorSDK::is_error ( $query ) ) {
-					return $query;
-				} else {
-					return true;
-				}
-			} else {
-				$error = new errorSDK ();
-				$error->succeed = false;
-				$error->error = $GLOBALS['lang']->users->form_not_filled_in;
-				return $error;
-			}
-		} else {
-			$error = new errorSDK ();
-			$error->succeed = false;
-			$error->error = $GLOBALS['lang']->users->not_logged_in;
-			return $error;
-		}
-	}
-		
-	function editcomment ( $newvalues ) {
-		$sql = "UPDATE " . TBL_COMMENTS . " SET ".  FIELD_NEWS_MESSAGE 
-			. "='" . $newvalues['message'] . "' , " . FIELD_NEWS_SUBJECT . "='" 
-			. $newvalues['subject'] . "' WHERE id='" . $_GET['id'] . "'";
-		$query = $GLOBALS['database']->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $query;
-		} else {
+	public function postnews ($message,$subject,$category,$date,$language,$author) {
+		try {
+			$sql = 'INSERT into ' . TBL_NEWS;
+			$fields = array (FIELD_NEWS_ID,FIELD_NEWS_MESSAGE,FIELD_NEWS_SUBJECT
+				,FIELD_NEWS_LANGUAGE,FIELD_NEWS_COMMENTS,FIELD_NEWS_AUTHOR,
+				FIELD_NEWS_DATE,FIELD_NEWS_CATEGORY);
+			$strfields = implode (',',$fields);
+			$sql .= '(' . $strfields . ')';
+			$content = array ('\'DEFAULT\'','\''.$message.'\'','\''.$subject.'\'',
+				'\''.$language.'\'','\'0\'','\''.$author.'\'','\''.$date.'\'',
+				'\''.$category.'\'');
+			$strcontent = implode (',',$content);
+			$sql .= ' values (' . $strcontent . ')';
+			$query = $this->database->query ($sql);
 			return true;
 		}
-	}	
-		
-	function postcomment ( $input ) {
-		if ( $GLOBALS['user']->loggedin () ) {
-			if ( ! ( empty ( $input['subject'] ) ) or ( empty ( $input['message'] ) ) ) {
-				// preparing the message and all of its data
-				// FIXME news may not handle functions out of functions.php
-				$date = getUTCtime ($this->config);
-				$user = $_SESSION['name'];
-				$message = $input['message']; // switch \n to <br />
-				
-				// this is bad code // make me better PLEASE
-				// FIXME
-				if ( $_POST['on_comment'] == 'NULL' ) {
-					$comment_on_news = 1;
-					$id_on_comment = 0;
-				} else {
-					$comment_on_news = 0;
-					$id_on_comment = $_POST['on_comment'];
-				}
-				
-				$sql = "INSERT into comments (id,subject, message, author, date, id_news
-					, comment_on_news, id_on_comment) values (DEFAULT,'$input[subject]'
-					,'$message','$user','$date','$input[on_news]','$comment_on_news'
-					,'$id_on_comment') ";
-				$query = $GLOBALS['database']->query ( $sql );
-				if ( ! errorSDK::is_error ( $query ) ) {
-					// comment is posted now updating the news #comments
-					// select the news
-					$sql = 'SELECT ' . FIELD_NEWS_COMMENTS . ' FROM ' . TBL_NEWS 
-						. ' WHERE ' .  FIELD_NEWS_ID . '=' . $input['on_news'];
-					$query = $GLOBALS['database']->query ( $sql,false ); // Not fatal
-					if ( ! errorSDK::is_error ( $query ) ) {
-						$news = $GLOBALS['database']->fetch_array ( $query );
-						$curcomments = $news[FIELD_NEWS_COMMENTS];
-						$newcomments = $curcomments + 1;
-						// now put the new value in the newsdb;
-						$sql = 'UPDATE ' . TBL_NEWS . ' set ' . FIELD_NEWS_COMMENTS 
-							. "='" . $newcomments . "' WHERE " . FIELD_NEWS_ID 
-							. "='"  . $input['on_news'] . "' LIMIT 1";
-						$query = $GLOBALS['database']->query ( $sql,false ); 
-							// not fatal
-						if ( ! errorSDK::is_error ( $query ) ) {
-							return true;
-						} else {
-							return $query;
-						}
-					} else {
-						return $query;
-					}
-				} else {
-					return $query;
-				}
-			} else {
-				$error = new errorSDK ();
-				$error->error = $GLOBALS['lang']->user->form_not_filled_in;
-				return $error;
-			}
-		} else {
-			$error = new errorSDK ();
-			$error->error = $GLOBALS['lang']->user->not_logged_in;
-			return $error;
+		catch (exceptionlist $e) {
+			throw $e;
 		}
-	}
-} // Class news		
+	} /* public function postnews ($message,$subject,$category,$date,$author) */
+
+	public function editcomment ($newmessage,$newsubject,$idcomment) {
+		try {
+			$sql = 'UPDATE ' . TBL_COMMENTS; 
+			$sql .= ' SET ' . FIELD_NEWS_MESSAGE . '=\'' . $newmessage . '\'';
+			$sql .= ',' . FIELD_NEWS_SUBJECT . '=\'' . $newsubject . '\'';
+			$sql .= ' WHERE id=\'' . $idcomment . '\'';
+			$query = $this->database->query ($sql);
+			return true;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function editcomment ($newmessage,$newsubject,$idcomment) */
+
+	public function postcomment ($message,$subject,$date,$user,$onnews,$oncomment = 0) {
+		try {
+			if ($oncomment == 0) {
+				$comment_on_news = YES;
+			} else {
+				$comment_on_news = NO;
+			}
+			$sql = 'INSERT into ' . TBL_COMMENTS;
+			$fields = array (FIELD_COMMENTS_ID,FIELD_COMMENTS_MESSAGE,
+				FIELD_COMMENTS_SUBJECT,FIELD_COMMENTS_AUTHOR,FIELD_COMMENTS_DATE,
+				FIELD_COMMENTS_ID_NEWS,FIELD_COMMENTS_ON_NEWS,
+				FIELD_COMMENTS_ID_ON_COMMENT);
+			$strfields = implode (',',$fields);
+			$sql .= ' (' . $strfields . ')';
+			$content = array ('\'DEFAULT\'','\''.$message.'\'','\''.$subject.'\''
+				,'\''.$user.'\'','\''.$date.'\'','\''.$onnews.'\'',
+				'\''.$comment_on_news.'\'','\''.$oncomment.'\'');
+			$strcontent = implode (',',$content);
+			$sql .= 'values (' . $strcontent . ')';
+			$query = $this->database->query ($sql);
+			// comment is posted now updating the news #comments
+			// select the news
+			$sql = 'SELECT ' . FIELD_NEWS_COMMENTS . ' FROM ' . TBL_NEWS;
+			$sql .= ' WHERE ' .  FIELD_NEWS_ID . '=\'' . $onnews . '\'';
+			$query = $this->database->query ($sql,false); // Not fatal
+			$news = $this->database->fetch_array ($query);
+			$curcomments = $news[FIELD_NEWS_COMMENTS];
+			// now put the new value in the newsdb;
+			$sql = 'UPDATE ' . TBL_NEWS;
+			$sql .= ' set ' . FIELD_NEWS_COMMENTS . '=\'' . $curcomments++ . '\'';
+			$sql .= ' WHERE ' . FIELD_NEWS_ID . '=\''  . $onnews . '\'';
+			$sql .= ' LIMIT 1';
+			$query = $this->database->query ($sql,false); // not fatal
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function postcomment ($message,$subject,$date,$user,$onnews,$oncomment = 0) */
+} // Class news
 ?>

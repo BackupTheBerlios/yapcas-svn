@@ -111,6 +111,7 @@ TODO
 	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )
 + Snelheid
 + XML database
++ SQLite db
 ?+ slimme quotes
 + class themes herschrijven
 	?* Extensies ?
@@ -118,6 +119,9 @@ TODO
 	* Een soort van functies maken die voor alle themas moeten werken ( om een layout te gebruiken
 		die in contentpage kan staan )
 + fix bug #00011
++ alleen de x aantal eerste woorden van een bericht laten zien - ook in rss -
++ automatisch invullen van onderwerp bij het schrijven van een commenteaar (RE: TODO)
++ bettere terugkoppeling (je hebt een commentaar geschreven -> automatisch terechtkomen op je commentaar)
 
 1.0 ( Stable )
 ---

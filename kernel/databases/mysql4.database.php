@@ -111,12 +111,6 @@ class database {
 		return $tables;
 	} /* function get_all_tables () */
 
-	//DEPRECATED
-	function countresults ($result) {
-		echo 'DEPRECATED';
-		return $this->num_rows ($result);
-	} /* function countresults ($result) */
-
 	public function num_rows ($result) {
 		return mysql_num_rows ($result);
 	} /* function num_rows ($result) */
