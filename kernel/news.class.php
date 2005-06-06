@@ -87,7 +87,6 @@ class news {
 			return $limit;
 		}
 		catch (exceptionlist $e) {
-			echo $e->debuginfo;
 			throw $e;
 		}
 	} /* public function getLimitNews ($offset = NULL,$category = NULL) */
@@ -149,7 +148,7 @@ class news {
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
 			$sql .= ' WHERE id_news=\'' . $idnews .'\'';
 			$sql .= ' AND ' . FIELD_COMMENTS_ID_ON_COMMENT . '=\'' . $comment[FIELD_COMMENTS_ID] . '\'';
-			$sql .= ' AND ' . FIELD_COMMENTS_ID_NEWS . '=\'' . NO .'\'';
+			$sql .= ' AND ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews .'\'';
 			$sql .= ' ORDER by ' . FIELD_COMMENTS_DATE . ' asc';
 			$query = $this->database->query ($sql);
 			$comments = array ();
@@ -165,7 +164,6 @@ class news {
 
 	public function startthreads ($idnews) {
 		try {
-			$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
 			$sql .= ' WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews . '\'';
 			$sql .= ' AND ' . FIELD_COMMENTS_ON_NEWS . '=\''. YES . '\'';
@@ -200,7 +198,7 @@ class news {
 				TYPE_STRING);
 			$limit = $this->getLimitComments ($idnews,$offset);
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
-			$sql .= 'WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews .'\'';
+			$sql .= ' WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews .'\'';
 			$sql .= ' ORDER by ' . FIELD_COMMENTS_DATE . ' asc ';
 			$sql .= 'LIMIT ' . $limit['limit'] . ' OFFSET ' . $limit['offset'];
 			$query = $this->database->query ($sql);
@@ -230,12 +228,12 @@ class news {
 	public function postnews ($message,$subject,$category,$date,$language,$author) {
 		try {
 			$sql = 'INSERT into ' . TBL_NEWS;
-			$fields = array (FIELD_NEWS_ID,FIELD_NEWS_MESSAGE,FIELD_NEWS_SUBJECT
+			$fields = array (FIELD_NEWS_MESSAGE,FIELD_NEWS_SUBJECT
 				,FIELD_NEWS_LANGUAGE,FIELD_NEWS_COMMENTS,FIELD_NEWS_AUTHOR,
 				FIELD_NEWS_DATE,FIELD_NEWS_CATEGORY);
 			$strfields = implode (',',$fields);
 			$sql .= '(' . $strfields . ')';
-			$content = array ('\'DEFAULT\'','\''.$message.'\'','\''.$subject.'\'',
+			$content = array ('\''.$message.'\'','\''.$subject.'\'',
 				'\''.$language.'\'','\'0\'','\''.$author.'\'','\''.$date.'\'',
 				'\''.$category.'\'');
 			$strcontent = implode (',',$content);
@@ -266,17 +264,19 @@ class news {
 		try {
 			if ($oncomment == 0) {
 				$comment_on_news = YES;
+				// stupid postgre hack
+				$oncomment = '0';
 			} else {
 				$comment_on_news = NO;
 			}
 			$sql = 'INSERT into ' . TBL_COMMENTS;
-			$fields = array (FIELD_COMMENTS_ID,FIELD_COMMENTS_MESSAGE,
+			$fields = array (FIELD_COMMENTS_MESSAGE,
 				FIELD_COMMENTS_SUBJECT,FIELD_COMMENTS_AUTHOR,FIELD_COMMENTS_DATE,
 				FIELD_COMMENTS_ID_NEWS,FIELD_COMMENTS_ON_NEWS,
 				FIELD_COMMENTS_ID_ON_COMMENT);
 			$strfields = implode (',',$fields);
 			$sql .= ' (' . $strfields . ')';
-			$content = array ('\'DEFAULT\'','\''.$message.'\'','\''.$subject.'\''
+			$content = array ('\''.$message.'\'','\''.$subject.'\''
 				,'\''.$user.'\'','\''.$date.'\'','\''.$onnews.'\'',
 				'\''.$comment_on_news.'\'','\''.$oncomment.'\'');
 			$strcontent = implode (',',$content);
@@ -291,9 +291,9 @@ class news {
 			$curcomments = $news[FIELD_NEWS_COMMENTS];
 			// now put the new value in the newsdb;
 			$sql = 'UPDATE ' . TBL_NEWS;
-			$sql .= ' set ' . FIELD_NEWS_COMMENTS . '=\'' . $curcomments++ . '\'';
+			$sql .= ' set ' . FIELD_NEWS_COMMENTS . '=\'' . ++$curcomments . '\'';
 			$sql .= ' WHERE ' . FIELD_NEWS_ID . '=\''  . $onnews . '\'';
-			$sql .= ' LIMIT 1';
+			//$sql .= ' LIMIT 1';
 			$query = $this->database->query ($sql,false); // not fatal
 		}
 		catch (exceptionlist $e) {

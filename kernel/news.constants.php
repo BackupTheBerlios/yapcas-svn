@@ -21,8 +21,8 @@
 	define ('FIELD_COMMENTS_MESSAGE','message');
 	define ('FIELD_COMMENTS_AUTHOR','author');
 
-	define ('FIELD_CATEGORIES_NAME',TBL_PREFIX . 'name');
-	define ('FIELD_CATEGORIES_LANGUAGE',TBL_PREFIX . 'language');
+	define ('FIELD_CATEGORIES_NAME','name');
+	define ('FIELD_CATEGORIES_LANGUAGE','language');
 
 	define ('GET_OFFSET','offset');
 	define ('GET_CATEGORY','category');

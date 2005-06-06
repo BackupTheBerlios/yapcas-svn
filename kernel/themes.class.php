@@ -18,15 +18,14 @@
 // The completely class needs to be rewritten
 // Step-By-Step
 // 1) Rewrite constructor
+// 2) better errorcatching
+// 3) better translation
+// 4) better desing possibilities
+// 5) extensions
 class theme {
-	/*var $config;
-	var $news;
-	var $database;
-	var $user;*/
-
 	function __construct () {
 		error_reporting (E_ALL);
-		define ('TBL_PREFIX','');
+		define ('TBL_PREFIX','yapcas');
 		define ('ERROR_LINK','./help.php#error');
 		global $lang;
 		if (isinstalled ()) {
@@ -34,12 +33,12 @@ class theme {
 			include ('kernel/error.class.php');
 			$this->config = new config ();
 			$this->config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
-			error_reporting ($this->config->getConfigByNameType('general/errorreporting',TYPE_INT));
+		//	error_reporting ($this->config->getConfigByNameType('general/errorreporting',TYPE_INT));
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename',0);
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description',0);
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
 			loaddbclass ($this->config->getConfigByNameType ('general/databasetype',TYPE_STRING));
-			$this->database = new database ($this->config);
+			$this->database = new database ($this->config,'site.config.php');
 			$this->database->connect ();
 			if (!databasecheck($this->database)) {
 				include ( 'kernel/users.constants.php' );
@@ -61,13 +60,15 @@ class theme {
 				$this->user = new basicuser ();
 				$this->loadtheme ( $theme );
 				include ( 'kernel/news.class.php' );
-				$this->news = new news ( $this->database,$this->user );
+				$this->news = new news ( $this->database,$this->user,$this->config );
 				$theme = $this;
 				$this->themefile ( 'install.html',false,true );
 				exit;
 			} else {
 				include ( 'kernel/users.class.php' );
-				$this->user = new user ( $this->database,$this->config );
+				$this->config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail');
+				$this->user = new user ( $this->database,
+					$this->config->getConfigByNameType ('user/activatemail',TYPE_BOOL) );
 				include ( 'kernel/news.class.php' );
 				include ( 'kernel/polls.class.php' );
 				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
@@ -99,6 +100,7 @@ class theme {
 				$user = $this->user;
 				$news = $this->news;
 				$theme = $this;
+				define ('TBL_PAGES', TBL_PREFIX . 'pages');
 			}
 		} else {
 			if ( file_exists ( 'site.config.php' ) ) {
@@ -162,7 +164,7 @@ class theme {
 		$pagename = ereg_replace ( '/','',$pagename ); 
 		// removes '/' in begin of pagename
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-		$sql = "SELECT * FROM pages WHERE name='$pagename' AND language='$language' LIMIT 1";
+		$sql = "SELECT * FROM " . TBL_PAGES ." WHERE name='$pagename' AND language='$language' LIMIT 1";
 		$query = $this->database->query ( $sql );
 		if ( errorSDK::is_error ( $query ) ) {
 			$this->error ( $query );
@@ -267,26 +269,22 @@ class theme {
 	function loadlinks () {
 		$links = $this->getfile ( 'themes/' . $this->themedir . '/links.html' );
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-		$sql = "SELECT name,shown_name FROM pages WHERE language='$language' AND show_in_nav='Y' AND show_in_user_nav='N'";
+		$sql = "SELECT name,shown_name FROM " . TBL_PAGES . " WHERE language='$language' AND show_in_nav='" . YES ."' AND show_in_user_nav='".NO."'";
 		$query = $GLOBALS['database']->query ( $sql );
 		$retlink = NULL;
-		if ( errorSDK::is_error ( $query ) ) {
-			$this->error ( $query );
-		} else {
 			while ( $link = $this->database->fetch_array ( $query ) ) {
 				$temp = $links;
 				$temp = ereg_replace ( '%link.name' ,$link['name'] ,$temp );
 				$temp = ereg_replace ( '%link.shown_name' ,$link['shown_name'] ,$temp );
 				$retlink .= $temp;
 			}
-		}
 		return $retlink;
 	}
 	
 	function loaduserlinks () {
 		$userlinks = $this->userlink;
 		$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
-		$sql = "SELECT name,shown_name FROM pages WHERE language='$language' AND show_in_nav='Y' AND show_in_user_nav='Y'";
+		$sql = "SELECT name,shown_name FROM " . TBL_PAGES ." WHERE language='$language' AND show_in_nav='" . YES ."' AND show_in_user_nav='".YES."'";
 		$query = $GLOBALS['database']->query ( $sql );
 		$retlink = NULL;
 		if ( errorSDK::is_error ( $query ) ) {
@@ -427,9 +425,9 @@ class theme {
 	}
 	
 	function viewuserlist () {
-		$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS . " WHERE " . FIELD_USERS_PUBLIC_USER . "='Y' ORDER by " . FIELD_USERS_NAME . " asc ";
-		$query = $GLOBALS['database']->query ( $sql );
-		if ( ! errorSDK::is_error ( $query ) ) {
+		try {
+			$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS . " WHERE " . FIELD_USERS_PUBLIC_USER . "='" . YES . "' ORDER by " . FIELD_USERS_NAME . " asc ";
+			$query = $GLOBALS['database']->query ( $sql );
 			$output = NULL;
 			while ( $user = $GLOBALS['database']->fetch_array ( $query ) ) {
 				$output .= $this->touserinfolink;
@@ -438,8 +436,9 @@ class theme {
 				$output = ereg_replace ( '%user.url',$link,$output );
 			}
 			return $output;
-		} else {
-			return $this->error ( $query );
+		}
+		catch (exceptionlist $e) {
+			throw $e;
 		}
 	}
 	
@@ -522,7 +521,7 @@ class theme {
 		$output = ereg_replace ( '%postcomment.lang' ,$GLOBALS['lang']->news->post_a_comment,$output );
 		$output = ereg_replace ( '%new_password1.lang' ,$GLOBALS['lang']->users->new_password,$output );
 		$output = ereg_replace ( '%new_password2.lang' ,$GLOBALS['lang']->users->new_password_repeat,$output );
-		$output = ereg_replace ( '%poll.action' ,POLLS_VOTE_ACTION,$output );
+	//$output = ereg_replace ( '%poll.action' ,POLLS_VOTE_ACTION,$output );
 		$output = ereg_replace ( '%poll.method' ,'post',$output );
 		
 		$timezone = $this->config->getConfigByNameType('general/timezone',TYPE_INT);
@@ -539,7 +538,11 @@ class theme {
 		// removes '/' in begin of pagename
 		if ( ( $pagename == 'news.php' ) AND ( ! empty ( $_GET['action'] ) ) ) {
 			if ( $_GET['action'] == 'viewcomments' ) {
-				$output = ereg_replace ( '%commentnavigator.html',$this->commentnavigator (),$output );
+				if ($this->config->getConfigByNameType ('news/threaded',TYPE_BOOL) == false) {
+					$output = ereg_replace ( '%commentnavigator.html',$this->commentnavigator (),$output );
+				} else {
+					$output = ereg_replace ( '%commentnavigator.html','',$output );
+				}
 			}
 		}
 		$output = ereg_replace ( '%timezone.timezone' ,$timezone,$output );
@@ -550,7 +553,9 @@ class theme {
 		$output = ereg_replace ( '%username.user' ,$name,$output );
 	
 		$output = ereg_replace ( '%language.options' ,$this->options ( languagesinstalled(),$this->language_option,$language ) ,$output );
-		$output = ereg_replace ( '%threaded.options' ,$this->options ( array ( 'N' => $GLOBALS['lang']->site->no, 'Y' => $GLOBALS['lang']->site->yes ),$this->threaded_option,$this->user->convert_db2config ( CONFIG_THREADED,$threaded ) ),$output );
+		$boolthreaded = $this->config->getConfigByNameType ('news/threaded',TYPE_BOOL);
+		convertToDatabase ($boolthreaded);
+		$output = ereg_replace ( '%threaded.options' ,$this->options ( array (NO,YES),$this->threaded_option,$boolthreaded),$output );
 		$output = ereg_replace ( '%theme.options' ,$this->options ( themesinstalled(),$this->theme_option,$theme ) ,$output );
 		
 		$output = ereg_replace ( '%databasename.name' ,'name',$output );
@@ -649,7 +654,8 @@ class theme {
 	
 	function startflatthread () {
 		$output = NULL;
-		$allcomments = $this->news->getallcomments ();
+		// FIXME: $offset
+		$allcomments = $this->news->getallcomments ($_GET[GET_NEWSID],0);
 		if ( ! errorSDK::is_error ( $allcomments ) ) {
 			foreach ( $allcomments  as $comment ) {
 				$output .= $this->replacecomment ( $comment );
@@ -861,9 +867,9 @@ class theme {
 	}
 	
 	function viewprofile () {
-		if ( isset ( $_GET['user'] ) ) {
-			$profile = $GLOBALS['user']->getotherprofile ( $_GET['user'] );
-			if ( ! errorSDK::is_error ( $profile ) ) {
+		try {
+			if ( isset ( $_GET['user'] ) ) {
+				$profile = $this->user->getotherprofile ( $_GET['user'] );
 				$output = $this->getfile ( 'themes/' . $this->themedir . '/profile.html' );
 				$output = ereg_replace ( '%user.name',$profile[FIELD_USERS_NAME],$output );
 				$output = ereg_replace ( '%user.job',$profile[FIELD_USERS_PROFILE_JOB],$output );
@@ -878,13 +884,11 @@ class theme {
 				$output = ereg_replace ( '%user.jabber',$profile[FIELD_USERS_PROFILE_JABBER],$output );
 				return $output;
 			} else {
-				return $this->error ( $profile );
+				// throw
 			}
-		} else {
-			$error = new errorSDK ();
-			$error->succeed = false;
-			$error->error = $GLOBALS['lang']->users->form_not_filled_in;
-			return $this->error ( $error );
+		}
+		catch (exceptionlist $e) {
+			throw $e;
 		}
 	}
 	

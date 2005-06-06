@@ -6,11 +6,12 @@
 	define ('version', majorversion . '.' . minorversion . '.' . patchlevel);
 	define ('threaded',1);
 	define ('nonthreaded',0);
-	define ('MySQL 4','mysql4');
-	define ('MySQL 3','mysql3');
+	define ('mysql4','mysql4');
+	define ('mysql3','mysql3');
 	define ('MySQL4','mysql4');
 	define ('MySQL3','mysql3');
 	define ('PostgreSQL','postgresql');
+	define ('postgresql','postgresql');
 	define ('E_NONE',0);
 	define ('STANDARD_LANGUAGE','english');
 	define ('STANDARD_THEME','moderngray');

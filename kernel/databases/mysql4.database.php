@@ -20,19 +20,19 @@ if (! defined ('EXCEPTION_CLASS')) {
 }
 
 class database {
-	public function __construct (&$config) {
-		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/host',0);
-		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/user',0);
-		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/password',0);
-		$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/name',0);
+	public function __construct (&$config,$configfile) {
+		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/host',0);
+		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/user',0);
+		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/password',0);
+		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/name',0);
 
 		$this->config = $config;
-	} /* function database (&$config) */
+	} /* function database (&$config,$configfile) */
 
 	private function error () {
-		if ($this->config->getConfigByNameType ('general/errorreporting',TYPE_INT) == E_ALL) {
+		//if ($this->config->getConfigByNameType ('general/errorreporting',TYPE_INT) == E_ALL) {
 			return mysql_errno () . ': ' . mysql_error () . ' ';
-		}
+		//}
 	} /* function error () */
 
 	public function connect () {
@@ -63,7 +63,7 @@ class database {
 	} /* function close () */
 
 	private function sql2mysql ($sql) {
-		if (ereg ( '( serial )',$sql)) {
+		if (ereg ('( serial )',$sql)) {
 			$sql = ereg_replace ('( serial )',' int AUTO_INCREMENT ',$sql);
 		}
 		return $sql;

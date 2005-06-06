@@ -40,7 +40,13 @@ switch ($action) {
 		try {
 			$user->login ($_POST[POST_NAME],$_POST[POST_PASSWORD]);
 			$database->close ();
-			$theme->redirect ('index.php?note=you are logged in');
+			if ($user->hasSetConfig () == true) {
+				// this is not the first time the user logged in
+				$theme->redirect ('index.php?note=you are logged in');
+			} else {
+				$theme->redirect ('users.php?action=changeoptionsform' . 
+					'&note=this is the first time you log in, configure your account');
+			}
 		}
 		catch (exceptionlist $e) {
 			$database->close ();
@@ -74,20 +80,10 @@ switch ($action) {
 		break;
 	case 'register':
 		try {
-			$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail');
-			$language = $config->getConfigByNameType ('general/language',TYPE_STRING);
-			$utheme = $config->getConfigByNameType ('general/theme',TYPE_STRING);
-			$threaded = $config->getConfigByNameType ('news/threaded',TYPE_BOOL);
-			convertToDatabase ($threaded);
-			$postsonpage = $config->getConfigByNameType ('news/postsonpage',TYPE_INT);
-			$timeformat = $config->getConfigByNameType ('general/timeformat',TYPE_STRING);
-			$timezone = $config->getConfigByNameType ('general/timezone',TYPE_INT);
-			$headlines = $config->getConfigByNameType ('news/headlines',TYPE_INT);
 			$activatemail = $config->getConfigByNameType ('user/activatemail',
 				TYPE_BOOL);
 			$user->register ($_POST[POST_NAME],$_POST[POST_PASSWORD1],
-				$_POST[POST_PASSWORD2],$_POST[POST_EMAIL],$activatemail,$language,
-				$utheme,$threaded,$postsonpage,$timeformat,$timezone,$headlines);
+				$_POST[POST_PASSWORD2],$_POST[POST_EMAIL]);
 			$database->close ();
 			if ($activatemail == true) {
 				$link = 'index.php?note=You are now registerd, check your mail';
@@ -119,25 +115,34 @@ switch ($action) {
 		$database->close ();
 		break;
 	case 'changeoptions':
-		/*$user->setconfig (FIELD_USERS_THEME,$_POST[POST_THEME] ;
-		$user->setconfig (FIELD_USERS_THREADED,$user->convert_config2db (CONFIG_THREADED,$_POST[POST_THREADED]));
-		$user->setconfig (FIELD_USERS_LANGUAGE,$_POST[POST_LANGUAGE]);
-		$user->setconfig (FIELD_USERS_EMAIL,$_POST[POST_EMAIL]);
-		$user->setconfig (FIELD_USERS_TIMEZONE,$_POST[POST_TIMEZONE]);
-		$user->setconfig (FIELD_USERS_TIMEFORMAT,$_POST[POST_TIMEFORMAT]);
-		$user->setconfig (FIELD_USERS_POSTSONPAGE,$_POST[POST_POSTSONPAGE]);
-		$user->setconfig (FIELD_USERS_HEADLINES,$_POST[POST_HEADLINES]);
-		if ((!empty ($_POST[POST_NEW_PASSWORD1])) AND (!empty ($_POST[POST_NEW_PASSWORD2]))) {
-			$user->setnewpassword ($_POST[POST_NEW_PASSWORD1],$_POST[POST_NEW_PASSWORD2]);
-			$user->logout ();
-			$database->close ();
-			$link =  'index.php?note=' . $lang->users->options_are_saved . ': ' . $lang->users->logged_out_new_password;
-			$theme->redirect ();
-		} else {
-			$database->close ();
-			$link =  'users.php?action=changeoptionsform&note=' . $lang->users->options_are_saved;
+		try {
+		$user->setconfig (FIELD_USERS_THEME,$_POST[POST_THEME]);
+			$user->setconfig (FIELD_USERS_THREADED,$_POST[POST_THREADED]);
+			$user->setconfig (FIELD_USERS_LANGUAGE,$_POST[POST_LANGUAGE]);
+			$user->setconfig (FIELD_USERS_EMAIL,$_POST[POST_EMAIL]);
+			$user->setconfig (FIELD_USERS_TIMEZONE,$_POST[POST_TIMEZONE]);
+			$user->setconfig (FIELD_USERS_TIMEFORMAT,$_POST[POST_TIMEFORMAT]);
+			$user->setconfig (FIELD_USERS_POSTSONPAGE,$_POST[POST_POSTSONPAGE]);
+			$user->setconfig (FIELD_USERS_HEADLINES,$_POST[POST_HEADLINES]);
+			if ((!empty ($_POST[POST_NEW_PASSWORD1])) AND (!empty ($_POST[POST_NEW_PASSWORD2]))) {
+				$user->setnewpassword ($_POST[POST_NEW_PASSWORD1],$_POST[POST_NEW_PASSWORD2]);
+				// Do not log out -> password is wrong so he thinks you are'nt logged in
+				// FIXME
+				// $user->logout ();
+				$database->close ();
+				$link = 'index.php?note=Your options are saved: Login again with your new password';
+				$theme->redirect ($link);
+			} else {
+				$database->close ();
+				$link = 'users.php?action=changeoptionsform&note=Your options are saved';
+				$theme->redirect ($link);
+			}
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'users.php?action=changeoptionsform&',
+				'Options are not saved or saved partionelly',$errorrep);
 			$theme->redirect ($link);
-		}*/
+		}
 		break;
 	case 'viewuserlist':
 		$theme->themefile ('viewuserlist.html',true);

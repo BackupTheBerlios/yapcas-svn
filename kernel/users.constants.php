@@ -30,6 +30,7 @@
 	define ( 'FIELD_USERS_PROFILE_INTRESTS','intrests' );
 	define ( 'FIELD_USERS_PROFILE_WEBSITE','website' );
 	define ( 'FIELD_USERS_PROFILE_ADRESS','adress' );
+	define ( 'FIELD_USERS_PROFILE_EMAIL','email' );
 	define ( 'FIELD_IPBLOCKS_IP','ip' );
 	define ( 'PASSWORD_LENGTH',8 );
 	define ( 'IP_USER',$_SERVER['REMOTE_ADDR'] );

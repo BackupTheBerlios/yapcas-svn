@@ -29,12 +29,12 @@ define ('TYPE_INT',3);
 define ('TYPE_FLOAT',4);
 define ('TYPE_UKNOWN',-1); // I do not care type
 
-define ('YES','Y');
-define ('NO','N');
+define ('YES','Yes');
+define ('NO','No');
 
 function checkType ($content,$type) {
 	// stupid hack, if an integer value == 0, it is send as a bool
-	if ((is_bool($content)) and ($type == TYPE_INT)) {	
+	if ((is_bool($content)) and ($type == TYPE_INT)) {
 		$utype = TYPE_INT;
 	} else if (is_bool ($content)) {
 		$utype = TYPE_BOOL;
@@ -82,6 +82,8 @@ function convertToStandard (&$content) {
 		settype ($content,'bool');
 		$content = false;
 	}
+	// for people who don't use pass-by-values
+	return $content;
 } /* function convertToStandard (&$content) */
 
 function convertToDatabase (&$content) {
@@ -90,6 +92,8 @@ function convertToDatabase (&$content) {
 	} else if ($content == false) {
 		$content = NO;
 	}
+	// for people who don't use pass-by-values
+	return $content;
 } /* function convertToDatabase (&$content) */
 
 class config {
@@ -173,10 +177,12 @@ class config {
 					case 'YAPCAS_USER':
 						if ($vars[$i]->loggedin ()) {
 							try {
-								$this->addToConfigTree (
-									$vars[$i]->getconfig ($varname),$section,
-									$varname,$type);
-								return true;
+								if ($vars[$i]->getconfig ($varname) != '') {
+									$this->addToConfigTree (
+										$vars[$i]->getconfig ($varname),$section,
+										$varname,$type);
+									return true;
+								}
 							} 
 							catch (exceptionlist $e) {
 								throw $e;

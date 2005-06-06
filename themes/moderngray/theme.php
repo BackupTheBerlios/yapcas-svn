@@ -44,7 +44,7 @@
 	
 	$this->threaded_option['open'] = NULL;
 	$this->threaded_option['close'] = NULL;
-	$this->threaded_option['syntax_curval'] = '%option <input type="radio" name="%threaded.name" checked value="%option">';
+	$this->threaded_option['syntax_curval'] = '%option <input type="radio" name="%threaded.name" checked="checked" value="%option">';
 	$this->threaded_option['syntax'] = '%option <input type="radio" name="%threaded.name" value="%option">';
 	
 	$this->language_option['open'] = '<select name="%language.name">';

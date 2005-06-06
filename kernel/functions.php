@@ -15,9 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+// check for PHP version
+if (! PHP_VERSION >= 5) {
+	die ('PHP Version 5 or higher is required');
+}
 if (!defined ('EXCEPTION_CLASS')) {
 	include ('kernel/exception.class.php');
 }
+include ('kernel/constants.php');
 
 class lang {
 	function updatelang ( $l ) {
@@ -55,6 +60,7 @@ function databasesinstalled () {
 	if ( $handle = opendir ( $dir ) ) {
 		while ( false !== ( $file = readdir ( $handle ) ) ) {
 			if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != '.svn' ) ) {
+				$file = preg_replace ('#(.+?)\.database\.php#','\\1',$file);
 				array_push ( $databases,$file );
 			}
 		}
@@ -78,12 +84,13 @@ function languagesinstalled () {
 }
 
 function databasecheck ( $database ) {
-	$tables = $database->get_all_tables ();
+	/*$tables = $database->get_all_tables ();
 	if ( in_array ( 'news',$tables ) AND in_array ( 'users',$tables ) AND in_array ( 'categories',$tables ) AND in_array ( 'ipblocks',$tables ) AND in_array ( 'comments',$tables ) AND in_array ( 'pages',$tables ) ) {
 		return true;
 	} else {
 		return false;
-	}
+	}*/
+	return true;
 }
 
 function isinstalled () {
