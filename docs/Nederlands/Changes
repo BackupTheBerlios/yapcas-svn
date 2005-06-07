@@ -41,7 +41,7 @@ Eerste release
 + standaard homelink in de navigatiebalk bij installatie
 + optionsscherm geeft de geinstalleerde themas, talen weer
 
-0.3 (ALPHA STATUS)
+0.3 (ALPHA STATUS) Geplande releasedatum: 30 juni
 ----
 + houden van polls is mogelijk
 + wijzigen van ( eigen ) berichten
@@ -60,6 +60,8 @@ Eerste release
 	* #000010
 + installscript is beter
 + Het is mogelijk om een tabel prefix te zetten
++ Nieuwsfeed
+	* RSS 2.0 ondersteuning
 + Interne wijziging:: Error opvang
 	* Er zijn een aantal functies herschreven door deze wijziging
 + Interne wijziging:: configopties
@@ -83,7 +85,6 @@ TODO
 	* avatar
 !+ layout mooier maken
 + polls nakijken OF disablen OF optioneel maken bij installatie
-+ nieuws RSS
 + betere errorlog // alleen db problemen
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
 + config->writeOut (); schrijven // wat zal deze functie precies doen?

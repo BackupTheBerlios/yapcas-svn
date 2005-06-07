@@ -25,8 +25,9 @@ if (! defined ('EXCEPTION_CLASS')) {
 
 define ('TYPE_STRING',1);
 define ('TYPE_BOOL',2);
-define ('TYPE_INT',3);
-define ('TYPE_FLOAT',4);
+define ('TYPE_INT',3); // remove it
+define ('TYPE_FLOAT',3); // remove this
+define ('TYPE_NUMERIC',3);
 define ('TYPE_UKNOWN',-1); // I do not care type
 
 define ('YES','Yes');
@@ -38,10 +39,8 @@ function checkType ($content,$type) {
 		$utype = TYPE_INT;
 	} else if (is_bool ($content)) {
 		$utype = TYPE_BOOL;
-	} else if ((is_int ($content)) or (is_numeric ($content))) {
-		$utype = TYPE_INT;
-	} else if (is_float ($content)) {
-		$utype = TYPE_FLOAT;
+	} else if (is_numeric ($content)) {
+		$utype = TYPE_NUMERIC;
 	} else if (is_string ($content)) {
 		$utype = TYPE_STRING;
 	} else if (is_bool ($content)) {

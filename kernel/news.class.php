@@ -42,19 +42,11 @@ class news {
 			if (! empty ($category)) {
 				$sql .= ' AND ' . FIELD_NEWS_CATEGORY . '=\'' . $category . '\'';
 			}
-			$sql .= 'ORDER by ' . FIELD_NEWS_DATE . ' desc LIMIT ' . $limit;
+			$sql .= ' ORDER by ' . FIELD_NEWS_DATE . ' desc LIMIT ' . $limit;
 			$query = $this->database->query ($sql);
 			$return = array ();
 			while ($headline = $this->database->fetch_array ($query)) {
-				switch ($outputmethod) {
-					case 'rss':
-						// FIXME TODO
-						// $this->rss ();
-						break;
-					case 'show':
-						array_push ($return,$headline);
-						break;
-				}
+				array_push ($return,$headline);
 			}
 			return $return;
 		}
@@ -300,5 +292,94 @@ class news {
 			throw $e;
 		}
 	} /* public function postcomment ($message,$subject,$date,$user,$onnews,$oncomment = 0) */
+
+	private function viewRSS ($meta,$headlines) {
+		header('Content-type: text/xml');
+		$output = '<?xml version="1.0"?>';
+		$output .= '<rss version="2.0">';
+		$output .= '<channel>';
+
+		$output .= '<title>'.$meta['title'].'</title>';
+		$output .= '<link>'.$meta['link'].'</link>';
+		$output .= '<description>'.$meta['description'].'</description>';
+		//$output .= '<language>'.$meta['language'].'</language>';
+		if (isset ($meta['category'])) {
+			$output .= '<category>'.$meta['category'].'</category>';
+		}
+
+		$configtimezone =
+			$this->config->getConfigByNameType ('general/servertimezone',TYPE_NUMERIC);
+		if ($configtimezone < 0) {
+			$timezone = '-';
+		} else {
+			$timezone = '+';
+		}
+		if (abs($configtimezone) < 10) {
+			$timezone .= '0';
+		}
+		$timezone .= floor(abs($configtimezone));
+		$minutes = ceil (abs($configtimezone))-abs($configtimezone);
+		$minutes *= 60;
+		if ($minutes < 10) {
+			$timezone .= '0';
+		}
+		$timezone .= $minutes;
+
+		foreach ($headlines as $headline) {
+			$output .= '<item>';
+			$output .= '<title>';
+				$output .= $headline[FIELD_NEWS_SUBJECT];
+			$output .= '</title>';
+			$output .= '<link>';
+				$output .= 'http://nyi.com';
+			$output .= '</link>';
+			$output .= '<description>';
+				$output .= $headline[FIELD_NEWS_MESSAGE];
+			$output .= '</description>';
+			$output .= '<author>';
+				$output .= $headline[FIELD_NEWS_AUTHOR];
+			$output .= '</author>';
+			$output .= '<category>';
+				$output .= $headline[FIELD_NEWS_CATEGORY];
+			$output .= '</category>';
+			$date = date ('D, d M Y H:i:s '.$timezone,
+				$headline[FIELD_NEWS_DATE]+$configtimezone*3600);
+			// RFC 2822 formatted date "Thu, 21 Dec 2000 16:01:07 +0100"
+			$output .= '<pubDate>';
+				$output .= $date;
+			$output .= '</pubDate>';
+			$output .= '<comments>';
+				$output .= $meta['link'] . '/news.php?action=viewcomments';
+				$output .= '&amp;id=' . $headline[FIELD_NEWS_ID];
+			$output .= '</comments>';
+			$output .= '</item>';
+		}
+
+		$output .= '</channel>';
+		$output .= '</rss>';
+		return $output;
+	} /* private function viewRSS ($meta,$headlines) */
+
+	public function viewFeed ($meta,$category = NULL,$method = 'RSS2') {
+		try {
+			if (! empty ($category)) {
+				$meta['category'] = $category;
+			}
+			$meta['link'] = 
+				$this->config->getConfigByNameType ('general/httplink',TYPE_STRING);
+			$headlines = $this->headlines (NULL,$category);
+			switch ($method) {
+				case 'RSS2':
+					$output = $this->viewRSS ($meta,$headlines);
+					break;
+				default:
+					$output = $this->viewRSS ($meta,$headlines);
+			}
+			return $output;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function viewFeed ($meta,$category = NULL,$method = 'RSS2') */
 } // Class news
 ?>

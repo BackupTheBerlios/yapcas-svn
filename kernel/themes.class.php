@@ -71,9 +71,11 @@ class theme {
 					$this->config->getConfigByNameType ('user/activatemail',TYPE_BOOL) );
 				include ( 'kernel/news.class.php' );
 				include ( 'kernel/polls.class.php' );
+				$this->config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
+				$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timezone',$this->user,'timezone','site.config.php'),
-					'general/timezone',TYPE_INT);
+					'general/timezone',TYPE_FLOAT);
 				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timeformat',$this->user,'timeformat','site.config.php'),
 					'general/timeformat',TYPE_STRING);

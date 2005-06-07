@@ -194,6 +194,24 @@ switch ($action) {
 			$theme->redirect ($link);
 		}
 		break;
+	case 'viewfeed':
+		try {
+			$meta['title'] = $config->getConfigByNameType ('general/sitename',TYPE_STRING);
+			$meta['description'] = $config->getConfigByNameType ('general/description',TYPE_STRING);
+			$meta['link'] = 'link';
+			if (! empty ($_GET[GET_CATEGORY])) {
+				$category = $_GET[GET_CATEGORY];
+			} else {
+				$category = NULL;
+			}
+			echo $news->viewFeed ($meta,$category,'RSS2');
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'index.php?','error running feed',$errorrep);
+			$database->close ();
+			$theme->redirect ($link);
+		}
+		break;
 	default: 
 		$database->close ();
 		$theme->redirect ('index.php');
