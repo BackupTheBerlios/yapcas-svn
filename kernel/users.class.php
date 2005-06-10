@@ -22,7 +22,7 @@ if (!defined ('USE_YAPCASUSER')) {
 if (!defined ('EXCEPTION_CLASS')) {
 	include ('kernel/exception.class.php');
 }
-
+define ('ACTIVATE_ID_LENGTH',32);
 class user { 
 	public function __construct ($database,$mustactivate) {
 		include_once ('kernel/users.constants.php');
@@ -253,7 +253,7 @@ class user {
 		}
 	} /* public function logout () */
 
-	public function register ($username,$password,$controlpass,$email) {
+	public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) {
 			try {
 				if ($password != $controlpass) {
 					throw new exceptionlist ('Passwords are not the same');
@@ -297,11 +297,37 @@ class user {
 				$strcontent = implode (',',$content);
 				$sql .= ' VALUES ( ' . $strcontent . ')';
 				$query = $this->database->query ($sql);
+				if ($this->mustactivate == true ) {
+					// put it in the queue
+					$sql = 'INSERT INTO ' . TBL_ACTIVATE_QUEUE;
+					$fields = array (FIELD_ACTIVATE_QUEUE_USER,
+						FIELD_ACTIVATE_QUEUE_ID,FIELD_ACTIVATE_QUEUE_START);
+					$strfields = implode (',',$fields);
+					$sql .= ' ( ' . $strfields . ' )';
+					$id = $this->randompassword (ACTIVATE_ID_LENGTH);
+					$content = array ('\''.$name.'\'','\''.$id.'\'','\''.time ().'\'');
+					$strcontent = implode (',',$content);
+					$sql .= ' VALUES ( ' . $strcontent . ' )';
+					$this->database->query ($sql);
+					// FIXME link
+					$cmail['message'] = ereg_replace ('%d',
+						'http://yapcas.localhost/users.php?action=activate&id='.$id,
+						$cmail['message']);
+				} else {
+					// $cmail;
+				}
+				// FIXME sitenmae
+				$this->sitename = 'YaPCaS';
+				$cmail['message'] = ereg_replace ('%s',$this->sitename,$cmail['message']);
+				$cmail['message'] = ereg_replace ('%n',$name,$cmail['message']);
+				$headers = 'From: ' .$webmastermail;//.'\r\n';
+				$headers = 'Reply-to: ' .$webmastermail;
+				mail ($email,$cmail['subject'],$cmail['message'],$headers);
 		}
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function register ($username,$password,$controlpass,$email) */
+	} /* public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) */
 
 	// TODO implement on check current password
 	public function setnewpassword ($password1,$password2,$curpassword = NULL) {
@@ -320,18 +346,18 @@ class user {
 		}
 	} /* public function setnewpassword ($password1,$password2,$curpassword = NULL) */
 
-	private function randompassword () {
+	private function randompassword ($length = PASSWORD_LENGTH) {
 		mt_srand ((double) microtime () * 1000000);
 		$password = NULL;
 
-		while (strlen ($password) <= PASSWORD_LENGTH) {
+		while (strlen ($password) <= $length) {
 			$i = chr (mt_rand(0,255)); 
 			if (eregi("^[a-z0-9A-Z]$",$i)) { // only add it if it is a-z,A-Z or 0-9
 				$password .= $i; 
 			}
-			return md5 ($password); 
 		}
-	} /* private function randompassword () */
+		return $password; 
+	} /* private function randompassword ($length = PASSWORD_LENGTH) */
 
 	public function lostpasw ($mail,$username) {
 		try {
@@ -347,7 +373,7 @@ class user {
 					throw new exceptionlist ('EMail not found');
 				}
 				$user = $this->database->fetch_array ($query);
-				$password = $this->randompassword ();
+				$password = md5 ($this->randompassword ());
 				$this->setnewpassword ($password,$password);
 				//FIXME mail
 			} else if ($username != NULL) {
@@ -356,7 +382,7 @@ class user {
 				if ($this->database->num_rows ($query) == 0) {
 					throw new exceptionlist ('Username not found');
 				}
-				$password = $this->randompassword ();
+				$password = md5 ($this->randompassword ());
 				$this->setnewpassword ($password,$password);
 				// FIXME mail;
 			} else {
@@ -401,20 +427,26 @@ class user {
 		}
 	} /* private function getdbconfig ($db_field) */
 
-	public function setconfig ($db_what,$value) {
+	public function setconfig ($db_what,$value,$mail = NULL) {
 		try {
+			if (($this->mustactivate == true) and ($db_what == FIELD_USERS_EMAIL)){
+				if (($value) != $this->getEmail ()) {
+					if (! empty ($mail)) {
+						$this->deActivate ($_SESSION[SESSION_NAME],$value,$mail['cmail'],$mail['webmaster']);
+					} else {
+						throw new exceptionlist ('Internal error');
+					}
+				}
+			}
 			$sql = 'UPDATE ' . TBL_USERS . ' SET ' . $db_what . '=\'' . $value . '\'';
 			$sql .= ' WHERE ' .  FIELD_USERS_NAME . '=\'' . $_SESSION[SESSION_NAME] . '\'';
 			$query = $this->database->query ($sql);
-			if (($this->mustactivate == true) and ($db_what == FIELD_USERS_EMAIL)){
-				$this->setconfig (FIELD_USERS_ACTIVATE,NO);
-			}
 			return true;
 		}
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function setconfig ($db_what,$value) */
+	} /* public function setconfig ($db_what,$value,$mail = NULL) */
 
 	public function hasSetConfig () {
 		try {
@@ -431,5 +463,54 @@ class user {
 			throw $e;
 		}
 	} /* puclic function hasSetConfig () */
+
+	public function activate ($id) {
+		try {
+			$sql = 'SELECT * FROM ' . TBL_ACTIVATE_QUEUE;
+			$sql .= ' WHERE ' . FIELD_ACTIVATE_QUEUE_ID . '=\'' . $id . '\'';
+			$query = $this->database->query ($sql);
+			if ($this->database->num_rows ($query) == 0) {
+				throw new exceptionlist ('ID not found');
+			}
+			$activate = $this->database->fetch_array ($query);
+			$sql = 'UPDATE ' . TBL_USERS;
+			$sql .= ' SET ' . FIELD_USERS_ACTIVATE . '=\'' . YES . '\'' ;
+			$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' .
+				$activate[FIELD_ACTIVATE_QUEUE_USER] . '\'';
+			$this->database->query ($sql);
+			$sql = 'DELETE FROM ' . TBL_ACTIVATE_QUEUE;
+			$sql .= ' WHERE ' . FIELD_ACTIVATE_QUEUE_ID . '=\'' . $id . '\'';
+			$this->database->query ($sql);
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function activate ($id) */
+
+	private function deActivate ($username,$mail,$cmail,$webmastermail) {
+		$this->setconfig (FIELD_USERS_ACTIVATE,NO);
+		// put it in the queue
+		$sql = 'INSERT INTO ' . TBL_ACTIVATE_QUEUE;
+		$fields = array (FIELD_ACTIVATE_QUEUE_USER,
+			FIELD_ACTIVATE_QUEUE_ID,FIELD_ACTIVATE_QUEUE_START);
+		$strfields = implode (',',$fields);
+		$sql .= ' ( ' . $strfields . ' )';
+		$id = $this->randompassword (ACTIVATE_ID_LENGTH);
+		$content = array ('\''.$username.'\'','\''.$id.'\'','\''.time ().'\'');
+		$strcontent = implode (',',$content);
+		$sql .= ' VALUES ( ' . $strcontent . ' )';
+		$this->database->query ($sql);
+		// FIXME link
+		$cmail['message'] = ereg_replace ('%d',
+			'http://yapcas.localhost/users.php?action=activate&id='.$id,
+			$cmail['message']);
+		// FIXME sitenmae
+		$this->sitename = 'YaPCaS';
+		$cmail['message'] = ereg_replace ('%s',$this->sitename,$cmail['message']);
+		$cmail['message'] = ereg_replace ('%n',$username,$cmail['message']);
+		$headers = 'From: ' .$webmastermail;
+		$headers = 'Reply-to: ' .$webmastermail;
+		mail ($mail,$cmail['subject'],$cmail['message'],$headers);
+	} /* private function deActive ($username,$mail,$cmail,$webmastermail) */
 } // clas user
 ?>

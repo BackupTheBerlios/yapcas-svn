@@ -3,6 +3,7 @@
 	define ( 'TBL_USERS',TBL_PREFIX . 'users' );
 	define ( 'TBL_USERS_PROFILE',TBL_PREFIX . 'user_profile' );
 	define ( 'TBL_IPBLOCKS',TBL_PREFIX .'ipblocks' );
+	define ('TBL_ACTIVATE_QUEUE',TBL_PREFIX.'activate_queue');
 	define ( 'FIELD_USERS_NAME','name' );
 	define ( 'FIELD_USERS_PASSWORD','password' );
 	define ( 'FIELD_USERS_TYPE','type' );
@@ -32,6 +33,9 @@
 	define ( 'FIELD_USERS_PROFILE_ADRESS','adress' );
 	define ( 'FIELD_USERS_PROFILE_EMAIL','email' );
 	define ( 'FIELD_IPBLOCKS_IP','ip' );
+	define ('FIELD_ACTIVATE_QUEUE_USER','username');
+	define ('FIELD_ACTIVATE_QUEUE_ID','id');
+	define ('FIELD_ACTIVATE_QUEUE_START','start');
 	define ( 'PASSWORD_LENGTH',8 );
 	define ( 'IP_USER',$_SERVER['REMOTE_ADDR'] );
 	define ( 'SESSION_NAME','name' );

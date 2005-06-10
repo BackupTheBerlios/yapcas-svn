@@ -39,3 +39,10 @@ CREATE TABLE %prefix%users (
   blocked varchar NOT NULL default 'No',
   PRIMARY KEY (name)
 );
+
+CREATE TABLE %prefix%activate_queue (
+  username varchar NOT NULL,
+  id varchar NOT NULL,
+  start int NOT NULL
+  UNIQUE KEY (name)
+);

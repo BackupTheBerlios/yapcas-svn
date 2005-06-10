@@ -60,6 +60,8 @@ Eerste release
 	* #000010
 + installscript is beter
 + Het is mogelijk om een tabel prefix te zetten
++ Optie toegevoegd, iedere keer dat een gebruiker zijn mail wijzigt
+	moet die zijn account activeren
 + Nieuwsfeed
 	* RSS 2.0 ondersteuning
 + Interne wijziging:: Error opvang
@@ -69,9 +71,7 @@ Eerste release
 TODO
 ----
 !+ usersysteem uitbreiden
-	!* verstuur mails
 	!* test sendpassword
-	!* activaten van profiel
 	!* profiel wijzigen
 	!* bug die rare tekens in tekstvelden zet oplossen
 	!* help integratie ( eerste ideeen / versies )

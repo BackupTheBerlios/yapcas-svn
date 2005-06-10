@@ -1,5 +1,6 @@
 <?php $config['general']['servertimezone'] = +2;$config['general']['timezone'] = 0;
 $config['general']['httplink'] = 'http://yapcas.localhost';
+$config['general']['webmastermail'] = 'nathansamson@gmail.com';
 $config['general']['timeformat'] = 'H:i:s d/m/y';$config['general']['sitename'] = 'YaPCaS';
 $config['general']['description'] = 'Yet another PHP Content admin System';
 $config['general']['language'] = 'dutch';$config['general']['theme'] = 'moderngray';

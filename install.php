@@ -60,6 +60,7 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['general']['language'] = '$_POST[language]';";
 	$config .= "\$config['general']['theme'] = 'moderngray';";
 	$config .= "\$config['general']['databasetype'] = $_POST[databasetype];";
+	// TODO $config .= "\$config['general']['webmastermail'] = $_POST[mail];";
 	$config .= "\$config['general']['errorreporting'] = E_NONE;";
 	//$config .= '// database';
 	$config .= "\$config['database']['host'] = '$_POST[databasehost]';";

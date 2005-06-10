@@ -37,6 +37,7 @@ class theme {
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename',0);
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description',0);
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
+			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
 			loaddbclass ($this->config->getConfigByNameType ('general/databasetype',TYPE_STRING));
 			$this->database = new database ($this->config,'site.config.php');
 			$this->database->connect ();
