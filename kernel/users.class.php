@@ -330,7 +330,7 @@ class user {
 	} /* public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) */
 
 	// TODO implement on check current password
-	public function setnewpassword ($password1,$password2,$curpassword = NULL) {
+	public function setnewpassword ($username,$password1,$password2,$curpassword = NULL) {
 		try {
 			$exception = NULL;
 			if ($password1 != $password2) {
@@ -338,13 +338,13 @@ class user {
 			}
 			$sql = 'UPDATE ' . TBL_USERS . ' SET ' . FIELD_USERS_PASSWORD;
 			$sql .= '=\'' . md5($password1) . '\'';
-			$sql .= 'WHERE ' . FIELD_USERS_NAME . '=\'' . $_SESSION[SESSION_NAME] . '\'';
+			$sql .= 'WHERE ' . FIELD_USERS_NAME . '=\'' . $username . '\'';
 			$query = $this->database->query ($sql);
 		}
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function setnewpassword ($password1,$password2,$curpassword = NULL) */
+	} /* public function setnewpassword ($username,$password1,$password2,$curpassword = NULL) */
 
 	private function randompassword ($length = PASSWORD_LENGTH) {
 		mt_srand ((double) microtime () * 1000000);
@@ -356,44 +356,58 @@ class user {
 				$password .= $i; 
 			}
 		}
-		return $password; 
+		return $password;
 	} /* private function randompassword ($length = PASSWORD_LENGTH) */
 
-	public function lostpasw ($mail,$username) {
+	public function lostpasw ($mail,$username,$cmail,$webmastermail) {
 		try {
+			$password = $this->randompassword ();
 			if (($mail == NULL) and ($username == NULL)) {
-				throw new exceptionlist ('Both are given, give only username or email');
-			} else if ($mail != NULL) {
+				throw new exceptionlist ('Fill e-mail or username in');
+			} else if (($mail != NULL) and ($username == NULL)) {
 				// mail is given
-				$sql = 'SELECT ' . FIELD_USERS_NAME . ',' . FIELD_USERS_PASSWORD
-					. ' FROM ' . TBL_USERS;
-				$sql .= ' WHERE ' . FIELD_USERS_EMAIL . '=\'' . $mail . '\''; 
+				$sql = 'SELECT ' . FIELD_USERS_NAME .' FROM ' . TBL_USERS;
+				$sql .= ' WHERE ' . FIELD_USERS_EMAIL . '=\'' . $mail . '\'';
 				$query = $this->database->query ($sql);
 				if ($this->database->num_rows ($query) == 0) {
 					throw new exceptionlist ('EMail not found');
 				}
 				$user = $this->database->fetch_array ($query);
-				$password = md5 ($this->randompassword ());
-				$this->setnewpassword ($password,$password);
-				//FIXME mail
-			} else if ($username != NULL) {
-				$sql = "SELECT " . db_email . " FROM users WHERE " . db_name . "='" .$_POST[POST_NAME] ."'"; 
+				$this->setnewpassword ($user[FIELD_USERS_NAME],$password,$password);
+				$headers = 'From: ' . $webmastermail . '\r\n';
+				$headers .= 'Reply-to: ' . $webmastermail;
+				// FIXME
+				$this->sitename = 'YaPCaS';
+				$cmail['message'] = ereg_replace ('%n',$user[FIELD_USERS_NAME],$cmail['message']);
+				$cmail['message'] = ereg_replace ('%p',$password,$cmail['message']);
+				$cmail['message'] = ereg_replace ('%n',$this->sitename,$cmail['message']);
+				mail ($mail,$cmail['subject'],$cmail['message'],$headers);
+			} else if (($username != NULL) and ($mail == NULL)) {
+				$sql = 'SELECT ' . FIELD_USERS_EMAIL . ' FROM ' . TBL_USERS;
+				$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' . $username . '\''; 
 				$query = $this->database->query ($sql);
 				if ($this->database->num_rows ($query) == 0) {
 					throw new exceptionlist ('Username not found');
 				}
-				$password = md5 ($this->randompassword ());
-				$this->setnewpassword ($password,$password);
-				// FIXME mail;
+				$user = $this->database->fetch_array ($query);
+				$this->setnewpassword ($username,$password,$password);
+				$headers = 'From: ' . $webmastermail . '\r\n';
+				$headers .= 'Reply-to: ' . $webmastermail;
+				// FIXME
+				$this->sitename = 'YaPCaS';
+				$cmail['message'] = ereg_replace ('%n',$username,$cmail['message']);
+				$cmail['message'] = ereg_replace ('%p',$password,$cmail['message']);
+				$cmail['message'] = ereg_replace ('%n',$this->sitename,$cmail['message']);
+				mail ($user[FIELD_USERS_EMAIL],$cmail['subject'],$cmail['message'],$headers);
 			} else {
-				// NONE given
-				throw new exceptionlist ('Fill e-mail or username in');
+				// BOTH given
+				throw new exceptionlist ('Both are given, fill or email or username in');
 			}
 		}
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function lostpasw ($mail,$username) */
+	} /* public function lostpasw ($mail,$username,$cmail,$webmastermail) */
  
 	private function getName () {
 		if (!$this->loggedin ()) {

@@ -108,11 +108,31 @@ switch ($action) {
 		}
 		break;
 	case 'sendpassword':
-		$error = $user->lostpasw (); 
-		$database->close ();
-		$link =  error_handling ($error,'index.php?','users.php?action=sendpasswordform',
-			$lang->users->password_is_send,$lang->users->password_is_not_send);
-		$theme->redirect ($link);
+		try {
+			if (empty ($_POST['email'])) {
+				$mail = NULL;
+			} else {
+				$mail = $_POST['email'];
+			}
+			if (empty ($_POST['name'])) {
+				$username = NULL;
+			} else {
+				
+				$username = $_POST['name'];
+			}
+			$cmail['subject'] = 'New password';
+			$cmail['message'] = 'Hello %n \n.Your password is changed on %s \n.New password is: %p\n. Username is: %n';
+			$webmastermail = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
+			$user->lostpasw ($mail,$username,$cmail,$webmastermail); 
+			$database->close ();
+			$link = 'index.php?note=Your password is send to your emailadress';
+			$theme->redirect ($link);
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'index.php?',
+				'Your password isn\'t send',$errorrep);
+			$theme->redirect ($link); 
+		}
 		break;
 	case 'sendpasswordform':
 		$theme->themefile ('sendpasswordform.html');
