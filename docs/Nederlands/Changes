@@ -53,6 +53,7 @@ Eerste release
 + profiel is uitgebreid (contacmogelijkheden)
 + de gebruiker kan instellen of zijn profiel openbaar is en of hij 
 	in de gebruikerslijst staat en of hij zijn contactinfo laat zien
++ Als je je wachtwoord vergeten bent, kun je het nu terug te weten komen
 + FAQ pagina
 + Er wordt naar verwezen via foutmeldingen
 + bug fixes
@@ -71,20 +72,18 @@ Eerste release
 TODO
 ----
 !+ usersysteem uitbreiden
-	!* test sendpassword
-	!* profiel wijzigen
+	!* profiel wijzigen (oa. + avatar
 	!* bug die rare tekens in tekstvelden zet oplossen
-	!* help integratie ( eerste ideeen / versies )
-		!- installscript database laten invullen
-		!- foutmeldingen nummers geven
-		!- alleen voor admins
-			x foutberichten uit de log bekijken + betekenis
-			!x FAQ vragen toevoegen
-		!- Error integratie veranderen
-			!x meerder meldingen bij één fout weergeven
-	* avatar
+!+ help integratie ( eerste ideeen / versies )
+	!* installscript database laten invullen
+	!* foutmeldingen nummers geven
+	!* alleen voor admins
+		- foutberichten uit de log bekijken + betekenis
+		!- FAQ vragen toevoegen
+	!* meerder meldingen bij één fout weergeven
 !+ layout mooier maken
-+ polls nakijken OF disablen OF optioneel maken bij installatie
+!+ polls nakijken OF disablen OF optioneel maken bij installatie
+!+ constructor voor themes herschrijven
 + betere errorlog // alleen db problemen
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
 + config->writeOut (); schrijven // wat zal deze functie precies doen?
