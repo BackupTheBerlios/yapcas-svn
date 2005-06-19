@@ -22,8 +22,81 @@
 // 3) better translation
 // 4) better desing possibilities
 // 5) extensions
+
 class theme {
 	function __construct () {
+		error_reporting (E_ALL);
+		// as it crashes between this and load of the config
+		// we need to have all debug info
+		// FIXME
+		if (! file_exists ('install.php4')) {
+			include ('kernel/config.class.php');
+			$config = new config ();
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
+			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
+			define ('TBL_PAGES',TBL_PREFIX . 'pages');
+			include ('kernel/error.class.php');
+			include ('kernel/users.class.php');
+			include ('kernel/news.class.php');
+			include ('kernel/polls.class.php');
+			$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
+			//error_reporting ($config->getConfigByNameType('general/errorreporting',TYPE_INT));
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description',0);
+			loaddbclass ($config->getConfigByNameType ('general/databasetype',TYPE_STRING));
+			$database = new database ($config,'site.config.php');
+			$database->connect ();
+			// TODO
+			$tables = array ();
+			if (checkDatabase ($database,$tables)) {
+				// Database seems to be OK
+				$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail',0);
+				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL));
+				$news = new news ($database,$user,$config);
+				$poll = new polls ($database,$config);
+				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
+				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
+				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('timezone',$user,'timezone','site.config.php'),
+					'general/timezone',TYPE_FLOAT);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('timeformat',$user,'timeformat','site.config.php'),
+					'general/timeformat',TYPE_STRING);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('language',$user,'language','site.config.php'),
+					'general/language',TYPE_STRING);
+				$lang = loadlang  ($config->getConfigByNameType('general/language',TYPE_STRING));
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('theme',$user,'theme','site.config.php'),
+					'general/theme',TYPE_STRING);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('threaded',$user,'threaded','site.config.php'),
+					'news/threaded',TYPE_BOOL);
+				$config->addConfigByList ('YAPCAS_USER',array($user),'user/email',TYPE_STRING);
+				$config->addConfigByList ('YAPCAS_USER',array($user),'user/name',TYPE_STRING);
+				$this->loadtheme ($config->getConfigByNameType('general/theme',TYPE_STRING));
+				$this->config = $config;
+				$this->news = $news;
+				$this->config = $config;
+				$this->poll = $poll;
+				$this->lang = $lang;
+				$this->user = $user;
+				$this->database = $database;
+				global $theme,$config,$news,$poll,$user,$lang,$database;
+				$config = $this->config;
+				$news = $this->news;
+				$config = $this->config;
+				$poll = $this->poll;
+				$lang = $this->lang;
+				$user = $this->user;
+				$database = $this->database;
+				$theme = $this;
+			}
+		}
+	} /* function __construct () */
+
+	/*function __construct () {
 		error_reporting (E_ALL);
 		define ('TBL_PREFIX','yapcas');
 		define ('ERROR_LINK','./help.php#error');
@@ -31,7 +104,7 @@ class theme {
 		if (isinstalled ()) {
 			include ('config.class.php');
 			include ('kernel/error.class.php');
-			$this->config = new config ();
+			$this->database = new config ();
 			$this->config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
 		//	error_reporting ($this->config->getConfigByNameType('general/errorreporting',TYPE_INT));
 			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename',0);
@@ -61,7 +134,7 @@ class theme {
 				$this->user = new basicuser ();
 				$this->loadtheme ( $theme );
 				include ( 'kernel/news.class.php' );
-				$this->news = new news ( $this->database,$this->user,$this->config );
+				$news = new news ( $this->database,$this->user,$this->config );
 				$theme = $this;
 				$this->themefile ( 'install.html',false,true );
 				exit;
@@ -85,7 +158,7 @@ class theme {
 					'general/language',TYPE_STRING);
 				$GLOBALS['lang'] = loadlang 
 					($this->config->getConfigByNameType('general/language',TYPE_STRING));
-				$this->news = new news ($this->database,$this->user,$this->config);
+				$news = new news ($this->database,$this->user,$this->config);
 				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('theme',$this->user,'theme','site.config.php'),
 					'general/theme',TYPE_STRING);
@@ -96,12 +169,12 @@ class theme {
 				$this->config->addConfigByList ('YAPCAS_USER',array($this->user),'user/name',TYPE_STRING);
 				$this->loadtheme ($this->config->getConfigByNameType('general/theme',TYPE_STRING));
 				$this->poll = new polls ($this->config);
-				global $user,$database,$news,$theme,$config,$poll;
+				global $user,$this->database,$news,$theme,$this->config,$poll;
 				$poll = $this->poll;
-				$config = $this->config;
-				$database = $this->database;
+				$this->config = $this->config;
+				$this->database = $this->database;
 				$user = $this->user;
-				$news = $this->news;
+				$news = $news;
 				$theme = $this;
 				define ('TBL_PAGES', TBL_PREFIX . 'pages');
 			}
@@ -132,13 +205,13 @@ class theme {
 				$this->user = new basicuser ();
 				$this->loadtheme ( $theme );
 				include ( 'kernel/news.class.php' );
-				$this->news = new news ( $this->database,$this->user );
+				$news = new news ( $this->database,$this->user );
 				$theme = $this;
 				$this->themefile ( 'install.html',false,true );
 				exit;
 			}
 		}
-	}
+	}*/
 	
 	function db_error ( $error,$fatal = false ) {
 		if ( $fatal == true ) {
@@ -172,10 +245,10 @@ class theme {
 		if ( errorSDK::is_error ( $query ) ) {
 			$this->error ( $query );
 		} else {
-			if ( $GLOBALS['database']->num_rows ( $query ) == 0 ) {
+			if ( $this->database->num_rows ( $query ) == 0 ) {
 				$title = $GLOBALS['lang']->site->untitled;
 			} else {
-				$pagetitle = $GLOBALS['database']->fetch_array ( $query );
+				$pagetitle = $this->database->fetch_array ( $query );
 				$pagetitle = $pagetitle['shown_name'];
 				$title = ereg_replace ( ' S ', $sitename, $this->titleformat );
 				$title = ereg_replace ( ' P ', $pagetitle, $title );

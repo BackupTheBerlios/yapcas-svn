@@ -24,6 +24,11 @@ if (!defined ('EXCEPTION_CLASS')) {
 }
 include ('kernel/constants.php');
 
+function checkDatabase ($database,$tables) {
+	// TODO
+	return true;
+}
+
 class lang {
 	function updatelang ( $l ) {
 		include ('lang/'. $l .'/news.lang.php');

@@ -17,7 +17,7 @@
 */
 
 	class polls {
-		function polls (&$config) {
+		function polls ($database,&$config) {
 			include ('kernel/polls.constants.php');
 
 			$this->config = $config;
