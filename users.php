@@ -49,6 +49,7 @@ switch ($action) {
 			}
 		}
 		catch (exceptionlist $e) {
+						echo $e->message;
 			$database->close ();
 			// FIXME
 			// save some loginthings like username in a cookie and retrieve them later??
@@ -158,7 +159,7 @@ switch ($action) {
 			$user->setconfig (FIELD_USERS_POSTSONPAGE,$_POST[POST_POSTSONPAGE]);
 			$user->setconfig (FIELD_USERS_HEADLINES,$_POST[POST_HEADLINES]);
 			if ((!empty ($_POST[POST_NEW_PASSWORD1])) AND (!empty ($_POST[POST_NEW_PASSWORD2]))) {
-				$user->setnewpassword ($_POST[POST_NEW_PASSWORD1],$_POST[POST_NEW_PASSWORD2]);
+				$user->setnewpassword ($user->getconfig ('name'),$_POST[POST_NEW_PASSWORD1],$_POST[POST_NEW_PASSWORD2]);
 				// Do not log out -> password is wrong so he thinks you are'nt logged in
 				// FIXME
 				// $user->logout ();
@@ -172,6 +173,7 @@ switch ($action) {
 			}
 		}
 		catch (exceptionlist $e) {
+			echo $e->message;
 			$link = catch_error ($e,'users.php?action=changeoptionsform&',
 				'Options are not saved or saved partionelly',$errorrep);
 			$theme->redirect ($link);

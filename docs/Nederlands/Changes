@@ -83,7 +83,6 @@ TODO
 	!* meerder meldingen bij één fout weergeven
 !+ layout mooier maken
 !+ polls nakijken OF disablen OF optioneel maken bij installatie
-!+ constructor voor themes herschrijven
 + betere errorlog // alleen db problemen
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
 + config->writeOut (); schrijven // wat zal deze functie precies doen?

@@ -17,7 +17,7 @@
 */
 // The completely class needs to be rewritten
 // Step-By-Step
-// 1) Rewrite constructor
+// 1) Rewrite constructor :: DONE
 // 2) better errorcatching
 // 3) better translation
 // 4) better desing possibilities
@@ -29,7 +29,7 @@ class theme {
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
-		if (! file_exists ('install.php4')) {
+		if (! file_exists ('.install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
@@ -40,7 +40,8 @@ class theme {
 			include ('kernel/news.class.php');
 			include ('kernel/polls.class.php');
 			$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
-			//error_reporting ($config->getConfigByNameType('general/errorreporting',TYPE_INT));
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
+			error_reporting ($config->getConfigByNameType('general/errorreporting',TYPE_INT));
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description',0);
 			loaddbclass ($config->getConfigByNameType ('general/databasetype',TYPE_STRING));
@@ -92,6 +93,31 @@ class theme {
 				$user = $this->user;
 				$database = $this->database;
 				$theme = $this;
+			}
+		} else {
+			if (file_exists ('site.config.php')) {
+				include ('kernel/config.class.php');
+				$config = new config ();
+				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
+				define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
+				define ('TBL_PAGES',TBL_PREFIX . 'pages');
+				$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
+				//error_reporting ($config->getConfigByNameType('general/errorreporting',TYPE_INT));
+				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
+				loaddbclass ($config->getConfigByNameType ('general/databasetype',TYPE_STRING));
+				$database = new database ($config,'site.config.php');
+				$database->connect ();
+				// FIXME
+				$tables = array ();
+				if (checkDatabase ($database,$tables)) {
+					// site is configured but the installscript exists???
+					echo 'DELETE install.php and than reload this page';
+					exit;
+				} else {
+					header ('Location: install.php');
+				}
+			} else {
+				header ('Location: install.php');
 			}
 		}
 	} /* function __construct () */
@@ -482,21 +508,21 @@ class theme {
 	}
 	
 	function showpoll () {
-		if ( empty ( $_GET['poll'] ) ) {
-			$id = $GLOBALS['poll']->getidcurrentpollbylanguage ($this->config->getConfigByNameType('general/language',TYPE_STRING));
-		} else {
-			$id = $_GET['poll'];
-		}
-		
-		$poll = $GLOBALS['poll']->getpollbyid ( $id );
-		if ( errorSDK::is_error ( $poll ) ) {
-			$this->error ( $poll );
-			return NULL;
-		} else {
+		try {
+			if ( empty ( $_GET['poll'] ) ) {
+				$id = $GLOBALS['poll']->getidcurrentpollbylanguage ($this->config->getConfigByNameType('general/language',TYPE_STRING));
+			} else {
+				$id = $_GET['poll'];
+			}
+			
+			$poll = $GLOBALS['poll']->getpollbyid ( $id );
 			$output = $this->getfile ( 'themes/' . $this->themedir . '/viewpollresults.html' );
 			$output = ereg_replace ( '%poll.question',$poll[FIELD_POLL_QUESTION],$output );
 			$output = ereg_replace ( '%poll.result',$this->pollresults ( explode ( ';',$poll[FIELD_POLL_CHOICES] ),explode ( ';',$poll[FIELD_POLL_RESULTS] ) ),$output );
 			return $output;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
 		}
 	}
 	
@@ -597,7 +623,7 @@ class theme {
 		$output = ereg_replace ( '%postcomment.lang' ,$GLOBALS['lang']->news->post_a_comment,$output );
 		$output = ereg_replace ( '%new_password1.lang' ,$GLOBALS['lang']->users->new_password,$output );
 		$output = ereg_replace ( '%new_password2.lang' ,$GLOBALS['lang']->users->new_password_repeat,$output );
-	//$output = ereg_replace ( '%poll.action' ,POLLS_VOTE_ACTION,$output );
+		$output = ereg_replace ( '%poll.action' ,POLLS_VOTE_ACTION,$output );
 		$output = ereg_replace ( '%poll.method' ,'post',$output );
 		
 		$timezone = $this->config->getConfigByNameType('general/timezone',TYPE_INT);
@@ -916,30 +942,30 @@ class theme {
 	}
 	
 	function shortviewcurrentpoll () {
-		$poll = $GLOBALS['poll']->getpollbyid ( $GLOBALS['poll']->getidcurrentpollbylanguage ($this->config->getConfigByNameType ('general/language',TYPE_STRING)) );
-		if ( ! errorSDK::is_error ( $poll ) ) {
-			$output = $this->getfile ( 'themes/' . $this->themedir . '/shortviewpoll.html' );
-			$output = ereg_replace ( '%poll.question',$poll['question'],$output);
-			$output = preg_replace ( '#\n#','',$output );
-			//remove all newlines ( to avoid problmes with next lines )
-			$voted = $GLOBALS['poll']->userhasvoted ();
-			if ( errorSDK::is_error ( $voted ) ) {
-				$this->error ( $voted );
-				$voted = false;
-			}
-			if ( $voted == true ) {
-				$output = preg_replace ( '#\{ifvoted\}(.+?)\{/ifvoted}#','\\1',$output );
-				$output = preg_replace ( '#\{ifnotvoted\}(.+?)\{/ifnotvoted\}#','',$output );
-				$output = ereg_replace ( '%poll.result',$this->pollresults ( explode ( ';',$poll[FIELD_POLL_CHOICES] ),explode ( ';',$poll[FIELD_POLL_RESULTS] ) ),$output );
+		try {
+			$poll = $GLOBALS['poll']->getpollbyid ( $GLOBALS['poll']->getidcurrentpollbylanguage ($this->config->getConfigByNameType ('general/language',TYPE_STRING)) );
+			if ($poll != NULL) {
+				$output = $this->getfile ( 'themes/' . $this->themedir . '/shortviewpoll.html' );
+				$output = ereg_replace ( '%poll.question',$poll['question'],$output);
+				$output = preg_replace ( '#\n#','',$output );
+				//remove all newlines ( to avoid problmes with next lines )
+				$voted = $GLOBALS['poll']->userhasvoted ($this->user->getconfig ('name'));
+				if ( $voted == true ) {
+					$output = preg_replace ( '#\{ifvoted\}(.+?)\{/ifvoted}#','\\1',$output );
+					$output = preg_replace ( '#\{ifnotvoted\}(.+?)\{/ifnotvoted\}#','',$output );
+					$output = ereg_replace ( '%poll.result',$this->pollresults ( explode ( ';',$poll[FIELD_POLL_CHOICES] ),explode ( ';',$poll[FIELD_POLL_RESULTS] ) ),$output );
+				} else {
+					$output = preg_replace ( '#\{ifvoted\}(.+?)\{/ifvoted}#','',$output );
+					$output = preg_replace ( '#\{ifnotvoted\}(.+?)\{/ifnotvoted\}#','\\1',$output );
+					$output = ereg_replace ( '%poll.choice',$this->pollanswerstovote ( explode ( ';',$poll[FIELD_POLL_CHOICES] ) ),$output );
+				}
 			} else {
-				$output = preg_replace ( '#\{ifvoted\}(.+?)\{/ifvoted}#','',$output );
-				$output = preg_replace ( '#\{ifnotvoted\}(.+?)\{/ifnotvoted\}#','\\1',$output );
-				$output = ereg_replace ( '%poll.choice',$this->pollanswerstovote ( explode ( ';',$poll[FIELD_POLL_CHOICES] ) ),$output );
+				$output = NULL;
 			}
-		} else {
-			$output = $this->error ( $poll );
+			return $output;
+		} catch (exceptionlist $e) {
+			throw $e;
 		}
-		return $output;
 	}
 	
 	function viewprofile () {

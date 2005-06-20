@@ -3,22 +3,29 @@ Bekende Fouten
 #00001: 
 	Titel: Usersysteem vertoont problemen
 	Prioriteit: Hoog
-	Meer uitleg: Momenteel alleen op de site van sourceforge
-		Localhost werkt net zoals members.lycos.nl
-	Versies: 0.1-0.2	
+	Meer uitleg: Momenteel alleen op de site van sourceforge (werkt sowieso niet meer op sf (PHP5))
+		Localhost werkt net zoals members.lycos.nl (niet meer: PHP5 afhankelijk)
+	Versies: 0.1-0.2
 
 #00011:
 	Titel: ubbcode nested
 	Prioriteit: Laag
 	Meer uitleg: als 2 dezelfde tags, die niet genset mogen worden , per ongeluk gensest worden,
 		dan is de uitvoer verkeerd.
-	Versies: 0.3 
+	Versies: 0.3 +
+
+#00012:
+	Titel: Poll afhankelijkheid
+	Prioriteit: Middel
+	Het poll systeem is momenteel afhankelijk van het gebruikersysteem, doordat het de ips
+		van de ingelogde gebruiker vraagt, --> oplossen
+	Versies: 0.3+
 
 Fouten die zijn opgelost
 ------------------------
 0.1.1
 -----
-Geen ;-)	
+Geen ;-)
 0.2
 ----
 #00002:
@@ -39,7 +46,7 @@ Geen ;-)
 #00005
 	Titel: update #reacties en Username
 	Prioriteit: Middel
-	Meer uitleg: het aantal reacties worden niet geupdated en de username wordt gegeven als een number
+	Meer uitleg: het aantal reacties wordt niet geupdated en de username wordt gegeven als een nummer
 	Versies: 0.1-0.1.1
 0.2.1
 -----
@@ -68,5 +75,5 @@ Geen ;-)
 	Versies: 0.2 vooral maar ook 0.1-0.1.1
 #00010:
 	Titel: Timezone
-	Meer uitleg: Er werd een fout tijdszone gebruikt.
+	Meer uitleg: Er werd een foute tijdszone gebruikt.
 	Versies: 0.1 - 0.2.1

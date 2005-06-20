@@ -15,27 +15,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-	include ('kernel/functions.php');
-	loadall ();
-	
-	if ( ! empty ( $_GET['action'] ) ) {
-		$action = $_GET['action'];
-	} else {
-		$theme->redirect ( 'index.php' );
-	}
-	
-	switch ( $action ) {
-		case 'vote':
-			$return = $GLOBALS['poll']->vote ( $_POST );
-			$GLOBALS['database']->close ();
-			$GLOBALS['theme']->redirect ( error_handling ( $return,'index.php?','index.php?',$lang->polls->voted,$lang->polls->not_voted ) );
+include ('kernel/functions.php');
+loadall ();
+
+if ( ! empty ( $_GET['action'] ) ) {
+	$action = $_GET['action'];
+} else {
+	$theme->redirect ( 'index.php' );
+}
+
+try {
+	$errorrep = $config->getConfigByNameType ('general/errorreporting',TYPE_INT);
+}
+catch (exceptionlist $e) {
+	// this is a big errror so $errorep = true
+	$link = catch_error ($e,'index.php?','your action has no effect',true);
+	$database->close ();
+	$theme->redirect ($link);
+}
+switch ( $action ) {
+	case 'vote':
+		try {
+			$return = $poll->vote ($_POST,$user->getconfig ('name'));
+			$database->close ();
+			$theme->redirect ('index.php?note=your vote is saved');
 			break;
-			
-		case 'allpolls':
-			$GLOBALS['theme']->themefile ( 'viewpolls.html' );
-			break;	
-		
-		default: 
-			$theme->redirect ( 'index.php' );
-	}
+		}
+		catch (exceptionlist $e) {
+			$theme->redirect (catch_error ($e,'index.php?','Your vote is not saved',$errorrep));
+		}
+	case 'allpolls':
+		$theme->themefile ( 'viewpolls.html' );
+		break;	
+	default: 
+		$theme->redirect ( 'index.php' );
+}
 ?>
