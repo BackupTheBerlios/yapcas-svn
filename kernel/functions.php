@@ -31,11 +31,31 @@ function checkDatabase ($database,$tables) {
 
 class lang {
 	function updatelang ( $l ) {
-		include ('lang/'. $l .'/news.lang.php');
-		include ('lang/'. $l .'/users.lang.php');
-		include ('lang/'. $l .'/site.lang.php');
-		include ('lang/'. $l .'/database.lang.php');
-		include ('lang/'. $l .'/polls.lang.php');
+		if (file_exists ('lang/'. $l .'/news.lang.php')) {
+			include ('lang/'. $l .'/news.lang.php');
+		} else {
+			include ('lang/dutch/news.lang.php');
+		}
+		if (file_exists ('lang/'. $l .'/users.lang.php')) {
+			include ('lang/'. $l .'/users.lang.php');
+		} else {
+			include ('lang/dutch/users.lang.php');
+		}
+		if (file_exists ('lang/'. $l .'/polls.lang.php')) {
+			include ('lang/'. $l .'/polls.lang.php');
+		} else {
+			include ('lang/dutch/polls.lang.php');
+		}
+		if (file_exists ('lang/'. $l .'/site.lang.php')) {
+			include ('lang/'. $l .'/site.lang.php');
+		} else {
+			include ('lang/dutch/site.lang.php');
+		}
+		if (file_exists ('lang/'. $l .'/database.lang.php')) {
+			include ('lang/'. $l .'/database.lang.php');
+		} else {
+			include ('lang/dutch/database.lang.php');
+		}
 	}
 }
 

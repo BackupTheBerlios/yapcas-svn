@@ -69,11 +69,10 @@ Eerste release
 	* Er zijn een aantal functies herschreven door deze wijziging
 + Interne wijziging:: configopties
 	* configopties is nu veel geavanceerder, ook is site.config.php gewijzigd
++ Interne wijziging::gebruikersdatabase
+	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
 TODO
 ----
-!+ usersysteem uitbreiden
-	!* profiel wijzigen (oa. + avatar
-	!* bug die rare tekens in tekstvelden zet oplossen
 !+ help integratie ( eerste ideeen / versies )
 	!* installscript database laten invullen
 	!* foutmeldingen nummers geven
@@ -82,7 +81,6 @@ TODO
 		!- FAQ vragen toevoegen
 	!* meerder meldingen bij één fout weergeven
 !+ layout mooier maken
-!+ polls nakijken OF disablen OF optioneel maken bij installatie
 + betere errorlog // alleen db problemen
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
 + config->writeOut (); schrijven // wat zal deze functie precies doen?
@@ -108,6 +106,11 @@ Dromen zijn bedrog
 ------------------
 TODO
 ----
++ avatar toevoegen
++ databasecheck
+	* alle tabellen aanwezig
+	* userdb --> controleer of user en user_profile evenveel tabellen hebben
++ zorgen dat activate_queue om de zoveel tijd geleegd wordt
 + interne berichten sturen (+ melding geven)
 + optie inbouwen dat er niet dubbelgepost wordt 
 	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )

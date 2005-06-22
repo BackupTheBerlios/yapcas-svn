@@ -49,7 +49,6 @@ switch ($action) {
 			}
 		}
 		catch (exceptionlist $e) {
-						echo $e->message;
 			$database->close ();
 			// FIXME
 			// save some loginthings like username in a cookie and retrieve them later??
@@ -102,7 +101,6 @@ switch ($action) {
 			$theme->redirect ($link); 
 		}
 		catch (exceptionlist $e) {
-			//echo 'output';
 			$link = catch_error ($e,'users.php?action=registerform&',
 				'You are not registerd',$errorrep);
 			$theme->redirect ($link); 
@@ -145,19 +143,19 @@ switch ($action) {
 		break;
 	case 'changeoptions':
 		try {
-		$user->setconfig (FIELD_USERS_THEME,$_POST[POST_THEME]);
-			$user->setconfig (FIELD_USERS_THREADED,$_POST[POST_THREADED]);
-			$user->setconfig (FIELD_USERS_LANGUAGE,$_POST[POST_LANGUAGE]);
+			$user->setconfig (FIELD_USERS_PROFILE_THEME,$_POST[POST_THEME]);
+			$user->setconfig (FIELD_USERS_PROFILE_THREADED,$_POST[POST_THREADED]);
+			$user->setconfig (FIELD_USERS_PROFILE_LANGUAGE,$_POST[POST_LANGUAGE]);
 			$mail['webmaster'] = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$mail['cmail']['subject'] = 'You must activate your mail';
 			$mail['cmail']['message'] = 'Hello %n \n. You have changed your ' .
 				'email-adress %s \n. Click on the following link to activate' .
 				'your mail %d \n.';
-			$user->setconfig (FIELD_USERS_EMAIL,$_POST[POST_EMAIL],$mail);
-			$user->setconfig (FIELD_USERS_TIMEZONE,$_POST[POST_TIMEZONE]);
-			$user->setconfig (FIELD_USERS_TIMEFORMAT,$_POST[POST_TIMEFORMAT]);
-			$user->setconfig (FIELD_USERS_POSTSONPAGE,$_POST[POST_POSTSONPAGE]);
-			$user->setconfig (FIELD_USERS_HEADLINES,$_POST[POST_HEADLINES]);
+			$user->setconfig (FIELD_USERS_PROFILE_EMAIL,$_POST[POST_EMAIL],TBL_USERS,$mail);
+			$user->setconfig (FIELD_USERS_PROFILE_TIMEZONE,$_POST[POST_TIMEZONE]);
+			$user->setconfig (FIELD_USERS_PROFILE_TIMEFORMAT,$_POST[POST_TIMEFORMAT]);
+			$user->setconfig (FIELD_USERS_PROFILE_POSTSONPAGE,$_POST[POST_POSTSONPAGE]);
+			$user->setconfig (FIELD_USERS_PROFILE_HEADLINES,$_POST[POST_HEADLINES]);
 			if ((!empty ($_POST[POST_NEW_PASSWORD1])) AND (!empty ($_POST[POST_NEW_PASSWORD2]))) {
 				$user->setnewpassword ($user->getconfig ('name'),$_POST[POST_NEW_PASSWORD1],$_POST[POST_NEW_PASSWORD2]);
 				// Do not log out -> password is wrong so he thinks you are'nt logged in
@@ -173,7 +171,6 @@ switch ($action) {
 			}
 		}
 		catch (exceptionlist $e) {
-			echo $e->message;
 			$link = catch_error ($e,'users.php?action=changeoptionsform&',
 				'Options are not saved or saved partionelly',$errorrep);
 			$theme->redirect ($link);

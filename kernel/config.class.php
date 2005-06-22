@@ -80,6 +80,8 @@ function convertToStandard (&$content) {
 	} else if ($content == NO) {
 		settype ($content,'bool');
 		$content = false;
+	} else if ($content == 0.0000000000001) {
+		$content = 0;
 	}
 	// for people who don't use pass-by-values
 	return $content;
@@ -176,10 +178,29 @@ class config {
 					case 'YAPCAS_USER':
 						if ($vars[$i]->loggedin ()) {
 							try {
-								if ($vars[$i]->getconfig ($varname) != '') {
+								if ($vars[$i]->getconfig ($varname) != NULL) {
 									$this->addToConfigTree (
 										$vars[$i]->getconfig ($varname),$section,
 										$varname,$type);
+									return true;
+								} else {
+									switch ($type) {
+										case TYPE_NUMERIC:
+										case TYPE_INT:
+										case TYPE_FLOAT:
+											// set it to this stupid value so it will not be converted to <empty>
+											$value = 0.0000000000001;
+											break;
+										case TYPE_STRING:
+											$value = '';
+											break;
+										case TYPE_BOOL:
+											$value = false;
+											break;
+										default: 
+											$value = NULL;
+									}
+									$this->addToConfigTree ($value,$section,$varname,$type);
 									return true;
 								}
 							} 

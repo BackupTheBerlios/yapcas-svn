@@ -252,9 +252,14 @@ class theme {
 
 	function loadtheme ($themedir) {
 		$this->themedir = $themedir;
-		include_once ('themes/' . $this->themedir . '/theme.php');
-		if ($this->version_cms != version) {
-			//$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/theme',0);
+		if (file_exists ('themes/' . $this->themedir . '/theme.php')) {
+			include_once ('themes/' . $this->themedir . '/theme.php');
+			if ($this->version_cms != version) {
+				//$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/theme',0);
+				$this->themedir = 'moderngray';//$this->config->getConfigByNameType ('general/theme',TYPE_STRING);
+				include_once ('themes/' . $this->themedir . '/theme.php');
+			}
+		} else {
 			$this->themedir = 'moderngray';//$this->config->getConfigByNameType ('general/theme',TYPE_STRING);
 			include_once ('themes/' . $this->themedir . '/theme.php');
 		}
@@ -647,10 +652,10 @@ class theme {
 				}
 			}
 		}
-		$output = ereg_replace ( '%timezone.timezone' ,$timezone,$output );
+		$output = ereg_replace ( '%timezone.timezone' ,strval($timezone),$output );
 		$output = ereg_replace ( '%timeformat.timeformat' ,$timeformat,$output );
-		$output = ereg_replace ( '%headlines.headlines' ,$headlines,$output );
-		$output = ereg_replace ( '%postsonpage.postsonpage' ,$postsonpage,$output );
+		$output = ereg_replace ( '%headlines.headlines' ,strval($headlines),$output );
+		$output = ereg_replace ( '%postsonpage.postsonpage' ,strval($postsonpage),$output );
 		$output = ereg_replace ( '%email.email' ,$email,$output );
 		$output = ereg_replace ( '%username.user' ,$name,$output );
 	

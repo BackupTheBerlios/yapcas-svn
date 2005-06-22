@@ -91,7 +91,7 @@ if (empty ($_POST['submit'])) {
 		$queries .= file_get_contents ('kernel/sql/polls.sql');
 		$queries .= file_get_contents ('kernel/sql/basic.sql');
 		$queries .= file_get_contents ('kernel/sql/help.sql');
-		$queries = ereg_replace ('%prefix%','yapcas',$queries);
+		$queries = ereg_replace ('%prefix%','yapcas4',$queries);
 		// TODO
 		//$queries .= file_get_contents ('kernel/sql/basiccontent.sql');
 		//$queries .= file_get_contents ('kernel/sql/helpcontent.sql');

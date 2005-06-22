@@ -29,13 +29,13 @@ class user {
 		$this->database = $database;
 		$this->mustactivate = $mustactivate;
 		try {
-			$this->languageconfig = $this->getdbconfig (FIELD_USERS_LANGUAGE);
-			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_TIMEZONE);
-			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_TIMEFORMAT);
-			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_THREADED);
-			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_POSTSONPAGE);
-			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_HEADLINES);
-			$this->themeconfig = $this->getdbconfig (FIELD_USERS_THEME);
+			$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
+			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
+			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
+			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
+			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
+			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
+			$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
 		}
 		catch (exceptionlist $e) {
 			throw $e;
@@ -164,7 +164,7 @@ class user {
 				// make him a root or other user
 				return $validlogin;
 			}
-			catch (listexception $e) {
+			catch (exceptionlist $e) {
 				throw $e;
 			}
 		} else {
@@ -222,13 +222,13 @@ class user {
 			$_SESSION[SESSION_NAME] = $user[FIELD_USERS_NAME];
 			$_SESSION[SESSION_TYPE] = $user[FIELD_USERS_TYPE];
 			$_SESSION[SESSION_PASSWORD] = $user[FIELD_USERS_PASSWORD];
-			$this->languageconfig = $this->getdbconfig (FIELD_USERS_LANGUAGE);
-			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_TIMEZONE);
-			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_TIMEFORMAT);
-			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_THREADED);
-			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_POSTSONPAGE);
-			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_HEADLINES);
-			$this->themeconfig = $this->getdbconfig (FIELD_USERS_THEME);
+			$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
+			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
+			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
+			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
+			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
+			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
+			$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
 			return true;
 		}
 		catch (exceptionlist $e) {
@@ -297,6 +297,11 @@ class user {
 				$strcontent = implode (',',$content);
 				$sql .= ' VALUES ( ' . $strcontent . ')';
 				$query = $this->database->query ($sql);
+				// create the config column
+				$sql = 'INSERT INTO ' . TBL_USERS_PROFILE;
+				$sql .= ' ('. FIELD_USERS_PROFILE_NAME .')';
+				$sql .= ' VALUES (\'' .$name. '\')';
+				$this->database->query ($sql);
 				if ($this->mustactivate == true ) {
 					// put it in the queue
 					$sql = 'INSERT INTO ' . TBL_ACTIVATE_QUEUE;
@@ -419,16 +424,19 @@ class user {
 
 	// why is this a seperate function?
 	private function getEmail () {
-		return $this->getdbconfig (FIELD_USERS_EMAIL);
+		return $this->getdbconfig (FIELD_USERS_EMAIL,TBL_USERS);
 	} /* private function getEmail () */
 
-	private function getdbconfig ($db_field) {
+	private function getdbconfig ($db_field,$table = TBL_USERS_PROFILE) {
 		try {
 			if ($this->loggedin () == true) {
-				$sql = 'SELECT ' . $db_field . ' FROM ' . TBL_USERS . ' WHERE ' 
+				$sql = 'SELECT ' . $db_field . ' FROM ' . $table . ' WHERE ' 
 					. FIELD_USERS_NAME . '=\'' . $_SESSION[SESSION_NAME] . '\' LIMIT 1';
 				$query = $this->database->query ($sql);
 				$user = $this->database->fetch_array ($query);
+				if ($user[$db_field] == '') {
+					return NULL;
+				}
 				return $user[$db_field];
 			} else {
 				// do no throw because it is used every time so return false
@@ -441,7 +449,7 @@ class user {
 		}
 	} /* private function getdbconfig ($db_field) */
 
-	public function setconfig ($db_what,$value,$mail = NULL) {
+	public function setconfig ($db_what,$value,$tbl = TBL_USERS_PROFILE,$mail = NULL) {
 		try {
 			if (($this->mustactivate == true) and ($db_what == FIELD_USERS_EMAIL)){
 				if (($value) != $this->getEmail ()) {
@@ -452,7 +460,7 @@ class user {
 					}
 				}
 			}
-			$sql = 'UPDATE ' . TBL_USERS . ' SET ' . $db_what . '=\'' . $value . '\'';
+			$sql = 'UPDATE ' . $tbl . ' SET ' . $db_what . '=\'' . $value . '\'';
 			$sql .= ' WHERE ' .  FIELD_USERS_NAME . '=\'' . $_SESSION[SESSION_NAME] . '\'';
 			$query = $this->database->query ($sql);
 			return true;

@@ -1,5 +1,5 @@
 CREATE TABLE %prefix%ipblocks (
-  ip varchar NOT NULL default '',
+  ip varchar NOT NULL default NULL,
   date int NOT NULL default '0',
   reason text NOT NULL,
   PRIMARY KEY  (ip)
@@ -16,22 +16,22 @@ CREATE TABLE %prefix%user_profile (
   adress varchar default NULL,
   job varchar default NULL,
   intrests varchar default NULL,
-  PRIMARY KEY  (name)
-);
-
-CREATE TABLE %prefix%users (
-  name varchar NOT NULL default '',
-  password varchar NOT NULL default '',
-  email varchar NOT NULL default '',
-  type varchar NOT NULL default 'users',
-  language varchar default NULL,
-  theme varchar default NULL,
-  ip text NOT NULL,
   threaded varchar default NULL,
   postsonpage int default NULL,
   timezone int default NULL,
   timeformat varchar default NULL,
   headlines int default NULL,
+  language varchar default NULL,
+  theme varchar default NULL,
+  PRIMARY KEY  (name)
+);
+
+CREATE TABLE %prefix%users (
+  name varchar NOT NULL,
+  password varchar NOT NULL,
+  email varchar NOT NULL,
+  type varchar NOT NULL default 'users',
+  ip text default NULL,
   public_user varchar NOT NULL default 'Yes',
   public_profile varchar NOT NULL default 'Yes',
   public_contact_info varchar NOT NULL default 'No',
@@ -43,6 +43,6 @@ CREATE TABLE %prefix%users (
 CREATE TABLE %prefix%activate_queue (
   username varchar NOT NULL,
   id varchar NOT NULL,
-  start int NOT NULL
-  UNIQUE KEY (name)
+  start int NOT NULL,
+  PRIMARY KEY (username)
 );
