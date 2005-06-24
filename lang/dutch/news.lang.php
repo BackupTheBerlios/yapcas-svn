@@ -13,22 +13,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-	$this->news->post_a_news = 'Nieuwsbericht posten';
-	$this->news->headlines = 'Hoofdpunten';
-	$this->news->singular_comment = 'Reactie';
-	$this->news->plural_comment = 'Reacties';
-	$this->news->subject = 'Onderwerp';
-	$this->news->message = 'Bericht';
-	$this->news->category = 'Categorie';
-	$this->news->post = 'Posten!!';
-	$this->news->post_a_comment = 'Reageren';
-	$this->news->comment_is_posted = 'Reactie is gepost';
-	$this->news->news_is_posted = 'Uw nieuwsbericht is gepost';
-	$this->news->news_is_not_posted = 'Uw nieuwsbericht is gepost';
-	$this->news->comment_is_not_posted = 'Uw reactie is niet gepost';
-	$this->news->give_a_comment = 'Reageren';
-	$this->news->headlines = 'Hoofdpunten';
-	$this->news->comments_on_news = 'Reacties op het nieuwsbericht: ';
-	$this->news->comment_is_edited = 'Uw reactie is gewijzigd';
-	$this->news->comment_is_not_edited = 'Uw reactie is niet gewijzigd';
+$this->lang['Post a news'] = 'Nieuwsbericht posten';
+$this->lang['Headlines'] = 'Hoofdpunten';
+$this->lang['Comment'] = 'Reactie';
+$this->lang['Comment'] = 'Reacties';
+$this->lang['Subject'] = 'Onderwerp';
+$this->lang['Message']= 'Bericht';
+$this->lang['Category'] = 'Categorie';
+$this->lang['Post!!'] = 'Posten!!';
+$this->lang['Post a comment'] = 'Reageren';
+$this->lang['Comment is posted'] = 'Reactie is gepost';
+$this->lang['Your newsmessage is posted'] = 'Uw nieuwsbericht is gepost';
+$this->lang['Your comment is not posted'] = 'Uw reactie is niet gepost';
+$this->lang['Post a comment'] = 'Reageren';
+$this->lang['Comments on this newsmessage: '] = 'Reacties op het nieuwsbericht: ';
+$this->lang['Your comment is edited'] = 'Uw reactie is gewijzigd';
+$this->lang['Your comment isn\'t edited'] = 'Uw reactie is niet gewijzigd';
 ?>

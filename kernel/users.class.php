@@ -24,10 +24,11 @@ if (!defined ('EXCEPTION_CLASS')) {
 }
 define ('ACTIVATE_ID_LENGTH',32);
 class user { 
-	public function __construct ($database,$mustactivate) {
+	public function __construct ($database,$mustactivate,$lang) {
 		include_once ('kernel/users.constants.php');
 		$this->database = $database;
 		$this->mustactivate = $mustactivate;
+		$this->lang = $lang;
 		try {
 			$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
 			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
@@ -40,7 +41,7 @@ class user {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function __construct ($database,$mustactivate) */
+	} /* public function __construct ($database,$mustactivate,$lang) */
 
 	public function getconfig ($what) {
 		switch ($what) {
@@ -72,7 +73,7 @@ class user {
 				return $this->getName ();
 				break;
 			default:
-				throw new exceptionlist ('Uknown userconfig',NULL,-1);
+				throw new exceptionlist ($this->lang ('Uknown userconfig'),NULL,-1);
 		}
 	} /* public getconfig ($what) */
 
@@ -179,12 +180,12 @@ class user {
 			$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' .$name. '\'';
 			$query = $this->database->query ($sql);
 			if ($this->database->num_rows ($query) != 1) {
-				$exception = new exceptionlist ('User does not exists',NULL,4);
+				$exception = new exceptionlist ($this->lang->translate ('User does not exists'),NULL,4);
 			}
 			// since we have only __one__ result it must not be in a loop
 			$user = $this->database->fetch_array ($query);
 			if ($user[FIELD_USERS_PASSWORD] != md5($password)) {
-				$e = new exceptionlist ('Your password is wrong',NULL,5);
+				$e = new exceptionlist ($this->lang->translate ('Your password is wrong'),NULL,5);
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -195,11 +196,11 @@ class user {
 				throw $exception;
 			}
 			if ($user[FIELD_USERS_BLOCKED] == YES) {
-				throw new exceptionlist ('Your username is blocked');
+				throw new exceptionlist ($this->lang->translate ('Your username is blocked'));
 			}
 			if ($user[FIELD_USERS_ACTIVATE] == NO) {
-				throw new exceptionlist ('Your username is not (yet) activated,' .
-				'check your mail to activate it');
+				throw new exceptionlist ($this->lang->translate ('Your username is not (yet) activated,' .
+				'check your mail to activate it'));
 			}
 			$userip = $user[FIELD_USERS_IP];
 			$userip = explode (',',$userip);
@@ -212,7 +213,7 @@ class user {
 				$sql .= 'LIMIT 1';
 				$query = $this->database->query ($sql,false);
 				if ($this->database->num_rows ($query) != 0) {
-					throw new exceptionlist ('Your IP is blocked');
+					throw new exceptionlist ($this->lang->translate ('Your IP is blocked'));
 				}
 			}
 			$sql = 'UPDATE ' . TBL_USERS;
@@ -239,7 +240,7 @@ class user {
 	public function logout () {
 		try {
 			if (! $this->loggedin ()) {
-				throw new exceptionlist ("Not logged in",NULL,7);
+				throw new exceptionlist ($this->lang->translate ('Not logged in'),NULL,7);
 			} else {
 				unset ($_SESSION[SESSION_NAME]);
 				unset ($_SESSION[SESSION_TYPE]);
@@ -256,7 +257,7 @@ class user {
 	public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) {
 			try {
 				if ($password != $controlpass) {
-					throw new exceptionlist ('Passwords are not the same');
+					throw new exceptionlist ($this->lang->translate ('Passwords are not the same'));
 				}
 				// check username alreade exists
 				$sql = 'SELECT ' . FIELD_USERS_NAME . ' FROM ' . TBL_USERS;
@@ -264,7 +265,7 @@ class user {
 				$sql .= ' LIMIT 1';
 				$query = $this->database->query ($sql);
 				if ($this->database->num_rows ($query) != 0) {
-					throw new exceptionlist ('User already exists, use another usrename');
+					throw new exceptionlist ($this->lang->translate ('User already exists, use another usrename'));
 				}
 				// check email already exists
 				$sql = "SELECT " . FIELD_USERS_EMAIL . " FROM " . TBL_USERS;
@@ -272,7 +273,7 @@ class user {
 				$sql .= 'LIMIT 1';
 				$query = $this->database->query ($sql);
 				if ($this->database->num_rows ($query) != 0) {
-					throw new exceptionlist ('Email is already registerd, use another email');
+					throw new exceptionlist ($this->lang->translate ('Email is already registerd, use another email'));
 				}
 				// i think everything is OK
 				// user can be put into the db
@@ -339,7 +340,7 @@ class user {
 		try {
 			$exception = NULL;
 			if ($password1 != $password2) {
-				throw new exceptionlist ('Password not changed, 2 paswwords are not equal');
+				throw new exceptionlist ($this->lang->translate ('Password not changed, 2 paswwords are not equal'));
 			}
 			$sql = 'UPDATE ' . TBL_USERS . ' SET ' . FIELD_USERS_PASSWORD;
 			$sql .= '=\'' . md5($password1) . '\'';
@@ -368,14 +369,14 @@ class user {
 		try {
 			$password = $this->randompassword ();
 			if (($mail == NULL) and ($username == NULL)) {
-				throw new exceptionlist ('Fill e-mail or username in');
+				throw new exceptionlist ($this->lang->translate ('Fill e-mail or username in'));
 			} else if (($mail != NULL) and ($username == NULL)) {
 				// mail is given
 				$sql = 'SELECT ' . FIELD_USERS_NAME .' FROM ' . TBL_USERS;
 				$sql .= ' WHERE ' . FIELD_USERS_EMAIL . '=\'' . $mail . '\'';
 				$query = $this->database->query ($sql);
 				if ($this->database->num_rows ($query) == 0) {
-					throw new exceptionlist ('EMail not found');
+					throw new exceptionlist ($this->lang->translate ('EMail not found'));
 				}
 				$user = $this->database->fetch_array ($query);
 				$this->setnewpassword ($user[FIELD_USERS_NAME],$password,$password);
@@ -392,7 +393,7 @@ class user {
 				$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' . $username . '\''; 
 				$query = $this->database->query ($sql);
 				if ($this->database->num_rows ($query) == 0) {
-					throw new exceptionlist ('Username not found');
+					throw new exceptionlist ($this->lang->translate ('Username not found'));
 				}
 				$user = $this->database->fetch_array ($query);
 				$this->setnewpassword ($username,$password,$password);
@@ -406,7 +407,7 @@ class user {
 				mail ($user[FIELD_USERS_EMAIL],$cmail['subject'],$cmail['message'],$headers);
 			} else {
 				// BOTH given
-				throw new exceptionlist ('Both are given, fill or email or username in');
+				throw new exceptionlist ($this->lang->translate ('Both are given, fill or email or username in'));
 			}
 		}
 		catch (exceptionlist $e) {
@@ -456,7 +457,7 @@ class user {
 					if (! empty ($mail)) {
 						$this->deActivate ($_SESSION[SESSION_NAME],$value,$mail['cmail'],$mail['webmaster']);
 					} else {
-						throw new exceptionlist ('Internal error');
+						throw new exceptionlist ($this->lang->translate ('Internal error'));
 					}
 				}
 			}
@@ -492,7 +493,7 @@ class user {
 			$sql .= ' WHERE ' . FIELD_ACTIVATE_QUEUE_ID . '=\'' . $id . '\'';
 			$query = $this->database->query ($sql);
 			if ($this->database->num_rows ($query) == 0) {
-				throw new exceptionlist ('ID not found');
+				throw new exceptionlist ($this->lang->translate ('ID not found'));
 			}
 			$activate = $this->database->fetch_array ($query);
 			$sql = 'UPDATE ' . TBL_USERS;

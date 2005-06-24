@@ -13,7 +13,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-	$this->polls->voted = 'U stem is opgenomen';
-	$this->polls->not_voted = 'U stem is niet opgenomen';
-	$this->polls->has_yet_voted = 'U hebt reeds gestemd';
+$this->lang['You have voted'] = 'U stem is opgenomen';
+$this->lang['Your vote is not saved'] = 'U stem is niet opgenomen';
+$this->lang['You have already voted'] = 'U heeft reeds gestemd';
+$this->lang['You haven\'t selected an option'] = 'U heeft geen optie geselecteerd';
 ?>

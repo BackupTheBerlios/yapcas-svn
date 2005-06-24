@@ -30,40 +30,48 @@ function checkDatabase ($database,$tables) {
 }
 
 class lang {
-	function updatelang ( $l ) {
-		if (file_exists ('lang/'. $l .'/news.lang.php')) {
-			include ('lang/'. $l .'/news.lang.php');
+	function __construct () {
+		$this->lang = array ();
+	}
+
+	function updatelang ($l) {
+		if ($l == 'english') {
+			unset ($this->lang);
+			$this->lang = array ();
 		} else {
-			include ('lang/dutch/news.lang.php');
+			if (file_exists ('lang/'. $l .'/news.lang.php')) {
+				include ('lang/'. $l .'/news.lang.php');
+			}
+			if (file_exists ('lang/'. $l .'/users.lang.php')) {
+				include ('lang/'. $l .'/users.lang.php');
+			}
+			if (file_exists ('lang/'. $l .'/polls.lang.php')) {
+				include ('lang/'. $l .'/polls.lang.php');
+			}
+			if (file_exists ('lang/'. $l .'/site.lang.php')) {
+				include ('lang/'. $l .'/site.lang.php');
+			}
+			if (file_exists ('lang/'. $l .'/database.lang.php')) {
+				include ('lang/'. $l .'/database.lang.php');
+			}
 		}
-		if (file_exists ('lang/'. $l .'/users.lang.php')) {
-			include ('lang/'. $l .'/users.lang.php');
+	}
+
+	function translate ($string) {
+		if (array_key_exists($string,$this->lang)) {
+			return $this->lang[$string];
 		} else {
-			include ('lang/dutch/users.lang.php');
-		}
-		if (file_exists ('lang/'. $l .'/polls.lang.php')) {
-			include ('lang/'. $l .'/polls.lang.php');
-		} else {
-			include ('lang/dutch/polls.lang.php');
-		}
-		if (file_exists ('lang/'. $l .'/site.lang.php')) {
-			include ('lang/'. $l .'/site.lang.php');
-		} else {
-			include ('lang/dutch/site.lang.php');
-		}
-		if (file_exists ('lang/'. $l .'/database.lang.php')) {
-			include ('lang/'. $l .'/database.lang.php');
-		} else {
-			include ('lang/dutch/database.lang.php');
+			return $string;
 		}
 	}
 }
 
-function loadlang ( $language ) {
+function loadlang ($language) {
 	$l = new lang ();
-	$l->updatelang ( $language );
+	$l->updatelang ($language);
 	return $l;
 }
+
 
 function themesinstalled () {
 	$themes = array ();

@@ -91,8 +91,22 @@ if (empty ($_POST['submit'])) {
 		$queries .= file_get_contents ('kernel/sql/polls.sql');
 		$queries .= file_get_contents ('kernel/sql/basic.sql');
 		$queries .= file_get_contents ('kernel/sql/help.sql');
-		$queries = ereg_replace ('%prefix%','yapcas4',$queries);
 		// TODO
+		$languages = languagesinstalled ();
+		foreach ($languages as $language) {
+			echo $language;
+			$lang = loadlang ($language);
+			$tmpquery = file_get_contents ('kernel/sql/basicpages.sql');
+			$tmpquery = ereg_replace ('%language%',$language,$tmpquery);
+			$tmpquery = ereg_replace ('%shown_logout%',$lang->translate ('logout'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_index%',$lang->translate ('Home'),$tmpquery);
+			$queries .= $tmpquery;
+		}
+		$queries = ereg_replace ('%show_logout_in_nav%',Yes,$queries);
+		$queries = ereg_replace ('%show_index_in_nav%',Yes,$queries);
+		$queries = ereg_replace ('%show_logout_in_user_nav%',Yes,$queries);
+		$queries = ereg_replace ('%show_index_in_user_nav%',No,$queries);
+		$queries = ereg_replace ('%prefix%','yapcas14',$queries);
 		//$queries .= file_get_contents ('kernel/sql/basiccontent.sql');
 		//$queries .= file_get_contents ('kernel/sql/helpcontent.sql');
 		$queriesarray = explode (';',$queries);

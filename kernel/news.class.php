@@ -16,10 +16,11 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
 class news {
-	public function __construct ($database,$user,&$config) {
+	public function __construct ($database,$user,&$config,$lang) {
 		include ('kernel/news.constants.php');
 		$this->database = $database;
 		$this->user = $user;
+		$this->lang = $lang;
 
 		$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 			array('headlines',$this->user,'headlines','site.config.php'),
@@ -28,7 +29,7 @@ class news {
 			array('postsonpage',$this->user,'postsonpage','site.config.php'),
 			'news/postsonpage',TYPE_INT);
 		$this->config = $config;
-	} /* public function __construct ($database,$user,&$config) */
+	} /* public function __construct ($database,$user,&$config,$lanh) */
 
 	public function headlines ($outputmethod,$category = NULL) {
 		try {

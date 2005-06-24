@@ -13,11 +13,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-	$this->database->internal_error = 'Interne fout in de database';
-	$this->database->not_connected = 'Niet verbonden met database';
-	$this->database->database_user =  'Database gebruiker';
-	$this->database->database_host = 'Database host';
-	$this->database->database_password = 'Database wachtwoord';
-	$this->database->database_name = 'Database naam';
-	$this->database->database_type = 'Database type';
+$this->lang['Internal error in database'] = 'Interne fout in de database';
+$this->lang['Not connected with database'] = 'Niet verbonden met database';
+$this->lang['Database'] = 'Database';
+$this->lang['username'] = 'gebruikersnaam';
+$this->lang['host'] = 'host';
+$this->lang['password'] = 'wachtwoord';
+$this->lang['name'] = 'naam';
+$this->lang['type'] = 'type';
 ?>

@@ -21,7 +21,7 @@ loadall ();
 if ( ! empty ( $_GET['action'] ) ) {
 	$action = $_GET['action'];
 } else {
-	$theme->redirect ( 'index.php' );
+	$theme->redirect ('index.php');
 }
 
 try {
@@ -29,7 +29,7 @@ try {
 }
 catch (exceptionlist $e) {
 	// this is a big errror so $errorep = true
-	$link = catch_error ($e,'index.php?','your action has no effect',true);
+	$link = catch_error ($e,'index.php?',$lang->translate ('Your action has no effect'),true);
 	$database->close ();
 	$theme->redirect ($link);
 }
@@ -38,16 +38,16 @@ switch ( $action ) {
 		try {
 			$return = $poll->vote ($_POST,$user->getconfig ('name'));
 			$database->close ();
-			$theme->redirect ('index.php?note=your vote is saved');
+			$theme->redirect ('index.php?note='.$lang->translate ('You have voted'));
 			break;
 		}
 		catch (exceptionlist $e) {
-			$theme->redirect (catch_error ($e,'index.php?','Your vote is not saved',$errorrep));
+			$theme->redirect (catch_error ($e,'index.php?',$lang->translate ('Your vote is not saved'),$errorrep));
 		}
 	case 'allpolls':
-		$theme->themefile ( 'viewpolls.html' );
-		break;	
+		$theme->themefile ('viewpolls.html' );
+		break;
 	default: 
-		$theme->redirect ( 'index.php' );
+		$theme->redirect ('index.php');
 }
 ?>

@@ -17,11 +17,12 @@
 */
 
 class polls {
-	function polls ($database,&$config) {
+	function __construct ($database,&$config,$lang) {
 		include ('kernel/polls.constants.php');
 		$this->database = $database;
 		$this->config = $config;
-	} /* function polss */
+		$this->lang = $lang;
+	} /* function __construct ($database,&$config,$lang) */
 
 	function getidcurrentpollbylanguage ($language) {
 		try {
@@ -52,21 +53,23 @@ class polls {
 			throw $e;
 		}
 	} /* function getpollbyid ($id) */
-	
-	function getallpollsbylanguage ( $language ) {
-		$sql = "SELECT * FROM " . TBL_POLLS . " WHERE " . FIELD_POLL_LANGUAGE . "='" . $language . "'";
-		$query = $GLOBALS['database']->query ( $sql );
-		if ( errorSDK::is_error ( $query ) ) {
-			return $query;
-		} else {
+
+	function getallpollsbylanguage ($language) {
+		try {
+			$sql = 'SELECT * FROM ' . TBL_POLLS;
+			$sql .= ' WHERE ' . FIELD_POLL_LANGUAGE . '=\'' . $language . '\'';
+			$query = $this->database->query ($sql);
 			$polls = array ();
-			while ( $poll = $GLOBALS['database']->fetch_array ( $query ) ) {
+			while ($poll = $this->database->fetch_array ($query)) {
 				$polls[] = $poll; // add poll at the end of the array
 			}
 			return $polls;
 		}
-	} /* function getallpollsbylanguage */
-	
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* function getallpollsbylanguage ($language) */
+
 	function vote ($info,$username) {
 		try {
 			if (isset ($info['voted_on'])) {
@@ -109,23 +112,24 @@ class polls {
 						$this->database->query ($sql);
 					}
 				} else {
-					throw new exceptionlist ('You have already voted');
+					throw new exceptionlist ($this->lang->translate ('You have already voted'));
 				}
 			} else {
-				throw new exceptionlist ('You haven\'t selected an option');
+				throw new exceptionlist ($this->lang->translate ('You haven\'t selected an option'));
 			}
 		}
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* function vote ( $info ) */
-	
+	} /* function vote ($info,$username) */
+
 	function userhasvoted ($username) {
 		try {
 			$cookie = false;
 			$ip = false;
 			$user = false;
-			$idcurpoll = $this->getidcurrentpollbylanguage ($this->config->getConfigByNameType('general/language',TYPE_STRING)); 
+			$idcurpoll = $this->getidcurrentpollbylanguage (
+				$this->config->getConfigByNameType('general/language',TYPE_STRING)); 
 			// check cookie
 			if (isset ($_COOKIE[COOKIE_POLL])) {
 				if ($_COOKIE[COOKIE_POLL] == $idcurpoll) {
@@ -184,6 +188,6 @@ class polls {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	}
+	} /* function userhasvoted ($username) */
 } /* class polls */
 ?>

@@ -13,11 +13,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-	$this->site->index = 'Home';
-	$this->site->navigation = 'Navigeren';
-	$this->site->installation = 'Installeren';
-	$this->site->install = 'Installeer!!';
-	$this->site->no = 'Nee';
-	$this->site->yes = 'Ja';
-	$this->site->untitled = 'Ongenaamd';
+$this->lang['Home'] = 'Start';
+$this->lang['Navigation'] = 'Navigeren';
+$this->lang['Install'] = 'Installeren';
+$this->lang['Install!!'] = 'Installeer!!';
+$this->lang['No'] = 'Nee';
+$this->lang['Yes'] = 'Ja';
+$this->lang['Untitled'] = 'Ongenaamd';
 ?>

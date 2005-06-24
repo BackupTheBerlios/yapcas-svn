@@ -39,7 +39,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','you can\'t open this page',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('Your action has no effect'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}
@@ -50,7 +50,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','you can\'t open this page',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}
@@ -59,7 +59,7 @@ switch ($action) {
 		try {
 			$exception = NULL;
 			if (empty ($_POST[POST_SUBJECT])) {
-				$e = new exceptionlist ('You must fill in the subject field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the subject field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -67,7 +67,7 @@ switch ($action) {
 				}
 			}
 			if (empty ($_POST[POST_MESSAGE])) {
-				$e = new exceptionlist ('You must fill in the message field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the message field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -88,10 +88,10 @@ switch ($action) {
 			$id = $_POST['on_news'];
 			$database->close ();
 			$theme->redirect ('news.php?action=viewcomments&id='.$id.
-				'&note=Your comment is posted');
+				'&note=' . $lang->translate ('Your comment is posted'));
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','Your comment is not posted',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('Your comment is not posted'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}
@@ -100,7 +100,7 @@ switch ($action) {
 		try {
 			$exception = NULL;
 			if (empty ($_POST[POST_SUBJECT])) {
-				$e = new exceptionlist ('You must fill in the subject field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the subject field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -109,7 +109,7 @@ switch ($action) {
 			}
 			$date = getUTCtime ($config);
 			if (empty ($_POST[POST_MESSAGE])) {
-				$e = new exceptionlist ('You must fill in the message field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the message field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -117,7 +117,7 @@ switch ($action) {
 				}
 			}
 			if (empty ($_POST[POST_CATEGORY])) {
-				$e = new exceptionlist ('You must fill in the category field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the category field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -130,11 +130,11 @@ switch ($action) {
 			$language = $config->getConfigByNameType ('general/language',TYPE_STRING);
 			$error = $news->postnews ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],
 				$_POST[POST_CATEGORY],$date,$language,$user->getconfig ('name'));
-			$theme->redirect ('index.php?note=Your message is posted');
+			$theme->redirect ('index.php?note=' . $lang->translate ('Your message is posted'));
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','Your message is not posted',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('Your message is not posted'),$errorrep);
 			$database->close ();
 			$link = $theme->redirect ($link);
 		}
@@ -145,7 +145,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','you can\'t open this page',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}
@@ -154,7 +154,7 @@ switch ($action) {
 		try {
 			$exception = NULL;
 			if (empty ($_POST[POST_MESSAGE])) {
-				$e = new exceptionlist ('You must fill in the message field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the message field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -163,7 +163,7 @@ switch ($action) {
 			}
 			$date = getUTCtime ($config);
 			if (empty ($_POST[POST_SUBJECT])) {
-				$e = new exceptionlist ('You must fill in the subject field');
+				$e = new exceptionlist ($lang->translate ('You must fill in the subject field'));
 				if ($exception == NULL) {
 					$exception = $e;
 				} else {
@@ -175,10 +175,10 @@ switch ($action) {
 			}
 			$news->editcomment ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$_GET[GET_ID]);
 			$database->close ();
-			$theme->redirect ('index.php?note=Your message is edited');
+			$theme->redirect ('index.php?note=' . $lang->translate ('Your message is edited'));
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','Your message is not edited',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('Your message is not edited'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}
@@ -189,7 +189,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','you can\'t open this page',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}
@@ -207,7 +207,7 @@ switch ($action) {
 			echo $news->viewFeed ($meta,$category,'RSS2');
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?','error running feed',$errorrep);
+			$link = catch_error ($e,'index.php?',$lang->translate ('error running feed'),$errorrep);
 			$database->close ();
 			$theme->redirect ($link);
 		}

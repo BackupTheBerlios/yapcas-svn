@@ -32,6 +32,7 @@ class theme {
 		if (! file_exists ('.install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
+			$lang = new lang ();
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
 			define ('TBL_PAGES',TBL_PREFIX . 'pages');
@@ -52,9 +53,9 @@ class theme {
 			if (checkDatabase ($database,$tables)) {
 				// Database seems to be OK
 				$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail',0);
-				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL));
-				$news = new news ($database,$user,$config);
-				$poll = new polls ($database,$config);
+				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
+				$news = new news ($database,$user,$config,$lang);
+				$poll = new polls ($database,$config,$lang);
 				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');
@@ -67,7 +68,7 @@ class theme {
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('language',$user,'language','site.config.php'),
 					'general/language',TYPE_STRING);
-				$lang = loadlang  ($config->getConfigByNameType('general/language',TYPE_STRING));
+				$lang->updatelang ($config->getConfigByNameType('general/language',TYPE_STRING));
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('theme',$user,'theme','site.config.php'),
 					'general/theme',TYPE_STRING);
@@ -277,7 +278,7 @@ class theme {
 			$this->error ( $query );
 		} else {
 			if ( $this->database->num_rows ( $query ) == 0 ) {
-				$title = $GLOBALS['lang']->site->untitled;
+				$title = $this->lang->translate ('Untitled');
 			} else {
 				$pagetitle = $this->database->fetch_array ( $query );
 				$pagetitle = $pagetitle['shown_name'];
@@ -362,7 +363,7 @@ class theme {
 				$link = 'news.php?action=postnewsform';
 				$tempoutput = $this->post_news_link;
 				$tempoutput = preg_replace ( '#%postnews.link#', $link , $tempoutput );
-				$tempoutput = preg_replace ( '#%postnews.lang#', $GLOBALS['lang']->news->post_a_news , $tempoutput );
+				$tempoutput = preg_replace ( '#%postnews.lang#',$this->lang->translate ('Post a news'), $tempoutput );
 			} else {
 				$tempoutput = NULL;
 			}
@@ -570,12 +571,12 @@ class theme {
 		//global $GLOBALS['lang'];
 		$output = $page;
 		$output = ereg_replace ( '%css' ,'themes/' . $this->themedir . '/standard.css',$output );
-		$output = ereg_replace ( '%databasetype.lang' ,$GLOBALS['lang']->database->database_type,$output );
-		$output = ereg_replace ( '%databasehost.lang' ,$GLOBALS['lang']->database->database_host,$output );
-		$output = ereg_replace ( '%databasename.lang' ,$GLOBALS['lang']->database->database_name,$output );
-		$output = ereg_replace ( '%databasepassword.lang' ,$GLOBALS['lang']->database->database_password,$output );
-		$output = ereg_replace ( '%installation.lang' ,$GLOBALS['lang']->site->installation,$output );
-		$output = ereg_replace ( '%install.lang' ,$GLOBALS['lang']->site->install,$output );
+		$output = ereg_replace ( '%databasetype.lang' ,$this->lang->translate ('type'),$output );
+		$output = ereg_replace ( '%databasehost.lang' ,$this->lang->translate ('host'),$output );
+		$output = ereg_replace ( '%databasename.lang' ,$this->lang->translate ('name'),$output );
+		$output = ereg_replace ( '%databasepassword.lang' ,$this->lang->translate ('password'),$output );
+		$output = ereg_replace ( '%installation.lang' ,$this->lang->translate ('Install'),$output );
+		$output = ereg_replace ( '%install.lang' ,$this->lang->translate ('Install!!'),$output );
 		$output = ereg_replace ( '%installscript.method' ,'post',$output );
 		$output = ereg_replace ( '%installscript.action' ,'install.php',$output );
 		$output = ereg_replace ( '%database.options' ,$this->options ( databasesinstalled() ,$this->database_option,$this->config->getConfigByNameType('general/databasetype',TYPE_STRING)),$output );
@@ -583,23 +584,23 @@ class theme {
 		$output = ereg_replace ( '%copyright.site.link' ,'about.php',$output );
 		$output = ereg_replace ( '%copyright.theme.text' ,$this->copyright,$output );
 		$output = ereg_replace ( '%copyright.theme.link' ,$this->themelink,$output );
-		$output = ereg_replace ( '%navigation.lang' ,$GLOBALS['lang']->site->navigation,$output );
-		$output = ereg_replace ( '%register.lang' ,$GLOBALS['lang']->users->register,$output );
+		$output = ereg_replace ( '%navigation.lang' ,$this->lang->translate ('Navigation'),$output );
+		$output = ereg_replace ( '%register.lang' ,$this->lang->translate ('Register'),$output );
 		$output = ereg_replace ( '%register.error' ,$this->get ( get_registererror, 'error' ),$output );
 		$output = ereg_replace ( '%email.formname' ,POST_EMAIL,$output );
 		$output = ereg_replace ( '%password1.formname' ,POST_PASSWORD1,$output );
 		$output = ereg_replace ( '%password2.formname' ,POST_PASSWORD2,$output );
 		$output = ereg_replace ( '%user.formname' ,POST_NAME,$output );
-		$output = ereg_replace ( '%databaseuser.lang',$GLOBALS['lang']->database->database_user,$output );
-		$output = ereg_replace ( '%sendpassword.lang' ,$GLOBALS['lang']->users->lost_password_question,$output );
+		$output = ereg_replace ( '%databaseuser.lang',$this->lang->translate ('usernmae'),$output );
+		$output = ereg_replace ( '%sendpassword.lang' ,$this->lang->translate ('Forgot your password?'),$output );
 		$output = ereg_replace ( '%sendpassword.error' ,$this->get ( get_sendpassworderror, 'error' ),$output );
-		$output = ereg_replace ( '%or.lang' ,$GLOBALS['lang']->users->or,$output );
+		$output = ereg_replace ( '%or.lang' ,$this->lang->translate ('or'),$output );
 		$output = ereg_replace ( '%sendpassword.action' ,sendpassword_action,$output );
 		$output = ereg_replace ( '%sendpassword.method' ,form_method,$output );
-		$output = ereg_replace ( '%username.lang' ,$GLOBALS['lang']->users->username,$output );
-		$output = ereg_replace ( '%password1.lang' ,$GLOBALS['lang']->users->password,$output );
-		$output = ereg_replace ( '%password2.lang' ,$GLOBALS['lang']->users->password_repeat,$output );
-		$output = ereg_replace ( '%email.lang' ,$GLOBALS['lang']->users->email,$output );
+		$output = ereg_replace ( '%username.lang' ,$this->lang->translate ('username'),$output );
+		$output = ereg_replace ( '%password1.lang' ,$this->lang->translate ('password'),$output );
+		$output = ereg_replace ( '%password2.lang' ,$this->lang->translate ('repeat your password'),$output );
+		$output = ereg_replace ( '%email.lang' ,$this->lang->translate ('e-mail'),$output );
 		$output = ereg_replace ( '%registerform.action' ,registerform_action,$output );
 		$output = ereg_replace ( '%registerform.method' ,form_method,$output );
 		$output = ereg_replace ( '%postnews.method' ,form_method,$output );
@@ -609,25 +610,25 @@ class theme {
 		$output = ereg_replace ( '%postcomment.action' ,'news.php?action=postcomment',$output );
 		$output = ereg_replace ( '%on_news.value' ,$this->get ( 'id_news','empty' ),$output );
 		$output = ereg_replace ( '%on_comment.value' ,$this->on_comment (),$output );
-		$output = ereg_replace ( '%postnews.lang' ,$GLOBALS['lang']->news->post_a_news,$output );
-		$output = ereg_replace ( '%subject.lang' ,$GLOBALS['lang']->news->subject,$output );
-		$output = ereg_replace ( '%newsmessage.lang' ,$GLOBALS['lang']->news->message,$output );
-		$output = ereg_replace ( '%category.lang' ,$GLOBALS['lang']->news->category,$output );
-		$output = ereg_replace ( '%post.lang' ,$GLOBALS['lang']->news->post,$output );
-		$output = ereg_replace ( '%logout.lang' ,$GLOBALS['lang']->users->logout,$output );
+		$output = ereg_replace ( '%postnews.lang' ,$this->lang->translate ('Post a news'),$output );
+		$output = ereg_replace ( '%subject.lang' ,$this->lang->translate ('Subject'),$output );
+		$output = ereg_replace ( '%newsmessage.lang' ,$this->lang->translate ('Message'),$output );
+		$output = ereg_replace ( '%category.lang' ,$this->lang->translate ('Category'),$output );
+		$output = ereg_replace ( '%post.lang' ,$this->lang->translate ('Post!!'),$output );
+		$output = ereg_replace ( '%logout.lang' ,$this->lang->translate ('Logout'),$output );
 		$output = ereg_replace ( '%logout.link' ,'users.php?action=logout',$output );
-		$output = ereg_replace ( '%timezone.lang' ,$GLOBALS['lang']->users->timezone,$output );
-		$output = ereg_replace ( '%timeformat.lang' ,$GLOBALS['lang']->users->timeformat,$output );
-		$output = ereg_replace ( '%valueheadlines.lang' ,$GLOBALS['lang']->users->valueheadlines,$output );
-		$output = ereg_replace ( '%headlines.lang' ,$GLOBALS['lang']->news->headlines,$output );
-		$output = ereg_replace ( '%comments_on_news.lang' ,$GLOBALS['lang']->news->comments_on_news,$output );
-		$output = ereg_replace ( '%postsonpage.lang' ,$GLOBALS['lang']->users->postsonpage,$output );
-		$output = ereg_replace ( '%threaded.lang' ,$GLOBALS['lang']->users->threaded,$output );
-		$output = ereg_replace ( '%theme.lang' ,$GLOBALS['lang']->users->theme,$output );
-		$output = ereg_replace ( '%language.lang' ,$GLOBALS['lang']->users->language,$output );
-		$output = ereg_replace ( '%postcomment.lang' ,$GLOBALS['lang']->news->post_a_comment,$output );
-		$output = ereg_replace ( '%new_password1.lang' ,$GLOBALS['lang']->users->new_password,$output );
-		$output = ereg_replace ( '%new_password2.lang' ,$GLOBALS['lang']->users->new_password_repeat,$output );
+		$output = ereg_replace ( '%timezone.lang' ,$this->lang->translate ('timezone'),$output );
+		$output = ereg_replace ( '%timeformat.lang' ,$this->lang->translate ('timeformat'),$output );
+		$output = ereg_replace ( '%valueheadlines.lang' ,$this->lang->translate ('Number of headlines visible'),$output );
+		$output = ereg_replace ( '%headlines.lang' ,$this->lang->translate ('Headlines'),$output );
+		$output = ereg_replace ( '%comments_on_news.lang' ,$this->lang->translate ('Comments on newsmessage'),$output );
+		$output = ereg_replace ( '%postsonpage.lang' ,$this->lang->translate ('Number of posts visible'),$output );
+		$output = ereg_replace ( '%threaded.lang' ,$this->lang->translate ('View comments threaded'),$output );
+		$output = ereg_replace ( '%theme.lang' ,$this->lang->translate ('theme'),$output );
+		$output = ereg_replace ( '%language.lang' ,$this->lang->translate ('language'),$output );
+		$output = ereg_replace ( '%postcomment.lang' ,$this->lang->translate ('Post a comment'),$output );
+		$output = ereg_replace ( '%new_password1.lang' ,$this->lang->translate ('Type a new password'),$output );
+		$output = ereg_replace ( '%new_password2.lang' ,$this->lang->translate ('Retype your new password'),$output );
 		$output = ereg_replace ( '%poll.action' ,POLLS_VOTE_ACTION,$output );
 		$output = ereg_replace ( '%poll.method' ,'post',$output );
 		
@@ -680,8 +681,8 @@ class theme {
 		$output = ereg_replace ( '%language.name' ,POST_LANGUAGE,$output );
 		$output = ereg_replace ( '%new_password1.name' ,POST_NEW_PASSWORD1,$output );
 		$output = ereg_replace ( '%new_password2.name' ,POST_NEW_PASSWORD2,$output );
-		$output = ereg_replace ( '%changeoptionsform.lang',$GLOBALS['lang']->users->change_options,$output );
-		$output = ereg_replace ( '%changeoptionsform.submit',$GLOBALS['lang']->users->change_options_submit,$output );
+		$output = ereg_replace ( '%changeoptionsform.lang',$this->lang->translate ('edit your options'),$output );
+		$output = ereg_replace ( '%changeoptionsform.submit',$this->lang->translate ('save your options'),$output );
 		$output = ereg_replace ( '%changeoptionsform.action',changeoptions_action,$output );
 		$output = ereg_replace ( '%changeoptionsform.action',changeoptions_action,$output );
 		//$output = ereg_replace ( '%showlinksallpolls',$this->showallpolls ($GLOBALS['poll']->getallpollsbylanguage ($this->config->getConfigByNameType('general/language',TYPE_STRING)),$output);
@@ -703,15 +704,15 @@ class theme {
 			$output = ereg_replace ( '%login.error' ,$this->get ( get_loginerror, 'error' ),$output );
 			$output = ereg_replace ( '%login.action', loginform_action, $output );
 			$output = ereg_replace ( '%login.method', form_method, $output );
-			$output = ereg_replace ( '%username.lang', $GLOBALS['lang']->users->username, $output );
+			$output = ereg_replace ( '%username.lang',$this->lang->translate ('username'), $output );
 			$output = ereg_replace ( '%username.formname', POST_NAME, $output );
-			$output = ereg_replace ( '%password.lang', $GLOBALS['lang']->users->password, $output );
+			$output = ereg_replace ( '%password.lang',$this->lang->translate ('passowrd'), $output );
 			$output = ereg_replace ( '%password.formname', POST_PASSWORD, $output );
-			$output = ereg_replace ( '%login.lang', $GLOBALS['lang']->users->login, $output );
+			$output = ereg_replace ( '%login.lang',$this->lang->translate ('login'), $output );
 			$output = ereg_replace ( '%toregisterform_action', toregisterform_action, $output );
-			$output = ereg_replace ( '%yetregisterd.lang', $GLOBALS['lang']->users->yet_registered_question, $output );
+			$output = ereg_replace ( '%notyetregisterd.lang',$this->lang->translate ('Not yet registerd?'), $output );
 			if ( ! empty ( $_GET[get_error] ) ) {
-				$output = ereg_replace ( '%getusernameorpassword.lang', $GLOBALS['lang']->users->forget_password_or_username, $output );
+				$output = ereg_replace ( '%getusernameorpassword.lang',$this->lang->translate ('Forgotten your password/username?'), $output );
 			} else {
 				$output = ereg_replace ( '%getusernameorpassword.lang', NULL, $output );
 			}
@@ -722,9 +723,9 @@ class theme {
 			$output = preg_replace ( '#\{loggedin\}(.+?)\{/loggedin}#','',$output );
 			$output = preg_replace ( '#\{notloggedin\}(.+?)\{/notloggedin\}#','\\1',$output );
 			$output = ereg_replace ( '%user.links',$this->loaduserlinks (),$output );
-			$output = ereg_replace ( '%users.lang',$GLOBALS['lang']->users->user,$output );
-			$output = ereg_replace ( '%logout.lang',$GLOBALS['lang']->users->logout,$output );
-			$output = ereg_replace ( '%changeoptionsform.lang',$GLOBALS['lang']->users->changeoptions,$output );
+			$output = ereg_replace ( '%users.lang',$this->lang->translate ('User'),$output );
+			$output = ereg_replace ( '%logout.lang',$this->lang->translate ('logout'),$output );
+			$output = ereg_replace ( '%changeoptionsform.lang',$this->lang->translate ('Edit your options'),$output );
 			$output = ereg_replace ( '%changeoptionsform.link',tochangeoptionsform,$output );
 			$output = ereg_replace ( '%logout.link',logout,$output );
 		}
@@ -739,7 +740,7 @@ class theme {
 		$output = ereg_replace ( '%comment.date',setdate ( $comment['date'] ),$output );
 		$link = 'news.php?action=postcommentform&amp;id_comment=' . $comment['id'] . '&amp;id_news=' . $comment['id_news'];
 		$output = ereg_replace ( '%comment.newcommentlink',$link,$output );
-		$output = ereg_replace ( '%comment.newcomment',$GLOBALS['lang']->news->give_a_comment,$output );
+		$output = ereg_replace ( '%comment.newcomment',$this->lang->translate ('Post a comment'),$output );
 		if ( $comment['author']  == $this->config->getConfigByNameType ('user/name',TYPE_STRING)) {
 			$output = ereg_replace ( '%edit.button',$this->newstheme->editbutton,$output );
 			$output = ereg_replace ( '%link','news.php?action=editcommentform&amp;id=' . $comment['id'],$output );
@@ -862,9 +863,9 @@ class theme {
 				$output = ereg_replace ( '%news.message',$this->replacerichtext ( $news['message'] ),$output );
 				//$output = ereg_replace ( '%news.image',$news['image'],$output );
 				$output = ereg_replace ( '%news.date',setdate ( $news['date'] ),$output );
-				$output = ereg_replace ( '%news.comments',$news['comments'] . '&nbsp;' . $GLOBALS['lang']->news->plural_comment,$output );
+				$output = ereg_replace ( '%news.comments',$news['comments'] . '&nbsp;' . $this->lang->translate ('Comments'),$output );
 				$output = ereg_replace ( '%news.commentlink',$link,$output );
-				$output = ereg_replace ( '%news.newcomment',$GLOBALS['lang']->news->give_a_comment,$output );
+				$output = ereg_replace ( '%news.newcomment',$this->lang->translate ('Post a comment'),$output );
 				$link2 = 'news.php?action=postcommentform&amp;id_news=' . $_GET['id'];
 				$output = ereg_replace ( '%news.link.newcomment',$link2,$output );
 				return $output;

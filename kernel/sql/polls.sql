@@ -1,6 +1,6 @@
 CREATE TABLE %prefix%polls (
   id serial NOT NULL,
-  active char NOT NULL default 'No',
+  active varchar NOT NULL default 'No',
   question text NOT NULL,
   answers text NOT NULL,
   votes text NOT NULL,
