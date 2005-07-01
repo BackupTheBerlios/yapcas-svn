@@ -42,7 +42,7 @@ switch ($action) {
 			$database->close ();
 			if ($user->hasSetConfig () == true) {
 				// this is not the first time the user logged in
-				$theme->redirect ('index.php?note=' . $lang->translate ('You are logged in');
+				$theme->redirect ('index.php?note=' . $lang->translate ('You are logged in'));
 			} else {
 				$theme->redirect ('users.php?action=changeoptionsform' . 
 					'&note=' . $lang->translate ('This is the first time you log in, configure your account'));

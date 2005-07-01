@@ -30,6 +30,7 @@ class user {
 		$this->mustactivate = $mustactivate;
 		$this->lang = $lang;
 		try {
+			$this->isloggedin = $this->loggedin ();
 			$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
 			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
 			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
@@ -37,6 +38,8 @@ class user {
 			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
 			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
 			$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
+			$this->email = $this->getEmail ();
+			$this->name = $this->getName ();
 		}
 		catch (exceptionlist $e) {
 			throw $e;
@@ -67,13 +70,16 @@ class user {
 				return $this->themeconfig;
 				break;
 			case 'email':
-				return $this->getEmail ();
+				return $this->email;
 				break;
 			case 'name':
-				return $this->getName ();
+				return $this->name;
+				break;
+			case 'langcode':
+				return 'en';
 				break;
 			default:
-				throw new exceptionlist ($this->lang ('Uknown userconfig'),NULL,-1);
+				throw new exceptionlist ($this->lang->translate ('Uknown userconfig'),NULL,-1);
 		}
 	} /* public getconfig ($what) */
 
@@ -158,18 +164,22 @@ class user {
 	} /* public function getips () */
 
 	public function loggedin () {
-		if (!empty ($_SESSION[SESSION_NAME])) {
-			try {
-				$validlogin = $this->validlogin ();
-				// this checks of the user has not hacked the session vars and
-				// make him a root or other user
-				return $validlogin;
-			}
-			catch (exceptionlist $e) {
-				throw $e;
+		if (! isset ($this->isloggedin)) {
+			if (!empty ($_SESSION[SESSION_NAME])) {
+				try {
+					$validlogin = $this->validlogin ();
+					// this checks of the user has not hacked the session vars and
+					// make him a root or other user
+					return $validlogin;
+				}
+				catch (exceptionlist $e) {
+					throw $e;
+				}
+			} else {
+				return false;
 			}
 		} else {
-			return false;
+			return $this->isloggedin;
 		}
 	} /* public function loggedin () */
 

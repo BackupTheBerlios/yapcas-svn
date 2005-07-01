@@ -76,13 +76,10 @@ TODO
 !+ help integratie ( eerste ideeen / versies )
 	!* installscript database laten invullen
 	!* foutmeldingen nummers geven
-	!* alleen voor admins
-		- foutberichten uit de log bekijken + betekenis
-		!- FAQ vragen toevoegen
+		ik ga maar een foutmelding een nummer geven om te lanten zien hoe het systeem werkt
 	!* meerder meldingen bij één fout weergeven
 !+ layout mooier maken
 !+ de queries nakijken (bug #00006 komt weer op)
-+ betere errorlog // alleen db problemen
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
 + config->writeOut (); schrijven // wat zal deze functie precies doen?
 
@@ -96,6 +93,7 @@ TODO
 	* admin van berichten ( geintegreerd in newssysteem )
 	* error logs bekijken
 	* paginas toevoegen
+	* FAQ vragen toevoegen
 
 0.5 ( BETA stauts )
 ----
