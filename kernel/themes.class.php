@@ -36,7 +36,8 @@ class theme {
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
 			define ('TBL_PAGES',TBL_PREFIX . 'pages');
-			include ('kernel/error.class.php');
+			include ('kernel/help.class.php');
+			include ('kernel/error.class.php'); // This should not be in the release
 			include ('kernel/users.class.php');
 			include ('kernel/news.class.php');
 			include ('kernel/polls.class.php');
@@ -56,6 +57,7 @@ class theme {
 				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
 				$news = new news ($database,$user,$config,$lang);
 				$poll = new polls ($database,$config,$lang);
+				$this->help = new help ($database,$config,$lang);
 				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');
@@ -75,6 +77,9 @@ class theme {
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('threaded',$user,'threaded','site.config.php'),
 					'news/threaded',TYPE_BOOL);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('langcode',$user,'langcode','site.config.php'),
+					'general/langcode',TYPE_STRING);
 				$config->addConfigByList ('YAPCAS_USER',array($user),'user/email',TYPE_STRING);
 				$config->addConfigByList ('YAPCAS_USER',array($user),'user/name',TYPE_STRING);
 				$this->loadtheme ($config->getConfigByNameType('general/theme',TYPE_STRING));
@@ -999,28 +1004,60 @@ class theme {
 			throw $e;
 		}
 	}
-	
-	function helpindex () {
-		$output = NULL;
-		foreach (errorSDK::getHelpIndex ($this->database) as $title) {
-			$output .= $title;
+
+	function helpcategories ($parent) {
+		try {
+			$cat = array ();
+			foreach ($this->help->getAllCategoriesIDByParent ($parent) as $subcat) {
+				$cat[$subcat] = $this->helpcategories ($subcat);
+			}
+			return $cat;
 		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	}
+
+	function replace_helpindex ($index,$nr = 0) {
+		$output = NULL;
+		$nr++;
+		if (array_key_exists ($nr,$this->helpindex)) {
+			$replace = $this->helpindex[$nr];
+		} else {
+			$replace['start'] = '<ol>';
+			$replace['item'] = '<li>%item%</li>';
+			$replace['end'] = '</ol>';
+		}
+		$output .= $replace['start'];
+		foreach ($index as $parentkey => $i) {
+			$cat = $this->help->getCatByIDAndLang ($parentkey,$this->config->getConfigByNameType ('general/langcode',TYPE_STRING));
+			$output .= $replace['item'];
+			$output = ereg_replace ('%item%',$cat['name'],$output);
+			$output .= $this->replace_helpindex ($i,$nr);
+		}
+		$output .= $replace['end'];
 		return $output;
+	}
+
+/*foreach ($i as $childid => $j) {
+				$cat = $this->help->getCatByIDAndLang ($childid,'en');
+				$output .= ': ' . $cat['name'] . '<br />';
+			}*/
+
+	function helpindex () {
+		try {
+			$output = NULL;
+			$index = $this->helpcategories (0);
+			$output .= $this->replace_helpindex ($index);
+			return $output;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
 	}
 	
 	function helpcontent () {
 		$output = NULL;
-		foreach (errorSDK::getHelpIndex ($this->database) as $index) {
-			$question = errorSDK::getQuestionsByIndex ($this->database,$index);
-			if (! errorSDK::is_error ($question)) {
-				$tmpoutput = $this->helpqa;
-				$tmpoutput = ereg_replace ('%question',$question[FIELD_HELPQUESTION_QUESTION],$tmpoutput);
-				$tmpoutput = ereg_replace ('%answer',$question[FIELD_HELPQUESTION_ANSWER],$tmpoutput);
-				$output .= $tmpoutput;  
-			} else {
-				$output .= $this->error ($question);
-			}
-		}
 		return $output;
 	}
 	

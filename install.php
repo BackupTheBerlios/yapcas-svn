@@ -106,7 +106,7 @@ if (empty ($_POST['submit'])) {
 		$queries = ereg_replace ('%show_index_in_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_logout_in_user_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_index_in_user_nav%',No,$queries);
-		$queries = ereg_replace ('%prefix%','yapcas14',$queries);
+		$queries = ereg_replace ('%prefix%','yapcas17',$queries);
 		//$queries .= file_get_contents ('kernel/sql/basiccontent.sql');
 		//$queries .= file_get_contents ('kernel/sql/helpcontent.sql');
 		$queriesarray = explode (';',$queries);

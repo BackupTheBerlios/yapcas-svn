@@ -81,6 +81,7 @@ TODO
 		!- FAQ vragen toevoegen
 	!* meerder meldingen bij één fout weergeven
 !+ layout mooier maken
+!+ de queries nakijken (bug #00006 komt weer op)
 + betere errorlog // alleen db problemen
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
 + config->writeOut (); schrijven // wat zal deze functie precies doen?
@@ -89,6 +90,7 @@ TODO
 ----
 TODO
 ----
++ geavanceerd rechtensysteem schrijven
 + admin schrijven
 	* blokkeren van gebruikers / ips
 	* admin van berichten ( geintegreerd in newssysteem )
@@ -100,6 +102,10 @@ TODO
 TODO
 ----
 + Forum
+	dit gaat bestaan uit elementen die al geprogrammeerd zijn (news,user,poll,rechten)
+	die moeten samengebracht worden, en in een nieuwe layout gestoken, ook moeten 
+	er aanpassingen aangebracht worden zodat er handig met categorien kan gewerkt worden
+	zonder de oude (nieuws)code te breken
 + Admin forum schrijven
 
 Dromen zijn bedrog

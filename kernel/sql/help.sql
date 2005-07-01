@@ -1,15 +1,21 @@
-CREATE TABLE %prefix%helpindex (
-  id serial NOT NULL,
-  title varchar NOT NULL,
-  lang varchar NOT NULL,
-  PRIMARY KEY (id)
+CREATE TABLE %prefix%helpcategory (
+	id int,
+	parent int default '0',
+	PRIMARY KEY (id)
 );
 
-CREATE TABLE %prefix%helpquestion (
-  id int NOT NULL,
-  question varchar NOT NULL,
-  answer text NOT NULL,
-  lang varchar NOT NULL,
-  helpindex varchar NOT NULL,
-  PRIMARY KEY (id)
-)
+CREATE TABLE %prefix%transcategory (
+	id int,
+	langcode varchar,
+	name varchar,
+	PRIMARY KEY (id,langcode)
+);
+
+CREATE TABLE %prefix%helpquestions (
+	id int,
+	question text,
+	answer text,
+	langcode text,
+	category int,
+	PRIMARY KEY (id)
+);
