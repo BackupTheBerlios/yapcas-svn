@@ -8,4 +8,6 @@
 
 	define ('FIELD_HELP_TRANSCATEGORY_ID','id');
 	define ('FIELD_HELP_TRANSCATEGORY_LANG','langcode');
+
+	define ('FIELD_HELP_QUESTION_CATEGORY','category');
 ?>

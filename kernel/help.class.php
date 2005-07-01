@@ -56,7 +56,7 @@ class help {
 
 	function getAllQByCategoryIDAndLang ($cat,$lang) {
 		try {
-			$sql = 'SELECT * FROM ' . TBL_HELP;
+			$sql = 'SELECT * FROM ' . TBL_HELP_QUESTIONS;
 			$sql .= ' WHERE ' . FIELD_HELP_QUESTION_CATEGORY . '=\'' . $cat .'\'';
 			$query = $this->database->query ($sql);
 			$q = array ();

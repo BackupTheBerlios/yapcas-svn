@@ -1022,27 +1022,34 @@ class theme {
 		$output = NULL;
 		$nr++;
 		if (array_key_exists ($nr,$this->helpindex)) {
-			$replace = $this->helpindex[$nr];
+			$replace[$nr] = $this->helpindex[$nr];
 		} else {
-			$replace['start'] = '<ol>';
-			$replace['item'] = '<li>%item%</li>';
-			$replace['end'] = '</ol>';
+			$replace[$nr]['start'] = '<ol>';
+			$replace[$nr]['item'] = '<li>%item%</li>';
+			$replace[$nr]['end'] = '</ol><ul>%questions%</ul>';
+			$replace[1]['start'] = '<ol>';
+			$replace[1]['item'] = '<li>%item%</li>';
+			$replace[1]['end'] = '</ol>';
 		}
-		$output .= $replace['start'];
+		$output .= $replace[$nr]['start'];
 		foreach ($index as $parentkey => $i) {
 			$cat = $this->help->getCatByIDAndLang ($parentkey,$this->config->getConfigByNameType ('general/langcode',TYPE_STRING));
-			$output .= $replace['item'];
+			$output .= $replace[$nr]['item'];
 			$output = ereg_replace ('%item%',$cat['name'],$output);
 			$output .= $this->replace_helpindex ($i,$nr);
+			// add the questions
+			$q = $this->help->getAllQByCategoryIDAndLang ($parentkey,
+				$this->config->getConfigByNameType ('general/langcode',TYPE_STRING));
+			$qo = NULL;
+			foreach ($q as $question) {
+				$qotmp = $this->helpindexquestion;
+				$qo .= ereg_replace ('%question%',$question['question'],$qotmp);
+			}
+			$output = ereg_replace ('%questions%',$qo,$output);
 		}
-		$output .= $replace['end'];
+		$output .= $replace[$nr]['end'];
 		return $output;
 	}
-
-/*foreach ($i as $childid => $j) {
-				$cat = $this->help->getCatByIDAndLang ($childid,'en');
-				$output .= ': ' . $cat['name'] . '<br />';
-			}*/
 
 	function helpindex () {
 		try {

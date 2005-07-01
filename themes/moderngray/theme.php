@@ -74,5 +74,7 @@
 	$this->b['open'] = '<span class="b">';
 	$this->b['close'] = '</span>';
 
-	$this->helpqa = 'Vraag: %question <br />Antwoord: %answer'
+	$this->helpqa = 'Vraag: %question <br />Antwoord: %answer';
+	$this->helpindex = array ();
+	$this->helpindexquestion = '<li>%question%</li>';
 ?>
