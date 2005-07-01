@@ -1025,10 +1025,8 @@ class theme {
 			$replace[$nr] = $this->helpindex[$nr];
 		} else {
 			$replace[$nr]['start'] = '<ol>';
-			$replace[$nr]['item'] = '<li>%item%</li>';
+			$replace[$nr]['item'] = '<li><a href="#%itemid%">%item%</a></li>';
 			$replace[$nr]['end'] = '</ol><ul>%questions%</ul>';
-			$replace[1]['start'] = '<ol>';
-			$replace[1]['item'] = '<li>%item%</li>';
 			$replace[1]['end'] = '</ol>';
 		}
 		$output .= $replace[$nr]['start'];
@@ -1036,6 +1034,7 @@ class theme {
 			$cat = $this->help->getCatByIDAndLang ($parentkey,$this->config->getConfigByNameType ('general/langcode',TYPE_STRING));
 			$output .= $replace[$nr]['item'];
 			$output = ereg_replace ('%item%',$cat['name'],$output);
+			$output = ereg_replace ('%itemid%','category' . $parentkey,$output);
 			$output .= $this->replace_helpindex ($i,$nr);
 			// add the questions
 			$q = $this->help->getAllQByCategoryIDAndLang ($parentkey,
@@ -1044,6 +1043,41 @@ class theme {
 			foreach ($q as $question) {
 				$qotmp = $this->helpindexquestion;
 				$qo .= ereg_replace ('%question%',$question['question'],$qotmp);
+				$qo = ereg_replace ('%itemid%','question' . $question['id'],$qo);
+			}
+			$output = ereg_replace ('%questions%',$qo,$output);
+		}
+		$output .= $replace[$nr]['end'];
+		return $output;
+	}
+
+	function replace_helpcontent ($index,$nr = 0) {
+		$output = NULL;
+		$nr++;
+		if (array_key_exists ($nr,$this->helpcontent)) {
+			$replace[$nr] = $this->helpcontent[$nr];
+		} else {
+			$replace[$nr]['start'] = '<ol>';
+			$replace[$nr]['item'] = '<li id="%itemid%">%item%</li>';
+			$replace[$nr]['end'] = '</ol><ul>%questions%</ul>';
+			$replace[1]['end'] = '</ol>';
+		}
+		$output .= $replace[$nr]['start'];
+		foreach ($index as $parentkey => $i) {
+			$cat = $this->help->getCatByIDAndLang ($parentkey,$this->config->getConfigByNameType ('general/langcode',TYPE_STRING));
+			$output .= $replace[$nr]['item'];
+			$output = ereg_replace ('%item%',$cat['name'],$output);
+			$output = ereg_replace ('%itemid%','category' . $parentkey,$output);
+			$output .= $this->replace_helpcontent ($i,$nr);
+			// add the questions
+			$q = $this->help->getAllQByCategoryIDAndLang ($parentkey,
+				$this->config->getConfigByNameType ('general/langcode',TYPE_STRING));
+			$qo = NULL;
+			foreach ($q as $question) {
+				$qotmp = $this->helpcontentquestion;
+				$qo .= ereg_replace ('%question%',$question['question'],$qotmp);
+				$qo = ereg_replace ('%answer%',$question['answer'],$qo);
+				$qo = ereg_replace ('%itemid%','question' . $question['id'],$qo);
 			}
 			$output = ereg_replace ('%questions%',$qo,$output);
 		}
@@ -1062,10 +1096,17 @@ class theme {
 			throw $e;
 		}
 	}
-	
+
 	function helpcontent () {
-		$output = NULL;
-		return $output;
+		try {
+			$output = NULL;
+			$index = $this->helpcategories (0);
+			$output .= $this->replace_helpcontent ($index);
+			return $output;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
 	}
 	
 	function help () {
