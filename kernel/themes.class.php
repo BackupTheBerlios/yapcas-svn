@@ -424,7 +424,7 @@ class theme {
 		$pagename = ereg_replace ( '/','',$pagename ); 
 		// removes '/' in begin of pagename
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-		$sql = "SELECT * FROM pages WHERE name='$pagename' AND language='$language'";
+		$sql = "SELECT * FROM " . TBL_PAGES . " WHERE " . FIELD_PAGES_NAME . "='$pagename' AND " . FIELD_PAGES_LANGUAGE . "='$language'";
 		$query = $this->database->query ( $sql );
 		if ( errorSDK::is_error ( $query ) ) {
 			$this->error ( $query );

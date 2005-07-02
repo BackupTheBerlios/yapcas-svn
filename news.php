@@ -124,7 +124,7 @@ switch ($action) {
 					$exception->setNext ($e);
 				}
 			}
-			if (! empty ($exceptionlist)) {
+			if (! empty ($exception)) {
 				throw $exception;
 			}
 			$language = $config->getConfigByNameType ('general/language',TYPE_STRING);

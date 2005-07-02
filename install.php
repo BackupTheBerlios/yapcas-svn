@@ -58,15 +58,17 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['general']['sitename'] = '$_POST[sitename]';";
 	$config .= "\$config['general']['description'] = '$_POST[description]';";
 	$config .= "\$config['general']['language'] = '$_POST[language]';";
+	$config .= "\$config['general']['langcode'] = 'en';";
 	$config .= "\$config['general']['theme'] = 'moderngray';";
 	$config .= "\$config['general']['databasetype'] = $_POST[databasetype];";
-	// TODO $config .= "\$config['general']['webmastermail'] = $_POST[mail];";
+	$config .= "\$config['general']['webmastermail'] = '$_POST[webmastermail]';";
 	$config .= "\$config['general']['errorreporting'] = E_NONE;";
 	//$config .= '// database';
 	$config .= "\$config['database']['host'] = '$_POST[databasehost]';";
 	$config .= "\$config['database']['user'] = '$_POST[databaseuser]';";
 	$config .= "\$config['database']['password'] = '$_POST[databasepassword]';";
 	$config .= "\$config['database']['name'] = '$_POST[databasename]';";
+	$config .= "\$config['database']['tblprefix'] = '$_POST[databaseprefix]';";
 	//$config .= '// news';
 	$config .= "\$config['news']['headlines'] = 10;";
 	$config .= "\$config['news']['postsonpage'] = 5;";
@@ -77,9 +79,9 @@ if (empty ($_POST['submit'])) {
 	convertToStandard ($activatemail);
 	$config .= "\$config['user']['activatemail'] = true;";
 	$config .= ' ?>';
-	/*$handle = fopen ('site.config.php','w');
+	$handle = fopen ('site.config.php','w');
 	fwrite ($handle,$config);
-	fclose ($handle);*/
+	fclose ($handle);
 	// do dbstuff
 	try {
 		$config = new config ();
@@ -106,7 +108,7 @@ if (empty ($_POST['submit'])) {
 		$queries = ereg_replace ('%show_index_in_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_logout_in_user_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_index_in_user_nav%',No,$queries);
-		$queries = ereg_replace ('%prefix%','yapcas17',$queries);
+		$queries = ereg_replace ('%prefix%',$_POST['databaseprefix'],$queries);
 		//$queries .= file_get_contents ('kernel/sql/basiccontent.sql');
 		//$queries .= file_get_contents ('kernel/sql/helpcontent.sql');
 		$queriesarray = explode (';',$queries);

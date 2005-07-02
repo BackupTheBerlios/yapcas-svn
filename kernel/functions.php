@@ -221,7 +221,6 @@ function setdate ($time) {
 
 function getUTCtime (&$config) {
 	try {
-		$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/servertimezone');
 		$sitetimezone = $config->getConfigByNameType ('general/servertimezone',TYPE_INT);
 		$time = time ();
 		$UTCtime = $time - ($sitetimezone * 60 * 60);

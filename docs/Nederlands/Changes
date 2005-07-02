@@ -79,15 +79,20 @@ TODO
 		ik ga maar een foutmelding een nummer geven om te lanten zien hoe het systeem werkt
 	!* meerder meldingen bij één fout weergeven
 !+ layout mooier maken
-!+ de queries nakijken (bug #00006 komt weer op)
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
-+ config->writeOut (); schrijven // wat zal deze functie precies doen?
+
+0.3.5
+-----
++ Herwerken van themes systeem
++ Extensies mogelijk maken
+?+ Rechten/Groepen systeem schrijven? mogelijk in 0.4
+?+ configsysteem wijzigen? mogelijk in een latere versie
 
 0.4 
 ----
 TODO
 ----
-+ geavanceerd rechtensysteem schrijven
+?+ geavanceerd rechtensysteem schrijven. mogelijk in 0.3.5
 + admin schrijven
 	* blokkeren van gebruikers / ips
 	* admin van berichten ( geintegreerd in newssysteem )
@@ -110,6 +115,7 @@ Dromen zijn bedrog
 ------------------
 TODO
 ----
++ er zijn een aantal queries teveel
 + avatar toevoegen
 + databasecheck
 	* alle tabellen aanwezig

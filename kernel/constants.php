@@ -18,4 +18,7 @@
 	define ('STANDARD_THEME','moderngray');
 	define ('STANDARD_DATABASE_TYPE',MySQL4);
 	define ('COPYRIGHT','&copy; 2005 Nathan Samson Yapcas is Licensed under the GPL');
+
+	define ('FIELD_PAGES_NAME','name');
+	define ('FIELD_PAGES_LANGUAGE','language');
 ?>
