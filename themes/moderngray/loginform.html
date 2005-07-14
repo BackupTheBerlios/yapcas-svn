@@ -1,41 +1,12 @@
 {loggedin}
-<div class="box">
-	<h2>
-		%login.lang
-	</h2>
-	<div>
-		<object>
-			<form class="login" action="%login.action" method="%login.method">
-				<p>
-					%username.lang :<input type="text" name="%username.formname" size="10" />
-				</p>
-				<p>
-					%password.lang : 
-					<input type="password" name="%password.formname" size="10" />
-				</p>
-				<p>
-					<input type="submit" value="%login.lang" /><br />
-				</p>
-				<p>
-					<a href="%toregisterform_action">%notyetregisterd.lang</a>
-				</p>
-				<p>
-					<a href="%getusernameorpassword.link">%getusernameorpassword.lang</a>
-				</p>
-			</form>
-		</object>
-	</div>
-</div>
+	<form class="login" action="%login.action" method="%login.method">
+		%username.lang: <input class="text" type="text" name="%username.formname" size="10" />
+		%password.lang: <input class="text" type="password" name="%password.formname" size="10" />
+		<input class="button" type="submit" value="%login.lang" />
+		<a href="%toregisterform_action">%notyetregisterd.lang</a>
+		<a href="%getusernameorpassword.link">%getusernameorpassword.lang</a>
+	</form>
 {/loggedin}
 {notloggedin}
-<div class="box">
-	<h2>
-		%users.lang
-	</h2>
-	<div>
-		<p>
-			%user.links
-		</p>
-	</div>
-</div>
+	%user.links
 {/notloggedin}

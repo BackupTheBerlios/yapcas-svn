@@ -295,7 +295,7 @@ class news {
 	} /* public function postcomment ($message,$subject,$date,$user,$onnews,$oncomment = 0) */
 
 	private function viewRSS ($meta,$headlines) {
-		header('Content-type: text/xml');
+		header('Content-type: application/xml');
 		$output = '<?xml version="1.0"?>';
 		$output .= '<rss version="2.0">';
 		$output .= '<channel>';
@@ -332,7 +332,7 @@ class news {
 				$output .= $headline[FIELD_NEWS_SUBJECT];
 			$output .= '</title>';
 			$output .= '<link>';
-				$output .= 'http://nyi.com';
+				$output .= $meta['link'] . '/index.php#news' . $headline[FIELD_NEWS_ID];
 			$output .= '</link>';
 			$output .= '<description>';
 				$output .= $headline[FIELD_NEWS_MESSAGE];
@@ -366,8 +366,6 @@ class news {
 			if (! empty ($category)) {
 				$meta['category'] = $category;
 			}
-			$meta['link'] = 
-				$this->config->getConfigByNameType ('general/httplink',TYPE_STRING);
 			$headlines = $this->headlines (NULL,$category);
 			switch ($method) {
 				case 'RSS2':

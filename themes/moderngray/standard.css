@@ -1,162 +1,178 @@
-.login {
-	  margin-bottom: 0em;
-}	
-
-.login div span {
-	  padding: 5px;
-	  font-size: 10pt;
-	  width: 3000px;
+#banner{
+	display: block;
+	top: 0px;
+	left: 0px;
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	border: solid 7px #0800FF;
+	-moz-border-radius: 10px;
+	padding: 5px;
+	z-index: 1;
+	background-color: #82CAFF;
 }
 
-#banner {
-	  font-size: 20pt;
-	  top: 0px;
-	  text-align: center;
-	  border: 1px solid black;
-	  margin-bottom: 10px;
-	  background-color: #A9A9A9;
-	  clear: both;
+#banner h1 {
+	text-align: center;
+	margin: 0;
+}
+
+#banner h4 {
+	text-align: right;
+	margin: 0;
+}
+
+#banner #navigation {
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#sidebar {
+	position: fixed;
+	left: 0px;
+	margin-top: 10px;
+	width: 20%;
+	margin-left: 10%;
+	padding: 5px;
+}
+
+#content {
+	border-left: solid 5px #82CAFF;
+	position: relative;
+	margin-top: 10px;
+	width: 60%;
+	margin-left: 31%;
+	padding:5px;
 }
 
 #copyright {
-	  position: relative;
-	  font-size: 12pt;
-	  text-align: center;
-	  border: 1px solid black;
-	  clear: both;
-}
-
-#links {
-	  background-color: #FFFFFF;
-	  width: 20em;
-	  float: left;
-	  overflow: auto;
-}
-
-/*#rechts {
-	  background-color: #FFFFFF;
-	  width: 20em;
-	  float: right;
-	  overflow: auto;
-}*/
-
-#main {
-	  margin-left: 21em;
-	  margin-bottom: 1em;
-	  margin-right: 0em;
+	position: relative;
+	font-size: 0.7em;
+	text-align: center;
+	clear: both;
 }
 
 .error {
-	border: 1px solid red;
+	border: solid 1px black;
+	background-color: yellow;
+	margin-top: 0;
+	padding: 2px;
+	font-size: 1.5em;
+	width: 100%;
+}
+
+.error a {
 	color: red;
-	margin-bottom: 0.5em;
 }
 
 .note {
-	border: 1px solid blue;
+	border: solid 1px black;
+	background-color: yellow;
+	margin-top: 0;
+	padding: 2px;
+	font-size: 1.5em;
+}
+
+.note a {
 	color: blue;
-	margin-bottom: 0.5em;
 }
 
 .warning {
-	border: 1px solid green;
-	color: green;
-	margin-bottom: 0.5em;
+	border: solid 1px black;
+	background-color: yellow;
+	margin-top: 0;
+	padding: 2px;
+	font-size: 1.5em;
 }
 
-.box h2 {
-	  font-size: 15pt;
-	  text-align: center;
-	  background-color: #A9A9A9;
-	  margin-top: 0px;
-	  margin-bottom: 0px;
-	  border-bottom: 1px solid black;
-}
-
-.box p {
-	  font-size: 0.8em;
-	  margin-top: 0px;
-	  margin-bottom: 0px;
-	  background-color: #DCDCDC;
+.warning a {
+	color: black;
 }
 
 .box {
-	  background-color: #FFFFFF;
-	  border: 1px solid black;
-	  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
-.nieuws h5{
-	  font-size: 10pt;
-	  height: 1.3em;
-	  /*background-color: gray;
-	  border-top: 1px solid black;*/
-	  margin-top: 0px;
-	  margin-bottom: 0px;
+.box h2 {
+	text-align: left;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
-.news h6 {
-	  font-size: 10pt;
-	  height: 1.3em;
-	  /*background-color: gray;
-	  border-bottom: 1px solid black;*/
-	  margin-top: 0px;
-	  margin-bottom: 0px;
-}
-
-.news h3 {
-	  font-size: 15pt;
-	  text-align: center;
-	  background-color: #A9A9A9;
-	  margin-top: 0px;
-	  margin-bottom: 0px;
+.box p {
+	font-size: 0.8em;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 .news {
-	  /*background-color: #DCDCDC;*/
-	  border: 0px solid white;
-	  border-top: 1px solid black;
-	  margin-bottom: 8px;
-	  font-size: 12pt;
+	border: 0px solid;
+	border-top: 3px solid #3BA1ED;
+	margin-bottom: 8px;
+	font-size: 12pt;
+}
+
+.news h3 {
+	font-size: 15pt;
+	text-align: center;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	background-color: #00F9FF;
+	-moz-border-radius-bottomleft: 10px;
+	-moz-border-radius-bottomright: 10px;
+}
+
+.nieuws h5{
+	font-size: 10pt;
+	height: 1.3em;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.news h6 {
+	font-size: 10pt;
+	height: 1.3em;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 .date {
-	  /* niets */
+	/* niets */
 }
 
 .author {
-	  float: right;
+	float: right;
 }
 
 .thread {
-	  margin-left: 25px;
+	margin-left: 25px;
 }
 
 .input {
-	  margin-left: 10%;
-	  margin-right: 10%;  
-	  width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;  
+	width: 80%;
 }
 
 .input span input, .input span textarea  {
-	  border: 1px solid black;
+	border: 1px solid black;
 }
 
 span.error {
-	  border: 1px solid red;
-	  color: red;
+	border: 1px solid red;
+	color: red;
 }
 
 span.bericht {
-	  position: relative;
-	  border: 1px solid green;
-	  color: blue;
-	  text-align: center;
-	  clear: both;
+	position: relative;
+	border: 1px solid green;
+	color: blue;
+	text-align: center;
+	clear: both;
 }
 
 div.message div.quote {
-	border: 2px dotted blue;
+	border: 2px dotted;
 	margin-left: 20px;
 	color: green;
 }
@@ -194,4 +210,17 @@ div.headline a.message {
 
 .thread {
 	margin-left: 1em;
+}
+
+.login {
+	font-size: 12px;
+	text-align: left;
+}
+
+.login input.button {
+	border: solid 1px;
+}
+
+.login input.text {
+	border: solid 1px;
 }

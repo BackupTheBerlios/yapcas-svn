@@ -74,6 +74,14 @@ switch ($action) {
 					$exception->setNext ($e);
 				}
 			}
+			if (empty ($_POST[POST_ID_NEWS])) {
+				$e = new exceptionlist ($lang->translate ('Core error'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
 			if (! empty ($exception)) {
 				throw $exception;
 			}
@@ -170,7 +178,15 @@ switch ($action) {
 					$exception->setNext ($e);
 				}
 			}
-			if (! empty ($exceptionlist)) {
+			if (empty ($_GET[GET_ID])) {
+				$e = new exceptionlist ($lang->translate ('Core error'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
+			if (! empty ($exception)) {
 				throw $exception;
 			}
 			$news->editcomment ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$_GET[GET_ID]);
@@ -198,7 +214,8 @@ switch ($action) {
 		try {
 			$meta['title'] = $config->getConfigByNameType ('general/sitename',TYPE_STRING);
 			$meta['description'] = $config->getConfigByNameType ('general/description',TYPE_STRING);
-			$meta['link'] = 'link';
+			$meta['link'] = $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"];
+			$meta['link'] = ereg_replace ('news.php','',$meta['link']);
 			if (! empty ($_GET[GET_CATEGORY])) {
 				$category = $_GET[GET_CATEGORY];
 			} else {

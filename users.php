@@ -38,6 +38,26 @@ catch (exceptionlist $e) {
 switch ($action) {
 	case 'login':
 		try {
+			$exception = NULL;
+			if (empty ($_POST[POST_NAME])) {
+				$e = new exceptionlist ($lang->translate ('You must fill in the username field'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
+			if (empty ($_POST[POST_PASSWORD])) {
+				$e = new exceptionlist ($lang->translate ('You must fill in the password field'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
+			if (! empty ($exception)) {
+				throw $exception;
+			}
 			$user->login ($_POST[POST_NAME],$_POST[POST_PASSWORD]);
 			$database->close ();
 			if ($user->hasSetConfig () == true) {

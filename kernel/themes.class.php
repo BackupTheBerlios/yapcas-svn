@@ -901,7 +901,7 @@ class theme {
 				$tempoutput = ereg_replace ( '%headline.message', substr ( $headline['message'],0,60) . '...',$tempoutput );
 				$tempoutput = ereg_replace ( '%headline.user',$headline['author'],$tempoutput );
 				$tempoutput = ereg_replace ( '%headline.date',setdate ( $headline['date'] ),$tempoutput );
-				$tempoutput = ereg_replace ( '%headline.link','news.php?action=viewcomments&id=' . $headline['id'],$tempoutput );
+				$tempoutput = ereg_replace ( '%headline.link','news.php?action=viewcomments&amp;id=' . $headline['id'],$tempoutput );
 				$output .= $tempoutput;
 			}
 		}

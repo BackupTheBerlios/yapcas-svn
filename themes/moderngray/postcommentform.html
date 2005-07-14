@@ -6,9 +6,18 @@
 		<link rel="stylesheet" type="text/css" href="%css" />
 	</head>
 	<body>
-		<div id="banner">%title</div>
-		<div id="links">%navigation.html %loginform.html</div>
-		<div id="main">
+		<div id="banner">
+			<h1>%title</h1>
+			<h4>%description%</h4>
+			<div id="navigation">%navigation.html %loginform.html</div>
+		</div>
+		<div id="sidebar">
+			<div class="box">
+				<h2>%headlines.lang</h2>
+				<p class="headlines">%headlines.html</p>
+			</div>
+			%shortviewcurrentpoll.html</div>
+		<div id="content">
 			%error %warning %note 
 			<div class="box">
 				<h2>
