@@ -30,21 +30,25 @@ class user {
 		$this->mustactivate = $mustactivate;
 		$this->lang = $lang;
 		try {
-			$this->isloggedin = $this->loggedin ();
-			$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
-			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
-			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
-			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
-			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
-			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
-			$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
-			$this->email = $this->getEmail ();
-			$this->name = $this->getName ();
+			$this->updateConfig ();
 		}
 		catch (exceptionlist $e) {
 			throw $e;
 		}
 	} /* public function __construct ($database,$mustactivate,$lang) */
+
+	public function updateConfig () {
+		$this->isloggedin = $this->loggedin ();
+		$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
+		$this->timezoneconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
+		$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
+		$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
+		$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
+		$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
+		$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
+		$this->email = $this->getEmail ();
+		$this->name = $this->getName ();
+	}
 
 	public function getconfig ($what) {
 		switch ($what) {
@@ -233,13 +237,9 @@ class user {
 			$_SESSION[SESSION_NAME] = $user[FIELD_USERS_NAME];
 			$_SESSION[SESSION_TYPE] = $user[FIELD_USERS_TYPE];
 			$_SESSION[SESSION_PASSWORD] = $user[FIELD_USERS_PASSWORD];
-			$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
-			$this->timezoneconfig =$this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
-			$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
-			$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
-			$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
-			$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
-			$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
+			// we need this, otherwise it would not check for new db
+			$this->isloggedin = true;
+			$this->updateConfig ();
 			return true;
 		}
 		catch (exceptionlist $e) {
@@ -483,10 +483,10 @@ class user {
 
 	public function hasSetConfig () {
 		try {
-			if (($this->languageconfig == '') or ($this->themeconfig == '') 
-			or ($this->timezoneconfig == '') or ($this->timeformatconfig == '')
-			or ($this->threadedconfig == '') or ($this->postsonpageconfig == '') 
-			or ($this->headlinesconfig == '')) {
+			if (($this->languageconfig == NULL) or ($this->themeconfig == NULL) 
+			or ($this->timezoneconfig == NULL) or ($this->timeformatconfig == NULL)
+			or ($this->threadedconfig == NULL) or ($this->postsonpageconfig == NULL) 
+			or ($this->headlinesconfig == NULL)) {
 				return false;
 			} else {
 				return true;

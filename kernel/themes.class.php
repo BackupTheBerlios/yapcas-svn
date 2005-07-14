@@ -45,7 +45,6 @@ class theme {
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
 			error_reporting ($config->getConfigByNameType('general/errorreporting',TYPE_INT));
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
-			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description',0);
 			loaddbclass ($config->getConfigByNameType ('general/databasetype',TYPE_STRING));
 			$database = new database ($config,'site.config.php');
 			$database->connect ();
@@ -61,6 +60,7 @@ class theme {
 				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');
+				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description');
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timezone',$user,'timezone','site.config.php'),
 					'general/timezone',TYPE_FLOAT);
@@ -307,7 +307,7 @@ class theme {
 		} else {
 			$category = $_GET['category'];
 		}
-		$newsmessage = $this->news->showallnews ();
+		$newsmessage = $this->news->showallnews ($_GET['offset'],$_GET['category']);
 		if ( errorSDK::is_error ( $newsmessage ) ) {
 			$this->error ( $newsmessage );
 		} else {
@@ -339,26 +339,27 @@ class theme {
 			}
 
 			$offset = $this->news->getLimitNews ($offset,$category);
+			$prevlink = 'index.php?category=' . $category . '&amp;offset=' . $offset['previous'];
+			$nextlink = 'index.php?category=' . $category . '&amp;offset=' . $offset['next'];
 			if ( $offset['previous'] < 0 ) {
 				$tempoutput = preg_replace ( '#%ifprev0(.+?)%/ifprev0#', '\\1', $tempoutput );
 				// change prev0 in somthing usefull
 				$tempoutput = preg_replace ( '#%ifprev>0(.+?)%/ifprev>0#', '', $tempoutput );
 				// make prev>0 dissappear
 			} else {
-				$link = 'index.php';
 				$tempoutput = preg_replace ( '#%ifprev>0(.+?)%/ifprev>0#', '\\1', $tempoutput );
-				$tempoutput = preg_replace ( '#%prev.link#', $link, $tempoutput );
+				$tempoutput = preg_replace ( '#%prev.link#', $prevlink, $tempoutput );
 				// change prev>0 in somthing usefull
 				$tempoutput = preg_replace ( '#%ifprev0(.+?)%/ifprev0#', '', $tempoutput );
 				// make prev0 dissappear
 			}
 			if ( $offset['next'] > $offset['total'] - 1 ) {
 				$tempoutput = preg_replace ( '#%ifnext0(.+?)%/ifnext0#', '\\1', $tempoutput );
+				$tempoutput = preg_replace ( '#%prev.link#', $prevlink, $tempoutput );
 				$tempoutput = preg_replace ( '#%ifnext>0(.+?)%/ifnext>0#', '', $tempoutput );
 			} else {
-				$link = 'index.php?category=' . $category . '&amp;offset=' . $offset['next'];
 				$tempoutput = preg_replace ( '#%ifnext0(.+?)%/ifnext0#', '', $tempoutput );
-				$tempoutput = preg_replace ( '#%next.link#', $link, $tempoutput );
+				$tempoutput = preg_replace ( '#%next.link#', $nextlink, $tempoutput );
 				$tempoutput = preg_replace ( '#%ifnext>0(.+?)%/ifnext>0#', '\\1', $tempoutput );
 			}
 			
@@ -694,6 +695,9 @@ class theme {
 		$output = ereg_replace ( '%showselectedpoll',$this->showpoll (),$output );
 		$output = ereg_replace ( '%user.links',$this->loaduserlinks (),$output );
 		$output = ereg_replace ( '%viewusers.list',$this->viewuserlist (),$output );
+		$output = ereg_replace ('%description%',
+			$this->config->getConfigByNameType ('general/description',TYPE_STRING),
+			$output);
 		$output = $this->replaceimages ( $output );
 		return $output;
 	}
@@ -767,8 +771,7 @@ class theme {
 	
 	function startflatthread () {
 		$output = NULL;
-		// FIXME: $offset
-		$allcomments = $this->news->getallcomments ($_GET[GET_NEWSID],0);
+		$allcomments = $this->news->getallcomments ($_GET[GET_NEWSID],$_GET['offset']);
 		if ( ! errorSDK::is_error ( $allcomments ) ) {
 			foreach ( $allcomments  as $comment ) {
 				$output .= $this->replacecomment ( $comment );

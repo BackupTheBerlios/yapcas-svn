@@ -101,8 +101,8 @@ class news {
 			$query = $this->database->query ($sql);
 			$limit['total'] = $this->database->num_rows ($query);
 			$userpostsonpage = $this->config->getConfigByNameType('news/postsonpage',TYPE_INT);
-			$limit['previous'] = $limit['offset'] - $userpostsonpage;
-			$limit['next'] = $limit['offset'] + $userpostsonpage;
+			$limit['previous'] = $limit['offset'] - $limit['limit'];
+			$limit['next'] = $limit['offset'] + $limit['limit'];
 			return $limit;
 		}
 		catch (exceptionlist $e) {

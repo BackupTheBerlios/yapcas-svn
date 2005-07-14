@@ -104,6 +104,7 @@ function databasesinstalled () {
 
 function languagesinstalled () {
 	$languages = array ();
+	array_push ($languages,'english');
 	$dir = "lang/";
 	if ( $handle = opendir ( $dir ) ) {
 		while ( false !== ( $file = readdir ( $handle ) ) ) {
