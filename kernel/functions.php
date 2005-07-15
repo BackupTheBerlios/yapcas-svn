@@ -215,7 +215,7 @@ function loadall () {
 function setdate ($time) {
 	global $config;
 	$timezone = $config->getConfigByNameType ('general/timezone',TYPE_INT);
-	$time = $time + $timezone * 60 * 60;
+	$timeme = $time + $timezone * 60 * 60;
 	$timeformat = $config->getConfigByNameType ('general/timeformat',TYPE_STRING);
 	return date ($timeformat,$time);
 }
@@ -234,11 +234,17 @@ function getUTCtime (&$config) {
 
 function catch_error ($exc,$link,$message,$moreinf) {
 	if ($exc->fatal) {
-		$link .= 'error=' . $message . ': ' . $exc->getMessage ();
+		$link .= 'error=' . $message;
+		$link .= '<ul>';
+		while ($exc != NULL) {
+			$link .= '<li>' . $exc->getMessage () . '</li>';
+			$exc = $exc->getNext ();
+		}
+		$link .= '</ul>';
 	} else {
-		$link .= 'warning=' . 'You action can be not completed: ' . $exc->getMessage ();
+		$link .= 'warning=' . 'Your action can be not completed: ' . $exc->getMessage ();
 	}
-	if ($moreinf == true) {
+	if (($moreinf == true) and (isset ($exc->debuginfo))) {
 		$link .= ': ' . $exc->debuginfo;
 	}
 	return $link;

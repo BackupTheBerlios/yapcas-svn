@@ -31,7 +31,7 @@ class exceptionlist extends Exception {
 	} /* public function setNext ($next) */
 
 	public function getNext () {
-		return $next;
+		return $this->next;
 	} /* public function getNext () */
 } /* class exceptionlist */
 ?>

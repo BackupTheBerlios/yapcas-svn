@@ -698,6 +698,10 @@ class theme {
 		$output = ereg_replace ('%description%',
 			$this->config->getConfigByNameType ('general/description',TYPE_STRING),
 			$output);
+		$output = ereg_replace ('%editcommentform.lang',$this->lang->translate ('Edit this comment'),$output );
+		$output = ereg_replace ('%editcomment.lang',$this->lang->translate ('Edit!!'),$output );
+		$output = ereg_replace ('%poll.language',$this->lang->translate ('Poll'),$output );
+		$output = ereg_replace ('%vote.lang',$this->lang->translate ('Vote!!'),$output );
 		$output = $this->replaceimages ( $output );
 		return $output;
 	}
@@ -715,7 +719,7 @@ class theme {
 			$output = ereg_replace ( '%login.method', form_method, $output );
 			$output = ereg_replace ( '%username.lang',$this->lang->translate ('username'), $output );
 			$output = ereg_replace ( '%username.formname', POST_NAME, $output );
-			$output = ereg_replace ( '%password.lang',$this->lang->translate ('passowrd'), $output );
+			$output = ereg_replace ( '%password.lang',$this->lang->translate ('password'), $output );
 			$output = ereg_replace ( '%password.formname', POST_PASSWORD, $output );
 			$output = ereg_replace ( '%login.lang',$this->lang->translate ('login'), $output );
 			$output = ereg_replace ( '%toregisterform_action', toregisterform_action, $output );
