@@ -102,12 +102,24 @@ if (empty ($_POST['submit'])) {
 			$tmpquery = ereg_replace ('%language%',$language,$tmpquery);
 			$tmpquery = ereg_replace ('%shown_logout%',$lang->translate ('logout'),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_index%',$lang->translate ('Home'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_registerform%',$lang->translate ('Register'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_sendpasswordform%',$lang->translate ('Lost Password'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_changeoptionsform%',$lang->translate ('Edit Settings'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_viewuserlist%',$lang->translate ('Userlist'),$tmpquery);
 			$queries .= $tmpquery;
 		}
 		$queries = ereg_replace ('%show_logout_in_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_index_in_nav%',Yes,$queries);
+		$queries = ereg_replace ('%show_registerform_in_nav%',No,$queries);
+		$queries = ereg_replace ('%show_sendpasswordform_in_nav%',No,$queries);
+		$queries = ereg_replace ('%show_changeoptionsform_in_nav%',Yes,$queries);
+		$queries = ereg_replace ('%show_viewuserlist_in_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_logout_in_user_nav%',Yes,$queries);
 		$queries = ereg_replace ('%show_index_in_user_nav%',No,$queries);
+		$queries = ereg_replace ('%show_registerform_in_user_nav%',No,$queries);
+		$queries = ereg_replace ('%show_sendpasswordform_in_user_nav%',No,$queries);
+		$queries = ereg_replace ('%show_changeoptionsform_in_user_nav%',Yes,$queries);
+		$queries = ereg_replace ('%show_viewuserlist_in_user_nav%',Yes,$queries);
 		$queries = ereg_replace ('%prefix%',$_POST['databaseprefix'],$queries);
 		//$queries .= file_get_contents ('kernel/sql/basiccontent.sql');
 		//$queries .= file_get_contents ('kernel/sql/helpcontent.sql');

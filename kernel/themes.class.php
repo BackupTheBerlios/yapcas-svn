@@ -69,7 +69,7 @@ class theme {
 					'general/timeformat',TYPE_STRING);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('language',$user,'language','site.config.php'),
-					'general/language',TYPE_STRING);
+					'general/language',TYPE_STRING,STANDARD_LANGUAGE);
 				$lang->updatelang ($config->getConfigByNameType('general/language',TYPE_STRING));
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('theme',$user,'theme','site.config.php'),

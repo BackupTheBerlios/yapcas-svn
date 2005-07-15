@@ -37,7 +37,7 @@
 	$this->database_option['syntax_curval'] = '<option>%option</option>';
 	$this->database_option['syntax'] = '<option>%option</option>';
 	
-	$this->theme_option['open'] = '<select name="%theme.name">';
+	$this->theme_option['open'] = '<select SELECTED name="%theme.name">';
 	$this->theme_option['close'] = '</select>';
 	$this->theme_option['syntax_curval'] = '<option>%option</option>';
 	$this->theme_option['syntax'] = '<option>%option</option>';
@@ -49,7 +49,7 @@
 	
 	$this->language_option['open'] = '<select name="%language.name">';
 	$this->language_option['close'] = '</select>';
-	$this->language_option['syntax_curval'] = '<option>%option</option>';
+	$this->language_option['syntax_curval'] = '<option SELECTED>%option</option>';
 	$this->language_option['syntax'] = '<option>%option</option>';
 	$this->newstheme->editbutton = '<a href="%link"><img src="%button.image" /></a>';
 	$this->titleformat = ' S  ::  P ';

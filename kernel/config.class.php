@@ -161,7 +161,7 @@ class config {
 		}
 	} /* function addConfigByFileName ($file,$type,name,$standard) */
 
-	public function addConfigByList ($list,$vars,$name,$type) {
+	public function addConfigByList ($list,$vars,$name,$type,$standard = NULL) {
 		$list = explode (';',$list);
 		$i = 0;
 		try {
@@ -189,13 +189,17 @@ class config {
 										case TYPE_INT:
 										case TYPE_FLOAT:
 											// set it to this stupid value so it will not be converted to <empty>
-											$value = 0.0000000000001;
+											if ($standard == NULL) {
+												$standard = 0.0000000000000001;
+											} else {
+												$value = $standard;
+											}
 											break;
 										case TYPE_STRING:
-											$value = '';
+											$value = $standard;
 											break;
 										case TYPE_BOOL:
-											$value = false;
+											$value = $standard;
 											break;
 										default: 
 											$value = NULL;
