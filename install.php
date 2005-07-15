@@ -74,10 +74,9 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['news']['postsonpage'] = 5;";
 	$config .= "\$config['news']['threaded'] = true;";
 	//$config .= "// user";
-	echo $_POST['activatemail'];
 	$activatemail = $_POST['activatemail'];
 	convertToStandard ($activatemail);
-	$config .= "\$config['user']['activatemail'] = true;";
+	$config .= "\$config['user']['activatemail'] = '$activatemail' ;";
 	$config .= ' ?>';
 	$handle = fopen ('site.config.php','w');
 	fwrite ($handle,$config);
