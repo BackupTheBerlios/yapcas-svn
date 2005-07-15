@@ -159,9 +159,9 @@ class polls {
 			$query = $this->database->query ( $sql );
 				if ($username != NULL) {
 					// FIXME
-					$getips = $user->getips ();
+					/*$getips = $user->getips ();
 						$userips[] = IP_USER;
-						$error = $getips;
+						$error = $getips;*/
 				} else {
 					$userips[] = IP_USER;
 				}

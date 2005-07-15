@@ -15,10 +15,9 @@ Bekende Fouten
 	Versies: 0.3 +
 
 #00012:
-	Titel: Poll afhankelijkheid
+	Titel: Poll IP
 	Prioriteit: Middel
-	Het poll systeem is momenteel afhankelijk van het gebruikersysteem, doordat het de ips
-		van de ingelogde gebruiker vraagt, --> oplossen
+	Het poll systeem heeft geen geavanceerde ipcheck
 	Versies: 0.3+
 
 Fouten die zijn opgelost
