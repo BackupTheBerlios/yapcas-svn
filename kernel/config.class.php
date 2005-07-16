@@ -49,7 +49,7 @@ function checkType ($content,$type) {
 		$utype = TYPE_UKNOWN;
 	}
 
-	if (($utype == $type) or ($type == TYPE_UKNOWN)){
+	if (($utype == $type) or ($type == TYPE_UKNOWN) or ($utype == TYPE_UKNOWN)){
 		return true;
 	} else {
 		echo '<br>' . $content . '<br />';
@@ -190,7 +190,7 @@ class config {
 										case TYPE_FLOAT:
 											// set it to this stupid value so it will not be converted to <empty>
 											if ($standard == NULL) {
-												$standard = 0.0000000000000001;
+												$standard = 0.0000000000001;
 											} else {
 												$value = $standard;
 											}

@@ -6,8 +6,8 @@ CREATE TABLE %prefix%helpcategory (
 
 CREATE TABLE %prefix%transcategory (
 	id int,
-	langcode varchar,
-	name varchar,
+	langcode varchar (5),
+	name varchar (50),
 	PRIMARY KEY (id,langcode)
 );
 

@@ -63,25 +63,25 @@ class theme {
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description');
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timezone',$user,'timezone','site.config.php'),
-					'general/timezone',TYPE_FLOAT);
+					'general/timezone',TYPE_FLOAT,1);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timeformat',$user,'timeformat','site.config.php'),
-					'general/timeformat',TYPE_STRING);
+					'general/timeformat',TYPE_STRING,'');
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('language',$user,'language','site.config.php'),
 					'general/language',TYPE_STRING,STANDARD_LANGUAGE);
 				$lang->updatelang ($config->getConfigByNameType('general/language',TYPE_STRING));
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('theme',$user,'theme','site.config.php'),
-					'general/theme',TYPE_STRING);
+					'general/theme',TYPE_STRING,'moderngray');
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('threaded',$user,'threaded','site.config.php'),
-					'news/threaded',TYPE_BOOL);
+					'news/threaded',TYPE_BOOL,YES);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('langcode',$user,'langcode','site.config.php'),
 					'general/langcode',TYPE_STRING);
 				$config->addConfigByList ('YAPCAS_USER',array($user),'user/email',TYPE_STRING);
-				$config->addConfigByList ('YAPCAS_USER',array($user),'user/name',TYPE_STRING);
+				$config->addConfigByList ('YAPCAS_USER',array($user),'user/name',TYPE_STRING,'anonymous');
 				$this->loadtheme ($config->getConfigByNameType('general/theme',TYPE_STRING));
 				$this->config = $config;
 				$this->news = $news;

@@ -24,10 +24,10 @@ class news {
 
 		$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 			array('headlines',$this->user,'headlines','site.config.php'),
-			'news/headlines',TYPE_INT);
+			'news/headlines',TYPE_INT,5);
 		$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 			array('postsonpage',$this->user,'postsonpage','site.config.php'),
-			'news/postsonpage',TYPE_INT);
+			'news/postsonpage',TYPE_INT,10);
 		$this->config = $config;
 	} /* public function __construct ($database,$user,&$config,$lanh) */
 

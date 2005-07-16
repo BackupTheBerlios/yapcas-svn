@@ -49,6 +49,9 @@ if (empty ($_POST['submit'])) {
 	$output = ereg_replace ('%database.options',replacedbtypes (databasesinstalled ()),$output);
 	echo $output;
 } else if ($_POST['submit'] == 'install') {
+	if (empty ($POST['activatemail'])) {
+		header ('install.php');
+	}
 	// install config script
 	$config = '<?php ';
 	//$config .= '// general';
@@ -75,8 +78,15 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['news']['threaded'] = true;";
 	//$config .= "// user";
 	$activatemail = $_POST['activatemail'];
-	convertToStandard ($activatemail);
-	$config .= "\$config['user']['activatemail'] = '$activatemail' ;";
+	if ($activatemail == YES) {
+		$activatemail = 'true';
+	} elseif ($activatemail == NO) {
+		$activatemail = 'false';
+	} else {
+		// Can never happen
+		$activatemail = 'true';
+	}
+	$config .= "\$config['user']['activatemail'] = $activatemail;";
 	$config .= ' ?>';
 	$handle = fopen ('site.config.php','w');
 	fwrite ($handle,$config);

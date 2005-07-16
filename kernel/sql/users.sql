@@ -1,48 +1,48 @@
 CREATE TABLE %prefix%ipblocks (
-  ip varchar NOT NULL default NULL,
-  date int NOT NULL default '0',
+  ip varchar(30) NOT NULL,
+  date int NOT NULL,
   reason text NOT NULL,
-  PRIMARY KEY  (ip)
+  PRIMARY KEY (ip)
 );
 
 CREATE TABLE %prefix%user_profile (
-  name varchar NOT NULL default '',
+  name varchar (50) NOT NULL,
   icq int default NULL,
-  aim varchar default NULL,
-  msn varchar default NULL,
-  yahoo varchar default NULL,
-  jabber varchar default NULL,
-  website varchar default NULL,
-  adress varchar default NULL,
-  job varchar default NULL,
-  intrests varchar default NULL,
-  threaded varchar default NULL,
+  aim varchar (125) default NULL,
+  msn varchar (125) default NULL,
+  yahoo varchar (125) default NULL,
+  jabber varchar (125) default NULL,
+  website varchar (255) default NULL,
+  adress varchar (255) default NULL,
+  job varchar (255) default NULL,
+  intrests varchar (255) default NULL,
+  threaded varchar (3) default NULL,
   postsonpage int default NULL,
-  timezone int default NULL,
-  timeformat varchar default NULL,
+  timezone int,
+  timeformat varchar (25) default NULL,
   headlines int default NULL,
-  language varchar default NULL,
-  theme varchar default NULL,
-  PRIMARY KEY  (name)
+  language varchar (50) default NULL,
+  theme varchar (50) default NULL,
+  PRIMARY KEY (name)
 );
 
 CREATE TABLE %prefix%users (
-  name varchar NOT NULL,
-  password varchar NOT NULL,
-  email varchar NOT NULL,
-  type varchar NOT NULL default 'users',
+  name varchar (50) NOT NULL,
+  password varchar (50) NOT NULL,
+  email varchar (255) NOT NULL,
+  type varchar (50) NOT NULL default 'users',
   ip text default NULL,
-  public_user varchar NOT NULL default 'Yes',
-  public_profile varchar NOT NULL default 'Yes',
-  public_contact_info varchar NOT NULL default 'No',
-  activated varchar NOT NULL default 'Yes',
-  blocked varchar NOT NULL default 'No',
+  public_user varchar (3) NOT NULL,
+  public_profile varchar (3) NOT NULL,
+  public_contact_info varchar (3) NOT NULL,
+  activated varchar (3) NOT NULL,
+  blocked varchar (3) NOT NULL,
   PRIMARY KEY (name)
 );
 
 CREATE TABLE %prefix%activate_queue (
-  username varchar NOT NULL,
-  id varchar NOT NULL,
+  username varchar (50) NOT NULL,
+  id varchar (18) NOT NULL,
   start int NOT NULL,
   PRIMARY KEY (username)
 );
