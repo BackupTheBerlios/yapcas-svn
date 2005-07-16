@@ -41,7 +41,7 @@ Eerste release
 + standaard homelink in de navigatiebalk bij installatie
 + optionsscherm geeft de geinstalleerde themas, talen weer
 
-0.3 (ALPHA STATUS) Geplande releasedatum: 30 juni
+0.3 (ALPHA STATUS) Release = 18 juli 2005
 ----
 + houden van polls is mogelijk
 + wijzigen van ( eigen ) berichten
@@ -72,13 +72,8 @@ Eerste release
 + Interne wijziging::gebruikersdatabase
 	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
 TODO
-----
-!+ help integratie ( eerste ideeen / versies )
-	!* installscript database laten invullen
-	!* foutmeldingen nummers geven
-		ik ga maar een foutmelding een nummer geven om te lanten zien hoe het systeem werkt
-	!* meerder meldingen bij één fout weergeven
-+ newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
+-----
+!+ Je profiel kunnen wijzigen
 
 0.3.5
 -----
@@ -114,6 +109,10 @@ Dromen zijn bedrog
 ------------------
 TODO
 ----
++ newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
++ installscript hrlpdatabase laten invullen
+	* foutmeldingen nummers geven
+		ik ga maar een foutmelding een nummer geven om te lanten zien hoe het systeem werkt
 + er zijn een aantal queries teveel
 + avatar toevoegen
 + databasecheck

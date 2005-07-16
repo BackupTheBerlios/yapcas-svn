@@ -128,130 +128,13 @@ class theme {
 		}
 	} /* function __construct () */
 
-	/*function __construct () {
-		error_reporting (E_ALL);
-		define ('TBL_PREFIX','yapcas');
-		define ('ERROR_LINK','./help.php#error');
-		global $lang;
-		if (isinstalled ()) {
-			include ('config.class.php');
-			include ('kernel/error.class.php');
-			$this->database = new config ();
-			$this->config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
-		//	error_reporting ($this->config->getConfigByNameType('general/errorreporting',TYPE_INT));
-			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename',0);
-			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description',0);
-			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
-			$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
-			loaddbclass ($this->config->getConfigByNameType ('general/databasetype',TYPE_STRING));
-			$this->database = new database ($this->config,'site.config.php');
-			$this->database->connect ();
-			if (!databasecheck($this->database)) {
-				include ( 'kernel/users.constants.php' );
-				global $theme;
-				if ( empty ( $_GET[get_language] ) ) {
-					$language = STANDARD_LANGUAGE;
-				} else {
-					$language = $_GET[get_language];
-				}
-				$GLOBALS['lang'] = loadlang ( $language );
-				if ( empty ( $_GET[get_theme] ) ) {
-					$theme = STANDARD_THEME;
-				} else {
-					$theme = $_GET[get_theme];
-				}
-				
-				// Define some $this->user->get  varrs to avoid problems
-				include ( 'kernel/basicuser.class.php' );
-				$this->user = new basicuser ();
-				$this->loadtheme ( $theme );
-				include ( 'kernel/news.class.php' );
-				$news = new news ( $this->database,$this->user,$this->config );
-				$theme = $this;
-				$this->themefile ( 'install.html',false,true );
-				exit;
-			} else {
-				include ( 'kernel/users.class.php' );
-				$this->config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail');
-				$this->user = new user ( $this->database,
-					$this->config->getConfigByNameType ('user/activatemail',TYPE_BOOL) );
-				include ( 'kernel/news.class.php' );
-				include ( 'kernel/polls.class.php' );
-				$this->config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
-				$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
-				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('timezone',$this->user,'timezone','site.config.php'),
-					'general/timezone',TYPE_FLOAT);
-				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('timeformat',$this->user,'timeformat','site.config.php'),
-					'general/timeformat',TYPE_STRING);
-				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('language',$this->user,'language','site.config.php'),
-					'general/language',TYPE_STRING);
-				$GLOBALS['lang'] = loadlang 
-					($this->config->getConfigByNameType('general/language',TYPE_STRING));
-				$news = new news ($this->database,$this->user,$this->config);
-				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('theme',$this->user,'theme','site.config.php'),
-					'general/theme',TYPE_STRING);
-				$this->config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('threaded',$this->user,'threaded','site.config.php'),
-					'news/threaded',TYPE_BOOL);
-				$this->config->addConfigByList ('YAPCAS_USER',array($this->user),'user/email',TYPE_STRING);
-				$this->config->addConfigByList ('YAPCAS_USER',array($this->user),'user/name',TYPE_STRING);
-				$this->loadtheme ($this->config->getConfigByNameType('general/theme',TYPE_STRING));
-				$this->poll = new polls ($this->config);
-				global $user,$this->database,$news,$theme,$this->config,$poll;
-				$poll = $this->poll;
-				$this->config = $this->config;
-				$this->database = $this->database;
-				$user = $this->user;
-				$news = $news;
-				$theme = $this;
-				define ('TBL_PAGES', TBL_PREFIX . 'pages');
-			}
-		} else {
-			if ( file_exists ( 'site.config.php' ) ) {
-				echo 'COPY a theme, lang or database to the installation dir of YaPCaS';
-			} else {
-				include ( 'kernel/basicconfig.class.php' );
-				$this->config = new basicconfig ();
-				loaddbclass ( $this->config->database->type );
-				$this->database = new database ( $this->config );
-				$this->database->connect ();
-				include ( 'kernel/users.constants.php' );
-				global $theme;
-				if ( empty ( $_GET[get_language] ) ) {
-					$language = STANDARD_LANGUAGE;
-				} else {
-					$language = $_GET[get_language];
-				}
-				$GLOBALS['lang'] = loadlang ( $language );
-				if ( empty ( $_GET[get_theme] ) ) {
-					$theme = STANDARD_THEME;
-				} else {
-					$theme = $_GET[get_theme];
-				}
-				// Define some $this->user->get  varrs to avoid problems
-				include ( 'kernel/basicuser.class.php' );
-				$this->user = new basicuser ();
-				$this->loadtheme ( $theme );
-				include ( 'kernel/news.class.php' );
-				$news = new news ( $this->database,$this->user );
-				$theme = $this;
-				$this->themefile ( 'install.html',false,true );
-				exit;
-			}
-		}
-	}*/
-	
 	function db_error ( $error,$fatal = false ) {
 		if ( $fatal == true ) {
 			echo '<div><h2>Database fout</h2><p>' . $error . '</p></div>';
 		} else {
 		}
 	}
-	
+
 	function error ( $error ) {
 		return $error->error;
 	}
@@ -637,7 +520,18 @@ class theme {
 		$output = ereg_replace ( '%new_password2.lang' ,$this->lang->translate ('Retype your new password'),$output );
 		$output = ereg_replace ( '%poll.action' ,POLLS_VOTE_ACTION,$output );
 		$output = ereg_replace ( '%poll.method' ,'post',$output );
-		
+		$output = ereg_replace ( '%viewallpols.lang' ,$this->lang->translate ('View all polls'),$output );
+		$output = ereg_replace ( '%profile.lang' ,$this->lang->translate ('Profile'),$output );
+		$output = ereg_replace ( '%job.lang' ,$this->lang->translate ('Job'),$output );
+		$output = ereg_replace ( '%intrests.lang' ,$this->lang->translate ('Intrests'),$output );
+		$output = ereg_replace ( '%icq.lang' ,$this->lang->translate ('ICQ'),$output );
+		$output = ereg_replace ( '%aim.lang' ,$this->lang->translate ('AIM'),$output );
+		$output = ereg_replace ( '%yahoo.lang' ,$this->lang->translate ('Yahoo'),$output );
+		$output = ereg_replace ( '%website.lang' ,$this->lang->translate ('Site'),$output );
+		$output = ereg_replace ( '%adress.lang' ,$this->lang->translate ('Adress'),$output );
+		$output = ereg_replace ( '%msn.lang' ,$this->lang->translate ('MSN'),$output );
+		$output = ereg_replace ( '%jabber.lang' ,$this->lang->translate ('Jabber'),$output );
+
 		$timezone = $this->config->getConfigByNameType('general/timezone',TYPE_INT);
 		$timeformat = $this->config->getConfigByNameType('general/timeformat',TYPE_STRING);
 		$headlines = $this->config->getConfigByNameType('news/headlines',TYPE_INT);
@@ -977,6 +871,7 @@ class theme {
 					$output = preg_replace ( '#\{ifnotvoted\}(.+?)\{/ifnotvoted\}#','\\1',$output );
 					$output = ereg_replace ( '%poll.choice',$this->pollanswerstovote ( explode ( ';',$poll[FIELD_POLL_CHOICES] ) ),$output );
 				}
+				$output = ereg_replace ('%viewallpolls.link','polls.php?action=allpolls',$output);
 			} else {
 				$output = NULL;
 			}

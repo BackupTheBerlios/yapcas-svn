@@ -102,7 +102,7 @@ switch ($action) {
 		try {
 			$activatemail = $config->getConfigByNameType ('user/activatemail',
 				TYPE_BOOL);
-			if ($activatemail = true) {
+			if ($activatemail == true) {
 				$mail['subject'] = $lang->translate ('You must activate your email');
 				$mail['message'] = $lang->translate ('Hello %n \n. Thanks for registering on %s \n. Click on the following link to activate your mail %d \n.');
 			} else {
@@ -114,9 +114,9 @@ switch ($action) {
 				$_POST[POST_PASSWORD2],$_POST[POST_EMAIL],$mail,$webmastermail);
 			$database->close ();
 			if ($activatemail == true) {
-				$link = 'index.php?note=' . $lang->translate ('You are now registerd, check your mail');
+				$link = 'index.php?note=' . $lang->translate ('You are now registerd, check your mail to activate your account');
 			} else {
-				$link = 'index.php?note=' . $lang->translate ('You are now registerd');
+				$link = 'index.php?note=' . $lang->translate ('You are now registerd, you can login now');
 			}
 			$theme->redirect ($link); 
 		}

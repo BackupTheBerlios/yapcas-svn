@@ -32,9 +32,9 @@ CREATE TABLE %prefix%users (
   email varchar (255) NOT NULL,
   type varchar (50) NOT NULL default 'users',
   ip text default NULL,
-  public_user varchar (3) NOT NULL,
-  public_profile varchar (3) NOT NULL,
-  public_contact_info varchar (3) NOT NULL,
+  public_user varchar (3) NOT NULL default 'Yes',
+  public_profile varchar (3) NOT NULL default 'Yes',
+  public_contact_info varchar (3) NOT NULL default 'No',
   activated varchar (3) NOT NULL,
   blocked varchar (3) NOT NULL,
   PRIMARY KEY (name)

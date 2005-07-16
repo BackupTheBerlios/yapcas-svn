@@ -19,11 +19,11 @@
 	$this->css[1] = 'standard.css';
 	$this->alternativecss[1] = 'alt.css';
 	
-	$this->errormessage = '<p class="error"><a href="%link">%error</a></p>';
-	$this->db_errormessage = '<p class="error"><a href="%link">%db_error</a></p>';
-	$this->notemessage = '<p class="note"><a href="%link">%note</a></p>';
-	$this->warningmessage = '<p class="warning"><a href="%link">%warning</a></p>';
-	$this->db_warning = '<p class="warning"><a href="%link">%db_warning</a></p>';
+	$this->errormessage = '<p class="error">%error</p>';
+	$this->db_errormessage = '<p class="error">%db_error</p>';
+	$this->notemessage = '<p class="note">%note</p>';
+	$this->warningmessage = '<p class="warning">%warning</p>';
+	$this->db_warning = '<p class="warning">%db_warning</p>';
 	
 	$this->post_news_link = '<a href="%postnews.link">%postnews.lang</a>';
 	$this->openthread = '<div class="thread">';
