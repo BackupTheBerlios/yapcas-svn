@@ -176,6 +176,15 @@ switch ($action) {
 			$user->setconfig (FIELD_USERS_PROFILE_TIMEFORMAT,$_POST[POST_TIMEFORMAT]);
 			$user->setconfig (FIELD_USERS_PROFILE_POSTSONPAGE,$_POST[POST_POSTSONPAGE]);
 			$user->setconfig (FIELD_USERS_PROFILE_HEADLINES,$_POST[POST_HEADLINES]);
+			$user->setconfig (FIELD_USERS_PROFILE_AIM,$_POST[POST_NEW_AIM]);
+			$user->setconfig (FIELD_USERS_PROFILE_MSN,$_POST[POST_NEW_MSN]);
+			$user->setconfig (FIELD_USERS_PROFILE_ICQ,$_POST[POST_NEW_ICQ]);
+			$user->setconfig (FIELD_USERS_PROFILE_JABBER,$_POST[POST_NEW_JABBER]);
+			$user->setconfig (FIELD_USERS_PROFILE_YAHOO,$_POST[POST_NEW_YAHOO]);
+			$user->setconfig (FIELD_USERS_PROFILE_JOB,$_POST[POST_NEW_JOB]);
+			$user->setconfig (FIELD_USERS_PROFILE_ADRESS,$_POST[POST_NEW_ADRESS]);
+			$user->setconfig (FIELD_USERS_PROFILE_INTRESTS,$_POST[POST_NEW_INTRESTS]);
+			$user->setconfig (FIELD_USERS_PROFILE_WEBSITE,$_POST[POST_NEW_WEBSITE]);
 			if ((!empty ($_POST[POST_NEW_PASSWORD1])) AND (!empty ($_POST[POST_NEW_PASSWORD2]))) {
 				$user->setnewpassword ($user->getconfig ('name'),$_POST[POST_NEW_PASSWORD1],$_POST[POST_NEW_PASSWORD2]);
 				// Do not log out -> password is wrong so he thinks you are'nt logged in

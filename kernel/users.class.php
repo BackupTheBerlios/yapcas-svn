@@ -128,7 +128,7 @@ class user {
 			$userprofile[FIELD_USERS_PROFILE_JOB] = $profile[FIELD_USERS_PROFILE_JOB];
 			$userprofile[FIELD_USERS_PROFILE_INTRESTS] = $profile[FIELD_USERS_PROFILE_INTRESTS];
 			$userprofile[FIELD_USERS_PROFILE_WEBSITE] = $profile[FIELD_USERS_PROFILE_WEBSITE];
-			if ($user[FIELD_USERS_PUBLIC_CONTACT_INFO] == YES) {
+			if (($user[FIELD_USERS_PUBLIC_CONTACT_INFO] == YES) or ($this->getconfig ('name') ==  $username)) {
 				$userprofile[FIELD_USERS_PROFILE_AIM] = $profile[FIELD_USERS_PROFILE_AIM];
 				$userprofile[FIELD_USERS_PROFILE_MSN] = $profile[FIELD_USERS_PROFILE_MSN];
 				$userprofile[FIELD_USERS_PROFILE_YAHOO] = $profile[FIELD_USERS_PROFILE_YAHOO];
@@ -137,13 +137,13 @@ class user {
 				$userprofile[FIELD_USERS_PROFILE_ADRESS] = $profile[FIELD_USERS_PROFILE_ADRESS];
 				$userprofile[FIELD_USERS_PROFILE_JABBER] = $profile[FIELD_USERS_PROFILE_JABBER];
 			} else {
-				$userprofile[FIELD_USERS_PROFILE_AIM] = $GLOBALS['lang']->users->not_public_contact_info;
-				$userprofile[FIELD_USERS_PROFILE_MSN] = $GLOBALS['lang']->users->not_public_contact_info;
-				$userprofile[FIELD_USERS_PROFILE_YAHOO] = $GLOBALS['lang']->users->not_public_contact_info;
-				$userprofile[FIELD_USERS_PROFILE_EMAIL] = $GLOBALS['lang']->users->not_public_contact_info;
-				$userprofile[FIELD_USERS_PROFILE_ICQ] = $GLOBALS['lang']->users->not_public_contact_info;
-				$userprofile[FIELD_USERS_PROFILE_ADRESS] = $GLOBALS['lang']->users->not_public_contact_info;
-				$userprofile[FIELD_USERS_PROFILE_JABBER] = $GLOBALS['lang']->users->not_public_contact_info;
+				$userprofile[FIELD_USERS_PROFILE_AIM] = '';
+				$userprofile[FIELD_USERS_PROFILE_MSN] = '';
+				$userprofile[FIELD_USERS_PROFILE_YAHOO] = '';
+				$userprofile[FIELD_USERS_PROFILE_EMAIL] = '';
+				$userprofile[FIELD_USERS_PROFILE_ICQ] = '';
+				$userprofile[FIELD_USERS_PROFILE_ADRESS] = '';
+				$userprofile[FIELD_USERS_PROFILE_JABBER] = '';
 			}
 			return $userprofile;
 		}

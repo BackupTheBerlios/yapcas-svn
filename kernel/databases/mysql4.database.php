@@ -70,7 +70,6 @@ class database {
 	} /* function sql2mysql ($sql) */
 
 	public function query ($sql,$fatal = true) {
-		//echo "SQL: " . $sql . '<br />';
 		if (!isset ($this->connection)) {
 			throw new exceptionlist ("No database connection",': '.$sql.': '.
 				__FILE__.': '.__FUNCTION__.': '.__LINE__,$fatal,-1,true);

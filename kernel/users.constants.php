@@ -56,6 +56,15 @@
 	define ( 'POST_LANGUAGE','language' );
 	define ( 'POST_NEW_PASSWORD1','new_password1' );
 	define ( 'POST_NEW_PASSWORD2','new_password12' );
+define ( 'POST_NEW_AIM','newaim' );
+define ( 'POST_NEW_MSN','newmsn' );
+define ( 'POST_NEW_ICQ','newicq' );
+define ( 'POST_NEW_JABBER','newjabber' );
+define ( 'POST_NEW_YAHOO','newyahoo' );
+define ( 'POST_NEW_WEBSITE','newwebsite' );
+define ( 'POST_NEW_ADRESS','newadress' );
+define ( 'POST_NEW_JOB','newjob' );
+define ( 'POST_NEW_INTRESTS','newintrests' );
 
 	define ( 'get_registererror','register_error' ); // will be removed soon
 	define ( 'get_loginerror','login_error' ); // will be removed soon

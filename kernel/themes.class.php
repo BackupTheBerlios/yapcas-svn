@@ -29,7 +29,7 @@ class theme {
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
-		if (! file_exists ('.install.php')) {
+		if (! file_exists ('install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
 			$lang = new lang ();
@@ -190,7 +190,12 @@ class theme {
 		} else {
 			$category = $_GET['category'];
 		}
-		$newsmessage = $this->news->showallnews ($_GET['offset'],$_GET['category']);
+		if ( empty ( $_GET['offset'] ) ) {
+			$offset = 0;
+		} else {
+			$offset = $_GET['offset'];
+		}
+		$newsmessage = $this->news->showallnews ($offset,$category);
 		if ( errorSDK::is_error ( $newsmessage ) ) {
 			$this->error ( $newsmessage );
 		} else {
@@ -204,7 +209,7 @@ class theme {
 				$tempoutput = ereg_replace ( '%news.image',$news['image'],$tempoutput );
 				$tempoutput = ereg_replace ( '%image.alt',$news['alternate'],$tempoutput );
 				$tempoutput = ereg_replace ( '%news.date',setdate ( $news['date'] ),$tempoutput );
-				$tempoutput = ereg_replace ( '%news.comments',$news['comments'] . '&nbsp;' . $GLOBALS['lang']->news->plural_comment,$tempoutput );
+				$tempoutput = ereg_replace ( '%news.comments',$news['comments'] . '&nbsp;' . $this->lang->translate ('comments'),$tempoutput );
 				$tempoutput = ereg_replace ( '%news.commentlink',$link,$tempoutput );
 				$output .= $tempoutput;
 			}
@@ -541,6 +546,7 @@ class theme {
 		$email =$this->config->getConfigByNameType('user/email',TYPE_STRING);
 		$name =  $this->config->getConfigByNameType('user/name',TYPE_STRING);
 		$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
+		$userprofile = $this->user->getotherprofile ($name);
 		$pagename = $_SERVER['PHP_SELF'];
 		$pagename = ereg_replace ( '/','',$pagename ); 
 		// removes '/' in begin of pagename
@@ -559,6 +565,24 @@ class theme {
 		$output = ereg_replace ( '%postsonpage.postsonpage' ,strval($postsonpage),$output );
 		$output = ereg_replace ( '%email.email' ,$email,$output );
 		$output = ereg_replace ( '%username.user' ,$name,$output );
+		$output = ereg_replace ( '%aim.aim' ,$userprofile[FIELD_USERS_PROFILE_AIM],$output );
+		$output = ereg_replace ( '%aim.name' ,'newaim',$output );
+		$output = ereg_replace ( '%icq.icq' ,$userprofile[FIELD_USERS_PROFILE_ICQ],$output );
+		$output = ereg_replace ( '%icq.name' ,'newicq',$output );
+		$output = ereg_replace ( '%msn.msn' ,$userprofile[FIELD_USERS_PROFILE_MSN],$output );
+		$output = ereg_replace ( '%msn.name' ,'newmsn',$output );
+		$output = ereg_replace ( '%jabber.jabber' ,$userprofile[FIELD_USERS_PROFILE_JABBER],$output );
+		$output = ereg_replace ( '%jabber.name' ,'newjabber',$output );
+		$output = ereg_replace ( '%adress.adress' ,$userprofile[FIELD_USERS_PROFILE_ADRESS],$output );
+		$output = ereg_replace ( '%adress.name' ,'newadress',$output );
+		$output = ereg_replace ( '%website.website' ,$userprofile[FIELD_USERS_PROFILE_WEBSITE],$output );
+		$output = ereg_replace ( '%website.name' ,'newwebsite',$output );
+		$output = ereg_replace ( '%yahoo.yahoo' ,$userprofile[FIELD_USERS_PROFILE_YAHOO],$output );
+		$output = ereg_replace ( '%yahoo.name' ,'newyahoo',$output );
+		$output = ereg_replace ( '%job.job' ,$userprofile[FIELD_USERS_PROFILE_JOB],$output );
+		$output = ereg_replace ( '%job.name' ,'newjob',$output );
+		$output = ereg_replace ( '%intrests.intrests' ,$userprofile[FIELD_USERS_PROFILE_INTRESTS],$output );
+		$output = ereg_replace ( '%intrests.name' ,'newintrests',$output );
 	
 		$output = ereg_replace ( '%language.options' ,$this->options ( languagesinstalled(),$this->language_option,$language ) ,$output );
 		$boolthreaded = $this->config->getConfigByNameType ('news/threaded',TYPE_BOOL);

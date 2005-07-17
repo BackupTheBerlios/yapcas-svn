@@ -71,9 +71,6 @@ Eerste release
 	* configopties is nu veel geavanceerder, ook is site.config.php gewijzigd
 + Interne wijziging::gebruikersdatabase
 	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
-TODO
------
-!+ Je profiel kunnen wijzigen
 
 0.3.5
 -----
