@@ -14,8 +14,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
 	$this->name = 'ModernGray';
-	$this->version = '0.1';
-	$this->version_cms = '0.2.1+svn3';
+	$this->version = '0.3';
+	$this->version_cms = '0.3';
 	$this->css[1] = 'standard.css';
 	$this->alternativecss[1] = 'alt.css';
 	
