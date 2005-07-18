@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>%title</title>
+		<link rel="stylesheet" type="text/css" href="%css" />
+	</head>
+	<body>
+		<div id="banner">
+			<h1>%title</h1>
+			<h4>%description%</h4>
+			<div id="navigation">%navigation.html %loginform.html</div>
+		</div>
+		<div id="sidebar">
+			<div class="box">
+				<h2>%headlines.lang</h2>
+				<p class="headlines">%headlines.html</p>
+			</div>
+			%shortviewcurrentpoll.html
+		</div>
+		<div id="content">
+			%error %warning %note 
+			<div class="box">
+				<h2>%editcommentform.lang</h2>
+				%editcommentform.html
+			</div>
+			%contentpage
+		</div>
+		<p id="copyright">
+			<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>
+		</p>
+</html>
