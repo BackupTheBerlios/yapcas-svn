@@ -159,9 +159,9 @@ class polls {
 			$query = $this->database->query ( $sql );
 				if ($username != NULL) {
 					// FIXME
-					/*$getips = $user->getips ();
-						$userips[] = IP_USER;
-						$error = $getips;*/
+					//$getips = $user->getips ();
+					$userips[] = IP_USER;
+					//$error = $getips;
 				} else {
 					$userips[] = IP_USER;
 				}
@@ -170,8 +170,8 @@ class polls {
 				while ($votedip = $this->database->fetch_array ($query)) {
 					$votedips[] = $votedip[FIELD_POLL_VOTED_IPS];
 				}
-				/* normally $voteips is bigger, so i think it is going less time
-				to check if a data out of big array is in a small array */
+				// normally $voteips is bigger, so i think it is going less time
+				//to check if a data out of big array is in a small array
 				foreach ($votedips as $voteip) {
 					if (in_array ($voteip,$userips)) {
 						$ip = true;

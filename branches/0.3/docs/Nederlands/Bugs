@@ -76,3 +76,20 @@ Geen ;-)
 	Titel: Timezone
 	Meer uitleg: Er werd een foute tijdszone gebruikt.
 	Versies: 0.1 - 0.2.1
+
+0.3.1
+-----
+#00013
+	Titel: Poll IP notice
+	Prioriteit: Middle
+	Meer uitleg: Wanneer een gebruiker ingelogd is en stemt op een poll wordt er 
+		een php-waarschuwing gegenereerd
+	Affected versions: 0.3.0
+
+#00014 
+	Titel: not logged in translation
+	Prioriteit: Middle
+	Meer uitleg: Wanneer een gebruiker niet ingelogd is en komt op een pagina waar 
+		inloggen vereist is wordt er een phpwaarschuwing gegenereerd en verschijnt 
+		er geen melding voor de gebruiker
+	Versies: 0.3.0

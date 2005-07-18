@@ -72,14 +72,21 @@ Eerste release
 + Interne wijziging::gebruikersdatabase
 	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
 
-0.3.5
+0.3.1
+-----
++ bug fixes
+	* #000013
+	* #000014
+
+0.4
 -----
 + Herwerken van themes systeem
 + Extensies mogelijk maken
++ contentlocale en uilocale maken
 ?+ Rechten/Groepen systeem schrijven? mogelijk in 0.4
 ?+ configsysteem wijzigen? mogelijk in een latere versie
 
-0.4 
+0.5
 ----
 TODO
 ----
@@ -91,7 +98,7 @@ TODO
 	* paginas toevoegen
 	* FAQ vragen toevoegen
 
-0.5 ( BETA stauts )
+0.6 ( BETA stauts )
 ----
 TODO
 ----

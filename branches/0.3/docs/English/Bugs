@@ -7,11 +7,23 @@ Known bugs
 		Localhost + members.lycos.nl are working
 	Affected versions: 0.1-0.2
 
+#00011:
+	Title: ubbcode nested
+	Priority: Low
+	More info: if 2 the same tags, which may not be nested, are nested, output is wrong
+	Affected versions: 0.3+
+
+#00012:
+	Title: Poll IP
+	Priority: Middle
+	More info: Poll system has no advanced IP checking
+	Affected versions: 0.3+
+
 Fixed bugs
 ------------------------
 0.1.1
 -----
-None ;-)	
+None ;-)
 0.2
 ----
 #00002:
@@ -63,3 +75,17 @@ None ;-)
 	Title: Timezine
 	More info: a wrong timezone was uses
 	affected versions: 0.1 - 0.2.1
+0.3.1
+-----
+#00013 
+	Title: Poll IP notice
+	Priority: Middle
+	More info: When a user is logged in an vote on a poll, 2 notices are given
+	Affected versions: 0.3.0
+
+#00014 
+	Title: not logged in translation
+	Priority: Middle
+	More info: When a user is not logged in and want to view a page where it 
+		is a requirement to login a notice is given + no error on index.php
+	Affected versions: 0.3.0

@@ -29,7 +29,7 @@ class theme {
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
-		if (! file_exists ('install.php')) {
+		if (! file_exists ('.install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
 			$lang = new lang ();
@@ -1044,7 +1044,7 @@ class theme {
 	
 	function themefile ( $file,$mustlogin = false,$basic = false) {
 		if ( ( $mustlogin == true ) AND ( $this->user->loggedin () != true ) ) {
-			$this->redirect ( 'index.php?warning=' . $GLOBALS['lang']->users->must_login );
+			$this->redirect ( 'index.php?warning=' . $this->lang->translate ('Login is required') );
 		}
 		$output = $this->getfile ( 'themes/' . $this->themedir . '/' . $file );
 		
