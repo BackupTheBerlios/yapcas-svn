@@ -38,7 +38,7 @@ class user {
 	} /* public function __construct ($database,$mustactivate,$lang) */
 
 	public function updateConfig () {
-		$this->isloggedin = $this->loggedin ();
+		$this->isloggedin = $this->isLoggedIn ();
 		$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
 		$this->timezoneconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
 		$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
@@ -50,7 +50,7 @@ class user {
 		$this->name = $this->getName ();
 	}
 
-	public function getconfig ($what) {
+	public function getConfig ($what) {
 		switch ($what) {
 			case 'language':
 				return $this->languageconfig;
@@ -85,9 +85,9 @@ class user {
 			default:
 				throw new exceptionlist ($this->lang->translate ('Uknown userconfig'),NULL,-1);
 		}
-	} /* public getconfig ($what) */
+	} /* public getConfig ($what) */
 
-	private function validlogin () {
+	private function isValidLogin () {
 		try {
 			// this check of a hacker did not change the sessions on the server
 			// to get another username or a type
@@ -106,9 +106,9 @@ class user {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* private function validlogin () */
+	} /* private function isValidLogin () */
 
-	public function getotherprofile ($username) {
+	public function getOtherProfile ($username) {
 		try {
 			$sql = "SELECT * FROM " . TBL_USERS . " WHERE " 
 				. FIELD_USERS_NAME . "='" . $username . "' AND " . FIELD_USERS_PUBLIC_USER . "='" .YES. "' LIMIT 1";
@@ -152,7 +152,7 @@ class user {
 		}
 	}
 
-	public function getips () {
+	public function getIPs () {
 		try {
 			$sql = 'SELECT ' . FIELD_USERS_IP . ' FROM ' . TBL_USERS;
 			$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' . $this->getname () . '\'';
@@ -165,13 +165,13 @@ class user {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function getips () */
+	} /* public function getIPs () */
 
-	public function loggedin () {
+	public function isLoggedIn () {
 		if (! isset ($this->isloggedin)) {
 			if (!empty ($_SESSION[SESSION_NAME])) {
 				try {
-					$validlogin = $this->validlogin ();
+					$validlogin = $this->isValidLogin ();
 					// this checks of the user has not hacked the session vars and
 					// make him a root or other user
 					return $validlogin;
@@ -185,7 +185,7 @@ class user {
 		} else {
 			return $this->isloggedin;
 		}
-	} /* public function loggedin () */
+	} /* public function isLoggedIn () */
 
 	public function login ($name,$password) {
 		try {
@@ -249,7 +249,7 @@ class user {
 
 	public function logout () {
 		try {
-			if (! $this->loggedin ()) {
+			if (! $this->isLoggedIn ()) {
 				throw new exceptionlist ($this->lang->translate ('Not logged in'),NULL,7);
 			} else {
 				unset ($_SESSION[SESSION_NAME]);
@@ -346,7 +346,7 @@ class user {
 	} /* public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) */
 
 	// TODO implement on check current password
-	public function setnewpassword ($username,$password1,$password2,$curpassword = NULL) {
+	public function setNewPassword ($username,$password1,$password2,$curpassword = NULL) {
 		try {
 			$exception = NULL;
 			if ($password1 != $password2) {
@@ -360,9 +360,9 @@ class user {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function setnewpassword ($username,$password1,$password2,$curpassword = NULL) */
+	} /* public function setNewPassword ($username,$password1,$password2,$curpassword = NULL) */
 
-	private function randompassword ($length = PASSWORD_LENGTH) {
+	private function getRandomPassword ($length = PASSWORD_LENGTH) {
 		mt_srand ((double) microtime () * 1000000);
 		$password = NULL;
 
@@ -373,7 +373,7 @@ class user {
 			}
 		}
 		return $password;
-	} /* private function randompassword ($length = PASSWORD_LENGTH) */
+	} /* private function getRandomPassword ($length = PASSWORD_LENGTH) */
 
 	public function lostpasw ($mail,$username,$cmail,$webmastermail) {
 		try {
@@ -426,7 +426,7 @@ class user {
 	} /* public function lostpasw ($mail,$username,$cmail,$webmastermail) */
  
 	private function getName () {
-		if (!$this->loggedin ()) {
+		if (!$this->isLoggedIn ()) {
 			return NULL;
 		} else {
 			return $_SESSION[SESSION_NAME];
@@ -438,9 +438,9 @@ class user {
 		return $this->getdbconfig (FIELD_USERS_EMAIL,TBL_USERS);
 	} /* private function getEmail () */
 
-	private function getdbconfig ($db_field,$table = TBL_USERS_PROFILE) {
+	private function getDBConfig ($db_field,$table = TBL_USERS_PROFILE) {
 		try {
-			if ($this->loggedin () == true) {
+			if ($this->isLoggedIn () == true) {
 				$sql = 'SELECT ' . $db_field . ' FROM ' . $table . ' WHERE ' 
 					. FIELD_USERS_NAME . '=\'' . $_SESSION[SESSION_NAME] . '\' LIMIT 1';
 				$query = $this->database->query ($sql);
@@ -458,9 +458,9 @@ class user {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* private function getdbconfig ($db_field) */
+	} /* private function getDBConfig ($db_field) */
 
-	public function setconfig ($db_what,$value,$tbl = TBL_USERS_PROFILE,$mail = NULL) {
+	public function setConfig ($db_what,$value,$tbl = TBL_USERS_PROFILE,$mail = NULL) {
 		try {
 			if (($this->mustactivate == true) and ($db_what == FIELD_USERS_EMAIL)){
 				if (($value) != $this->getEmail ()) {
@@ -479,7 +479,7 @@ class user {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function setconfig ($db_what,$value,$mail = NULL) */
+	} /* public function setConfig ($db_what,$value,$mail = NULL) */
 
 	public function hasSetConfig () {
 		try {

@@ -40,8 +40,32 @@ First release
 + installscript is localizible
 + by installation a 'home'-link is added to the navigation
 + changeoptions screen show the installed languages,themes
-0.3.0
------
-+ Bug fixes
+
+0.3 (ALPHA STATUS) Release = 18 juli 2005
+----
++ Polls are possible
++ You can edit your onw comments
++ The navigationbar is dynamic
++ You can view profiles
++ Markup in messages is possible ( b,u,i,quote )
++ no HTML-tags in messages
++ smilies in messages
++ profile is extended (jabber, website, etc)
++ several settings in profile-privacy
++ You can get you password back
++ FAQ page
++ Errormessages with an ID (none at the moment) can have some explanation in the FAQ
++ bug fixes
 	* #000006
 	* #000010
++ installscript is better
++ You can have a table-prefix
++ Add an option: If an user edit his mail, the use must activate his mail
++ Newsfeed
+	* RSS 2.0
++ Internal edit:: Errorcatching
+	* Some functions are rewritten
++ Internal edit: Config system
+	* configoptions is extended, also the markup of site.config.php changed
++ Internal edit: userdatabase
+	* useratabase has changed

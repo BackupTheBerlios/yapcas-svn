@@ -31,7 +31,7 @@ class news {
 		$this->config = $config;
 	} /* public function __construct ($database,$user,&$config,$lanh) */
 
-	public function headlines ($outputmethod,$category = NULL) {
+	public function getHeadlines ($category = NULL) {
 		try {
 			$limit = $this->config->getConfigByNameType ('news/headlines',TYPE_INT);
 			$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
@@ -54,7 +54,7 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function headlines ($outputmethod,$category = NULL) */
+	} /* public function getHeadlines ($outputmethod,$category = NULL) */
 
 	public function getLimitNews ($offset = NULL,$category = NULL) {
 		try {
@@ -110,7 +110,7 @@ class news {
 		}
 	} /* public function getLimitComments ($offset = NULL,$category = NULL) */
 
-	public function showallnews ($offset = NULL,$category = NULL) {
+	public function getAllNews ($offset = NULL,$category = NULL) {
 		try {
 			$limit = $this->getLimitNews ($offset,$category);
 			$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
@@ -134,9 +134,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function showallnews ($offset = NULL,$category = NULL) */
+	} /* public function showAllNews ($offset = NULL,$category = NULL) */
 
-	public function getthreadfollows ($idnews,$comment) {
+	public function getThreadFollows ($idnews,$comment) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
 			$sql .= ' WHERE id_news=\'' . $idnews .'\'';
@@ -153,9 +153,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function getthreadfollows ($idnews,$comment) */
+	} /* public function getThreadFollows ($idnews,$comment) */
 
-	public function startthreads ($idnews) {
+	public function startThreads ($idnews) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
 			$sql .= ' WHERE ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $idnews . '\'';
@@ -171,9 +171,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function startthreads ($idnews) */
+	} /* public function startThreads ($idnews) */
 
-	public function getcomment ($id) {
+	public function getComment ($id) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
 			$sql .= ' WHERE ' . FIELD_COMMENTS_ID . '=\'' . $id .'\'';
@@ -183,9 +183,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function getcomment ($id) */
+	} /* public function getComment ($id) */
 
-	public function getallcomments ($idnews,$offset = NULL) {
+	public function getAllComments ($idnews,$offset = NULL) {
 		try {
 			$language = $this->config->getConfigByNameType ('general/language',
 				TYPE_STRING);
@@ -204,9 +204,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function getallcomments ($idnews,$offset = NULL) */
+	} /* public function getAllComments ($idnews,$offset = NULL) */
 
-	public function getnews ($id) {
+	public function getNews ($id) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_NEWS;
 			$sql .= ' WHERE ' . FIELD_NEWS_ID . '=\''. $id .'\'';
@@ -216,9 +216,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function getnews ($id) */
+	} /* public function getNews ($id) */
 
-	public function postnews ($message,$subject,$category,$date,$language,$author) {
+	public function postNews ($message,$subject,$category,$date,$language,$author) {
 		try {
 			$sql = 'INSERT into ' . TBL_NEWS;
 			$fields = array (FIELD_NEWS_MESSAGE,FIELD_NEWS_SUBJECT
@@ -237,9 +237,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function postnews ($message,$subject,$category,$date,$author) */
+	} /* public function postNews ($message,$subject,$category,$date,$author) */
 
-	public function editcomment ($newmessage,$newsubject,$idcomment) {
+	public function editComment ($newmessage,$newsubject,$idcomment) {
 		try {
 			$sql = 'UPDATE ' . TBL_COMMENTS; 
 			$sql .= ' SET ' . FIELD_NEWS_MESSAGE . '=\'' . $newmessage . '\'';
@@ -251,9 +251,9 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function editcomment ($newmessage,$newsubject,$idcomment) */
+	} /* public function editComment ($newmessage,$newsubject,$idcomment) */
 
-	public function postcomment ($message,$subject,$date,$user,$onnews,$oncomment = 0) {
+	public function postComment ($message,$subject,$date,$user,$onnews,$oncomment = 0) {
 		try {
 			if ($oncomment == 0) {
 				$comment_on_news = YES;
@@ -292,7 +292,7 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function postcomment ($message,$subject,$date,$user,$onnews,$oncomment = 0) */
+	} /* public function postComment ($message,$subject,$date,$user,$onnews,$oncomment = 0) */
 
 	private function viewRSS ($meta,$headlines) {
 		header('Content-type: application/xml');

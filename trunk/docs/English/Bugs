@@ -7,11 +7,23 @@ Known bugs
 		Localhost + members.lycos.nl are working
 	Affected versions: 0.1-0.2
 
+#00011:
+	Title: ubbcode nested
+	Priority: Low
+	More info: if 2 the same tags, which may not be nested, are nested, output is wrong
+	Affected versions: 0.3+
+
+#00012:
+	Title: Poll IP
+	Priority: Middle
+	More info: Poll system has no advanced IP checking
+	Affected versions: 0.3+
+
 Fixed bugs
 ------------------------
 0.1.1
 -----
-None ;-)	
+None ;-)
 0.2
 ----
 #00002:

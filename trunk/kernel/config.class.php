@@ -176,7 +176,7 @@ class config {
 			foreach ($list as $item) {
 				switch ($item) {
 					case 'YAPCAS_USER':
-						if ($vars[$i]->loggedin ()) {
+						if ($vars[$i]->isLoggedIn ()) {
 							try {
 								if ($vars[$i]->getconfig ($varname) != NULL) {
 									$this->addToConfigTree (

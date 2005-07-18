@@ -24,7 +24,7 @@ class polls {
 		$this->lang = $lang;
 	} /* function __construct ($database,&$config,$lang) */
 
-	function getidcurrentpollbylanguage ($language) {
+	function getIDCurrentPollByLanguage ($language) {
 		try {
 			$sql = 'SELECT ' . FIELD_POLL_ID . ' FROM ' . TBL_POLLS;
 			$sql .= ' WHERE ' . FIELD_POLL_LANGUAGE . '=\'' . $language . '\'';
@@ -36,9 +36,9 @@ class polls {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* function getidcurrentpollbylanguage ($language) */
+	} /* function getIDCurrentPollByLanguage ($language) */
 
-	function getpollbyid ($id) {
+	function getPollByID ($id) {
 		try {
 			if ($id != NULL) {
 				$sql = 'SELECT * FROM ' . TBL_POLLS;
@@ -52,9 +52,9 @@ class polls {
 		} catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* function getpollbyid ($id) */
+	} /* function getPollByID ($id) */
 
-	function getallpollsbylanguage ($language) {
+	function getAllPollsByLanguage ($language) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_POLLS;
 			$sql .= ' WHERE ' . FIELD_POLL_LANGUAGE . '=\'' . $language . '\'';
@@ -68,7 +68,7 @@ class polls {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* function getallpollsbylanguage ($language) */
+	} /* function getAllPollsByLanguage ($language) */
 
 	function vote ($info,$username) {
 		try {
@@ -123,7 +123,7 @@ class polls {
 		}
 	} /* function vote ($info,$username) */
 
-	function userhasvoted ($username) {
+	function userHasVoted ($username) {
 		try {
 			$cookie = false;
 			$ip = false;
@@ -188,6 +188,6 @@ class polls {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* function userhasvoted ($username) */
+	} /* function userHasVoted ($username) */
 } /* class polls */
 ?>

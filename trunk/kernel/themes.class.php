@@ -29,7 +29,7 @@ class theme {
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
-		if (! file_exists ('install.php')) {
+		if (! file_exists ('.install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
 			$lang = new lang ();
@@ -195,7 +195,7 @@ class theme {
 		} else {
 			$offset = $_GET['offset'];
 		}
-		$newsmessage = $this->news->showallnews ($offset,$category);
+		$newsmessage = $this->news->getAllNews ($offset,$category);
 		if ( errorSDK::is_error ( $newsmessage ) ) {
 			$this->error ( $newsmessage );
 		} else {
@@ -253,7 +253,7 @@ class theme {
 			
 			$output .= $tempoutput;	
 			
-			if ( $this->user->loggedin () ) {
+			if ( $this->user->isLoggedIn () ) {
 				$link = 'news.php?action=postnewsform';
 				$tempoutput = $this->post_news_link;
 				$tempoutput = preg_replace ( '#%postnews.link#', $link , $tempoutput );
@@ -627,7 +627,7 @@ class theme {
 	function loadloginform () {
 		//echo $this->user->loggedin ();
 		$output = $this->getfile ( 'themes/' . $this->themedir . '/loginform.html' );
-		if ( ! $this->user->loggedin () ) {
+		if ( ! $this->user->isLoggedIn () ) {
 			$output = preg_replace ( '#\n#','',$output );
 			//remove all newlines ( to avoid problmes with next line )
 			$output = preg_replace ( '#\{loggedin\}(.+?)\{/loggedin}#','\\1',$output );
@@ -815,7 +815,8 @@ class theme {
 	function showheadlines () {
 		$fileoutput = $this->getfile ( 'themes/' . $this->themedir . '/headlines.html' );
 		$output = NULL;
-		$headlines = $this->news->headlines ( 'show' );
+		$category = NULL; // TODO
+		$headlines = $this->news->getHeadlines ($category);
 		
 		if ( errorSDK::is_error ( $headlines ) ) {
 			$this->error ( $headlines );
@@ -1043,8 +1044,8 @@ class theme {
 	}
 	
 	function themefile ( $file,$mustlogin = false,$basic = false) {
-		if ( ( $mustlogin == true ) AND ( $this->user->loggedin () != true ) ) {
-			$this->redirect ( 'index.php?warning=' . $GLOBALS['lang']->users->must_login );
+		if ( ( $mustlogin == true ) AND ( $this->user->isLoggedIn () != true ) ) {
+			$this->redirect ( 'index.php?warning=' . $this->lang->translate ('Login is required') );
 		}
 		$output = $this->getfile ( 'themes/' . $this->themedir . '/' . $file );
 		
