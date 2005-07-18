@@ -72,6 +72,12 @@ Eerste release
 + Interne wijziging::gebruikersdatabase
 	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
 
+0.3.1
+-----
++ bug fixes
+	* #000013
+	* #000014
+
 0.4
 -----
 + Herwerken van themes systeem

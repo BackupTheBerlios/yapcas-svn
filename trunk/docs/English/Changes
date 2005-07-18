@@ -69,3 +69,9 @@ First release
 	* configoptions is extended, also the markup of site.config.php changed
 + Internal edit: userdatabase
 	* useratabase has changed
+
+0.3.1
+-----
++ bug fixes
+	* #000013
+	* #000014
