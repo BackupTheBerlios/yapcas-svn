@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<title>%title</title>
+		<link rel="stylesheet" type="text/css" href="%css" />
+	</head>
+	<body>
+		<div id="banner">
+			<h1>%title</h1>
+			<h4>%description%</h4>
+			<div id="navigation">%navigation.html %loginform.html</div>
+		</div>
+		<div id="sidebar">
+			<div class="box">
+				<h2>%headlines.lang</h2>
+				<p class="headlines">%headlines.html</p>
+			</div>
+			%shortviewcurrentpoll.html</div>
+		<div id="content"> 
+			%error
+			%warning
+			%note
+			<div class="box">
+				<h2> %register.lang </h2>
+				<p>
+					%register.error
+					<object>
+						<form action="%registerform.action" method="post" style="text-align:center">
+							<p>
+								%username.lang : <br />
+								<input type="text" name="%user.formname" />
+							</p>
+							<p>
+								%email.lang : <br />
+								<input type="text" name="%email.formname" />
+							</p>
+							<p>
+								%password1.lang : <br />
+								<input type="password" name="%password1.formname" />
+							</p>
+							<p>
+								%password2.lang : <br />
+								<input type="password" name="%password2.formname" />
+							</p>
+							<p>
+								<input type="submit" value="%register.lang" />
+							</p>
+						</form>
+					</object>
+				</p>
+			</div>
+			%contentpage
+		</div>
+		<p id="copyright">
+			<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>
+		</p>
+	</body>
+</html>

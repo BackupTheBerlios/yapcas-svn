@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>%installation.lang</title>
+		<link rel="stylesheet" type="text/css" href="install.css" />
+	</head>
+	<body>
+		<div id="banner">%installation.lang</div>
+		<div class="box">
+			<p>
+				<object>
+					<form method="POST" action="install.php">
+						%databasetype.lang: %database.options<br />
+						%databasehost.lang: <input type="text" name="%databasehost.name"/><br />
+						%databaseuser.lang: <input type="text" name="%databaseuser.name"/><br />
+						%databasepassword.lang: <input type="password" name="%databasepassword.name"/><br />
+						%databasename.lang: <input type="text" name="%databasename.name"/><br />
+						%databaseprefix.lang: <input type="text" name="%databaseprefix.name"/><br />
+						<!--<input type="submit" value="%testdbconn.lang" name="submit"/>-->
+						%webmastermail.lang: <input type="int" name="%webmastermail.name"/><br />
+						%servertimezone.lang: <input type="int" name="%servertimezone.name"/><br />
+						%sitename.lang: <input type="text" name="%sitename.name"/><br />
+						%description.lang: <input type="text" name="%description.name"/><br />
+						%activatemail.lang: %Yes.lang <input type="radio" value="Yes" name="activatemail"/>%No.lang <input type="radio" value="No" name="activatemail"/>
+						<input type="hidden" name="%language.name" value="dutch"/>
+						<input type="submit" value="%install.lang" name="submit"/>
+					</form>
+				</object>
+			</p>
+		</div>
+	</body>
+</html>

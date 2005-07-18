@@ -1,0 +1,148 @@
+Todoes met een uitroepteken komen zeker in die release, todoes zonder mogelijk
+0.1 Release = geen openbare release
+---
+Eerste release
+
+0.1.1 Release = geen openbare release
+-----
++ Betere Language support
++ Dynamisch paginas toevoegen aan navigatiebalk
++ Code checkup en database aangepast voor class user
+
+0.2 (PRE-ALPHA) Release = 9 maart 2005
+----
++ MULTI-LANGUAGE SYSTEEM UITGESCHAKELD
++ PostgreSQL (7.4 & 7.x) Support DISABLED
++ news systeem opgeschoond
+	* aantal berichten zichtbaar op 1 pagina
+		- nog niet voor threaded berichten
+	* nieuwe database
+	* categoriën zijn dynamisch
+	* headlines worden getoond
++ veel configureerbaarder
++ userconfig scherm
++ users kunnen geblokkeerd worden op naam én op IP
++ layout is 100% aanpasbaar
++ foutenopvang is verbeterd ( vooral dbfouten )
++ instalscript
++ bug fixes
+	* #00002
+	* #00003
+	* #00004
+	* #00005
+0.2.1 Release = 18 maart 2005 
+-----
++ fixes bug #00007
++ licentievoorwaarden toegevoegd
++ PostgreSQL support enabled ( fixes bug #00008 )
++ bug fix ( #00009 )
++ installscript geeft de geinstalleerde databases ( in de core) weer
++ installscript is vertaalbaar
++ standaard homelink in de navigatiebalk bij installatie
++ optionsscherm geeft de geinstalleerde themas, talen weer
+
+0.3 (ALPHA STATUS) Release = 18 juli 2005
+----
++ houden van polls is mogelijk
++ wijzigen van ( eigen ) berichten
++ dynamisch maken van gerbuiker navigatie
++ gebruikerslijst toegevoegd met profiel van de gebruikers
++ ubb is mogelijk in berichten ( b,u,i,quote )
++ html tags worden niet meer getoond in berichten
++ smilies zijn mogelijk in berichten
++ profiel is uitgebreid (contacmogelijkheden)
++ de gebruiker kan instellen of zijn profiel openbaar is en of hij 
+	in de gebruikerslijst staat en of hij zijn contactinfo laat zien
++ Als je je wachtwoord vergeten bent, kun je het nu terug te weten komen
++ FAQ pagina
++ Er wordt naar verwezen via foutmeldingen
++ bug fixes
+	* #000006
+	* #000010
++ installscript is beter
++ Het is mogelijk om een tabel prefix te zetten
++ Optie toegevoegd, iedere keer dat een gebruiker zijn mail wijzigt
+	moet die zijn account activeren
++ Nieuwsfeed
+	* RSS 2.0 ondersteuning
++ Interne wijziging:: Error opvang
+	* Er zijn een aantal functies herschreven door deze wijziging
++ Interne wijziging:: configopties
+	* configopties is nu veel geavanceerder, ook is site.config.php gewijzigd
++ Interne wijziging::gebruikersdatabase
+	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
+
+0.3.5
+-----
++ Herwerken van themes systeem
++ Extensies mogelijk maken
+?+ Rechten/Groepen systeem schrijven? mogelijk in 0.4
+?+ configsysteem wijzigen? mogelijk in een latere versie
+
+0.4 
+----
+TODO
+----
+?+ geavanceerd rechtensysteem schrijven. mogelijk in 0.3.5
++ admin schrijven
+	* blokkeren van gebruikers / ips
+	* admin van berichten ( geintegreerd in newssysteem )
+	* error logs bekijken
+	* paginas toevoegen
+	* FAQ vragen toevoegen
+
+0.5 ( BETA stauts )
+----
+TODO
+----
++ Forum
+	dit gaat bestaan uit elementen die al geprogrammeerd zijn (news,user,poll,rechten)
+	die moeten samengebracht worden, en in een nieuwe layout gestoken, ook moeten 
+	er aanpassingen aangebracht worden zodat er handig met categorien kan gewerkt worden
+	zonder de oude (nieuws)code te breken
++ Admin forum schrijven
+
+Dromen zijn bedrog
+------------------
+TODO
+----
++ newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
++ installscript hrlpdatabase laten invullen
+	* foutmeldingen nummers geven
+		ik ga maar een foutmelding een nummer geven om te lanten zien hoe het systeem werkt
++ er zijn een aantal queries teveel
++ avatar toevoegen
++ databasecheck
+	* alle tabellen aanwezig
+	* userdb --> controleer of user en user_profile evenveel tabellen hebben
++ zorgen dat activate_queue om de zoveel tijd geleegd wordt
++ interne berichten sturen (+ melding geven)
++ optie inbouwen dat er niet dubbelgepost wordt 
+	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )
++ Snelheidtests
+?+ slimme quotes
++ class themes herschrijven
+	* Extensies
+	* Eigen thema 'macros' ( bepaalde %strings laten vervangen door het theme )
+	* Een soort van functies maken die voor alle themas moeten werken ( om een layout te gebruiken
+		die in contentpage kan staan )
++ fix bug #00011
++ alleen de x aantal eerste woorden van een bericht laten zien - ook in rss -
++ automatisch invullen van onderwerp bij het schrijven van een commenteaar (RE: TODO)
++ bettere terugkoppeling (je hebt een commentaar geschreven -> automatisch terechtkomen op je commentaar)
++ groepen en rechten
+
+1.0 ( Stable )
+---
++ Bugs only release
+
+Databases
+---------
++ XML database
++ SQLite db
+
+Extensies
+---------
++ Een reclameplugin
++ automatisch inloggen
++ wachtwoord onthouden
