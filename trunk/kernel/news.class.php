@@ -366,7 +366,7 @@ class news {
 			if (! empty ($category)) {
 				$meta['category'] = $category;
 			}
-			$headlines = $this->headlines (NULL,$category);
+			$headlines = $this->getHeadlines (NULL,$category);
 			switch ($method) {
 				case 'RSS2':
 					$output = $this->viewRSS ($meta,$headlines);
