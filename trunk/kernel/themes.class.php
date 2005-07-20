@@ -157,8 +157,8 @@ class theme {
 	function title () {
 		$sitename = $this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
 		$pagename = $_SERVER['PHP_SELF'];
-		$pagename = ereg_replace ( '/','',$pagename ); 
-		// removes '/' in begin of pagename
+		$pagename = preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+		// removes everything before and '/'
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
 		$sql = "SELECT * FROM " . TBL_PAGES ." WHERE name='$pagename' AND language='$language' LIMIT 1";
 		$query = $this->database->query ( $sql );
@@ -1080,6 +1080,10 @@ class theme {
 		return 'themes/' . $this->themedir . '/' . $file;
 	} /* private function convertFile ($file) */
 
+	private function loadGroup ($string) {
+		return explode (';',$string);
+	}
+
 	private function includes ($parser) {
 		// Get all Elements with the name include
 		while ($parser->getElement ('include') != NULL) {
@@ -1097,12 +1101,23 @@ class theme {
 		}
 	} /* private function includes ($parser) */
 
+	private function loadSideBar ($parser,$skinFile) {
+		$childsOfSideBar = $this->loadGroup ($this->childsOfSideBar);
+		$page = $this->loadGroup ($this->pages[$skinFile]);
+		// search the same parts in the 2 arrays
+		$toShow = array_intersect ($childsOfSideBar,$page);
+		foreach ($toShow as $test) {
+			echo 'JA=' . $test;
+		}
+	}
+
 	public function loadSkinFile ($skinFile,$loginReq = true) {
 		include ('kernel/minixml/minixml.inc.php');
 		if (file_exists ($this->convertFile ($skinFile))) {
 			$parser = new MiniXMLDoc ();
 			$parser->fromFile ($this->convertFile ($skinFile));
-			$this->includes ($parser);
+			$this->includes ($parser,$skinFile);
+			$this->loadSideBar ($parser,$skinFile);
 			echo $parser->toString ();
 		} else {
 			echo 'ERROR: ' . $this->convertFile ($skinFile);

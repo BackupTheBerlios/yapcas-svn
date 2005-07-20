@@ -106,3 +106,8 @@ None ;-)
 	Title: No commentnavigator when yapcas is installed in not root server
 	Priority: Hoog
 	Affected versions: ?0.1-0.2.1? 0.3.0
+
+#00018:
+	Title: pagetitle is always 'Untitled' when yapcas is not installed in root
+	Priority: Hoog
+	Affected versions: 0.3.0

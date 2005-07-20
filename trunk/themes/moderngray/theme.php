@@ -78,4 +78,9 @@
 	$this->helpcontent = array ();
 	$this->helpindexquestion = '<li><a href="#%itemid%">%question%</a></li>';
 	$this->helpcontentquestion = '<li id="%itemid%">%question%<br />%answer%</li>';
+
+	/*--------------------------------NEW VARS--------------------------------*/
+	$this->childsOfSideBar = '%test2';
+	$this->pages = array ();
+	$this->pages['index.html'] = '%test2;%test1';
 ?>
