@@ -110,3 +110,8 @@ Geen ;-)
 	Titel: Geen commentnavigator als yapcas niet in de root van de server staat
 	Prioriteit: Hoog
 	versies: ?0.1-0.2.1? 0.3.0
+
+#00018:
+	Titel: titel is altijd Ongenaamd wanneer yapcas niet in de rootmap geinstalleerd is
+	Prioriteit: Hoog
+	versies: 0.3.0

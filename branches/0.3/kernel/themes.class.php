@@ -157,10 +157,10 @@ class theme {
 	function title () {
 		$sitename = $this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
 		$pagename = $_SERVER['PHP_SELF'];
-		$pagename = ereg_replace ( '/','',$pagename ); 
-		// removes '/' in begin of pagename
+		$pagename = preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+		// removes everything before and '/'
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-		$sql = "SELECT * FROM " . TBL_PAGES ." WHERE name='$pagename' AND language='$language' LIMIT 1";
+		$sql = "SELECT * FROM " . TBL_PAGES ." WHERE name LIKE '%$pagename' AND language='$language' LIMIT 1";
 		$query = $this->database->query ( $sql );
 		if ( errorSDK::is_error ( $query ) ) {
 			$this->error ( $query );
