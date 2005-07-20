@@ -249,4 +249,8 @@ function catch_error ($exc,$link,$message,$moreinf) {
 	}
 	return $link;
 }
+
+function init () {
+	loadall ();
+}
 ?>

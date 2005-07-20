@@ -1073,5 +1073,41 @@ class theme {
 		$output = $this->replace_all ( $output );
 		echo $output;
 	}
+
+/*----------------------------------NEW CODE----------------------------------*/
+
+	private function convertFile ($file) {
+		return 'themes/' . $this->themedir . '/' . $file;
+	} /* private function convertFile ($file) */
+
+	private function includes ($parser) {
+		// Get all Elements with the name include
+		while ($parser->getElement ('include') != NULL) {
+			// set the includetag and parent
+			$include = $parser->getElement ('include');
+			$parent = $include->getParent ();
+			// creates a new doc from the file to be included and parse for includes
+			$incFile = new MiniXMLDoc ();
+			$incFile->fromFile ($this->convertFile ($include->xattributes['href']));
+			$this->includes ($incFile);
+			// set the root of the new file in the index of include
+			$parent->insertChild ($incFile->getRoot (),$include->getIndex ());
+			// be sure to not create an endless loop
+			$parent->removeChild ($include);
+		}
+	} /* private function includes ($parser) */
+
+	public function loadSkinFile ($skinFile,$loginReq = true) {
+		include ('kernel/minixml/minixml.inc.php');
+		if (file_exists ($this->convertFile ($skinFile))) {
+			$parser = new MiniXMLDoc ();
+			$parser->fromFile ($this->convertFile ($skinFile));
+			$this->includes ($parser);
+			echo $parser->toString ();
+		} else {
+			echo 'ERROR: ' . $this->convertFile ($skinFile);
+			throw new exceptionlist ("Failed to open file",ERROR_THEME);
+		}
+	} /* public function loadSkinFile ($skinFile,$loginReq = true) */
 } // layout
 ?>
