@@ -19,6 +19,13 @@ Known bugs
 	More info: Poll system has no advanced IP checking
 	Affected versions: 0.3+
 
+#00015:
+	Title: 2 or more the same newscategories in different languages
+	Priority: Middle
+	More info: if a newsmessage is posted with a newscategorie that exists in 2 
+		or more langiages it is shown 2 or more times on the mainpage
+	Affected versions: ?0.2-0.2.1? 0.3+
+
 Fixed bugs
 ------------------------
 0.1.1
