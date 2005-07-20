@@ -72,6 +72,7 @@ First release
 
 0.3.1
 -----
++ Editcomment button is now a simple link
 + bug fixes
 	* #000013
 	* #000014

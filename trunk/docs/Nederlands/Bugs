@@ -20,6 +20,18 @@ Bekende Fouten
 	Het poll systeem heeft geen geavanceerde ipcheck
 	Versies: 0.3+
 
+#00015:
+	Titel: 2 of meer dezelfde newscategoriën in een andere taal
+	Prioriteit: Middel
+	Meer info: als er een nieuwsbericht wordt gepost met een nieuwscategorie die
+		in 2 of meer talen bestaat, wordt die 2maal of meer getoond
+	Versies: ?0.2-0.2.1? 0.3+
+
+#00016:
+	Titel: notice + %commentnavigator.html wordt getoond op viewcomments.html
+	Prioritei: Hoog
+	versies: 0.3.0
+
 Fouten die zijn opgelost
 ------------------------
 0.1.1
