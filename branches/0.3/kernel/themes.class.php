@@ -548,9 +548,7 @@ class theme {
 		$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
 		$userprofile = $this->user->getotherprofile ($name);
 		$pagename = $_SERVER['PHP_SELF'];
-		$pagename = ereg_replace ( '/','',$pagename ); 
-		// removes '/' in begin of pagename
-		if ( ( $pagename == 'news.php' ) AND ( ! empty ( $_GET['action'] ) ) ) {
+		if ( ( ereg ('news.php',$pagename) ) AND ( ! empty ( $_GET['action'] ) ) ) {
 			if ( $_GET['action'] == 'viewcomments' ) {
 				if ($this->config->getConfigByNameType ('news/threaded',TYPE_BOOL) == false) {
 					$output = ereg_replace ( '%commentnavigator.html',$this->commentnavigator (),$output );
@@ -693,7 +691,12 @@ class theme {
 	
 	function startflatthread () {
 		$output = NULL;
-		$allcomments = $this->news->getallcomments ($_GET[GET_NEWSID],$_GET['offset']);
+		if (empty ($_GET['offset'])) {
+			$offset = 0;
+		} else {
+			$offset = $_GET['offset'];
+		}
+		$allcomments = $this->news->getallcomments ($_GET[GET_NEWSID],$offset);
 		if ( ! errorSDK::is_error ( $allcomments ) ) {
 			foreach ( $allcomments  as $comment ) {
 				$output .= $this->replacecomment ( $comment );
