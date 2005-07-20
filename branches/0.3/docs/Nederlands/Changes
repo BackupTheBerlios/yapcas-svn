@@ -78,9 +78,13 @@ Eerste release
 + bug fixes
 	* #000013
 	* #000014
+	* #000016
+	* #000017
 
 0.4
 -----
+TODO
+----
 + Herwerken van themes systeem
 + Extensies mogelijk maken
 + contentlocale en uilocale maken

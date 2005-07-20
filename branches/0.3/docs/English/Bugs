@@ -26,11 +26,6 @@ Known bugs
 		or more langiages it is shown 2 or more times on the mainpage
 	Affected versions: ?0.2-0.2.1? 0.3+
 
-#00016:
-	Title: notice + %commentnavigator.html shown on viewcomments
-	Priority: High
-	Affected versions: 0.3.0
-
 Fixed bugs
 ------------------------
 0.1.1
@@ -101,3 +96,13 @@ None ;-)
 	More info: When a user is not logged in and want to view a page where it 
 		is a requirement to login a notice is given + no error on index.php
 	Affected versions: 0.3.0
+
+#00016:
+	Title: notice in not threaded view of comments
+	Priority: High
+	Affected versions: 0.3.0
+
+#00017:
+	Title: No commentnavigator when yapcas is installed in not root server
+	Priority: Hoog
+	Affected versions: ?0.1-0.2.1? 0.3.0
