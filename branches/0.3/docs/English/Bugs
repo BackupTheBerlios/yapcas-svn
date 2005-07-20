@@ -26,6 +26,11 @@ Known bugs
 		or more langiages it is shown 2 or more times on the mainpage
 	Affected versions: ?0.2-0.2.1? 0.3+
 
+#00016:
+	Title: notice + %commentnavigator.html shown on viewcomments
+	Priority: High
+	Affected versions: 0.3.0
+
 Fixed bugs
 ------------------------
 0.1.1
