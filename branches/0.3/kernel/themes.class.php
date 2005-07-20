@@ -673,7 +673,7 @@ class theme {
 		$output = ereg_replace ( '%comment.newcommentlink',$link,$output );
 		$output = ereg_replace ( '%comment.newcomment',$this->lang->translate ('Post a comment'),$output );
 		if ( $comment['author']  == $this->config->getConfigByNameType ('user/name',TYPE_STRING)) {
-			$output = ereg_replace ( '%edit.button',$this->newstheme->editbutton,$output );
+			$output = ereg_replace ( '%edit.button','<a href="news.php?editcommentform">' . $this->lang->translate ('Edit') . '</a>',$output );
 			$output = ereg_replace ( '%link','news.php?action=editcommentform&amp;id=' . $comment['id'],$output );
 		} else {
 			$output = ereg_replace ( '%edit.button','',$output );
