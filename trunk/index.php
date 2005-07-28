@@ -17,5 +17,5 @@
 */
 	include ('kernel/functions.php');
 	init ();
-	$theme->loadSkinFile ('index.html');
+	$skin->loadSkinFile ('index.html');
 ?>

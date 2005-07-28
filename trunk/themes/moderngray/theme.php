@@ -80,7 +80,10 @@
 	$this->helpcontentquestion = '<li id="%itemid%">%question%<br />%answer%</li>';
 
 	/*--------------------------------NEW VARS--------------------------------*/
-	$this->childsOfSideBar = '%test2';
+	$this->entities = array ();
+	$this->entities['theme.shortviewpoll'] = $this->file ('shortviewpoll.html');
+	$this->childsOfSideBar = '&theme.shortviewpoll;';
 	$this->pages = array ();
-	$this->pages['index.html'] = '%test2;%test1';
+	$this->pages['index.html'] = '&theme.shortviewpoll;';
+	$this->titleFormat = ' S :: P';
 ?>

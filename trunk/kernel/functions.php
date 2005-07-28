@@ -251,6 +251,11 @@ function catch_error ($exc,$link,$message,$moreinf) {
 }
 
 function init () {
-	loadall ();
+	global $skin; 
+	include ('kernel/skin.class.php');
+	include ('kernel/xmllib/xmllib.class.php');
+	$skin = new CSkin ();
+	session_start ();
+	//include ('kernel/constants.php');
 }
 ?>
