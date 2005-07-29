@@ -109,5 +109,10 @@ None ;-)
 
 #00018:
 	Title: pagetitle is always 'Untitled' when yapcas is not installed in root
-	Priority: Hoog
+	Priority: High
 	Affected versions: 0.3.0
+
+#00019
+	Title: pagecontents is always empty when yapcas is not installed in root
+	Priority: High
+	Affected versions: ?0.2? 0.3.0
