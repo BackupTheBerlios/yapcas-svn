@@ -115,3 +115,8 @@ Geen ;-)
 	Titel: titel is altijd Ongenaamd wanneer yapcas niet in de rootmap geinstalleerd is
 	Prioriteit: Hoog
 	versies: 0.3.0
+
+#00019:
+	Titel: de paginainhoud is altijd leeg wanneer yapcas niet in de root is geinstalleerd
+	Prioriteit: Hoog
+	versies: ?0.2? 0.3

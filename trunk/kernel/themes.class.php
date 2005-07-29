@@ -310,8 +310,8 @@ class theme {
 	
 	function contentpage () {
 		$pagename = $_SERVER['PHP_SELF'];
-		$pagename = ereg_replace ( '/','',$pagename ); 
-		// removes '/' in begin of pagename
+		$pagename = preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+		// removes everything before and '/'
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
 		$sql = "SELECT * FROM " . TBL_PAGES . " WHERE " . FIELD_PAGES_NAME . "='$pagename' AND " . FIELD_PAGES_LANGUAGE . "='$language'";
 		$query = $this->database->query ( $sql );
