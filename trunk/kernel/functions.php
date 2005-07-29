@@ -252,8 +252,12 @@ function catch_error ($exc,$link,$message,$moreinf) {
 
 function init () {
 	global $skin; 
+	include ('kernel/help.class.php');
+	//include ('kernel/error.class.php'); // This should not be in the release
+	include ('kernel/users.class.php');
+	include ('kernel/news.class.php');
+	include ('kernel/polls.class.php');
 	include ('kernel/skin.class.php');
-	include ('kernel/xmllib/xmllib.class.php');
 	$skin = new CSkin ();
 	session_start ();
 	//include ('kernel/constants.php');

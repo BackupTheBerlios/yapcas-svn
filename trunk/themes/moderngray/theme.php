@@ -80,8 +80,9 @@
 	$this->helpcontentquestion = '<li id="%itemid%">%question%<br />%answer%</li>';
 
 	/*--------------------------------NEW VARS--------------------------------*/
-	$this->entities = array ();
-	$this->entities['theme.shortviewpoll'] = $this->file ('shortviewpoll.html');
+	$this->items = array ();
+	$this->items['theme.shortviewpoll'] = '{include shortviewpoll.html}';
+	$this->items['moderngray.standardcss'] = $this->convertFile ('standard.css');
 	$this->childsOfSideBar = '&theme.shortviewpoll;';
 	$this->pages = array ();
 	$this->pages['index.html'] = '&theme.shortviewpoll;';
