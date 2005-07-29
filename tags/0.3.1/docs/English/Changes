@@ -1,0 +1,82 @@
+Todoes with an "!" have an higher priority
+0.1 Release = not a public release
+---
+First release
+
+0.1.1 Release =  not a public release
+-----
++ Better Language support
++ Add pages dynamicaly to the navigation
++ Code checkup and changed database for users
+
+0.2 Release = 9 march 2005
+----
++ MULTI-LANGUAGE SYSTEM DISABLED
++ PostgreSQL (7.4 & 7.x) Support DISABLED
++ news systeem cleaned
+	* nulber of comments visible on one page
+		- not for threade
+	* new database
+	* categories are dynamic
+	* headlines visible
++ add more configuration
++ userconfig screen
++ users could be blocked on username AND IP
++ layout is 100% changeable
++ catching errors is better( mainly DB-errirs)
++ added installscript
++ bug fixes
+	* #00002
+	* #00003
+	* #00004
+	* #00005
+0.2.1
+-----
++ fixes bug #00007
++ add license
++ PostgreSQL support enabled ( fixes bug #00008 )
++ fix bug #00009)
++ installscript shows the installed core-databases
++ installscript is localizible
++ by installation a 'home'-link is added to the navigation
++ changeoptions screen show the installed languages,themes
+
+0.3 (ALPHA STATUS) Release = 18 juli 2005
+----
++ Polls are possible
++ You can edit your onw comments
++ The navigationbar is dynamic
++ You can view profiles
++ Markup in messages is possible ( b,u,i,quote )
++ no HTML-tags in messages
++ smilies in messages
++ profile is extended (jabber, website, etc)
++ several settings in profile-privacy
++ You can get you password back
++ FAQ page
++ Errormessages with an ID (none at the moment) can have some explanation in the FAQ
++ bug fixes
+	* #000006
+	* #000010
++ installscript is better
++ You can have a table-prefix
++ Add an option: If an user edit his mail, the use must activate his mail
++ Newsfeed
+	* RSS 2.0
++ Internal edit:: Errorcatching
+	* Some functions are rewritten
++ Internal edit: Config system
+	* configoptions is extended, also the markup of site.config.php changed
++ Internal edit: userdatabase
+	* useratabase has changed
+
+0.3.1
+-----
++ Editcomment button is now a simple link
++ bug fixes
+	* #00013
+	* #00014
+	* #00016
+	* #00017
+	* #00018
+	* #00019

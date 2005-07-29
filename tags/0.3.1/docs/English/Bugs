@@ -1,0 +1,118 @@
+Known bugs
+--------------
+#00001: 
+	Title: Usersystem has problems
+	Priority: High
+	More info: Only on sourceforge.net
+		Localhost + members.lycos.nl are working
+	Affected versions: 0.1-0.2
+
+#00011:
+	Title: ubbcode nested
+	Priority: Low
+	More info: if 2 the same tags, which may not be nested, are nested, output is wrong
+	Affected versions: 0.3+
+
+#00012:
+	Title: Poll IP
+	Priority: Middle
+	More info: Poll system has no advanced IP checking
+	Affected versions: 0.3+
+
+#00015:
+	Title: 2 or more the same newscategories in different languages
+	Priority: Middle
+	More info: if a newsmessage is posted with a newscategorie that exists in 2 
+		or more langiages it is shown 2 or more times on the mainpage
+	Affected versions: ?0.2-0.2.1? 0.3+
+
+Fixed bugs
+------------------------
+0.1.1
+-----
+None ;-)
+0.2
+----
+#00002:
+	Title: connection closed (MySQL4)
+	More info: the database connection closes on strange moments
+#00003:
+	Title: Not logged in
+	Priority: Low
+	More info: If you are logged out and you go to a page with a form what you can not use without being logged
+		in, you get only a message after submitting the form.
+	Affected versions: 0.1-0.1.1 
+#00004:
+	Title: Hacking
+	Priority: SUPER HIGH ( SEQURITY )
+	Meer uitleg: a hacker can change the sessions so that he can become a 'root'
+	Versies: 0.1-0.1.1
+#00005
+	Title: update #reactions and Username
+	Priority: Middle
+	More info: number of reactions are not updated and username is shown as a number
+	Affected versions: 0.1-0.1.1
+	
+0.2.1
+-----
+#00007:
+	Title: Multi-language
+	Priority: SUPER HIGH ( Not security )
+	More info: You can only use one language
+	Affected versions: 0.2 
+#00008:
+	Title: PostgreSQL
+	Priority: SUPER HIGH ( Not security )
+	More info: PostgreSQL is not supported.
+	Affected versions: 0.2
+#00009:
+	Title: Threaded
+	Priority: SUPER HIGH ( Not security )
+	More info: You can only view comments in a threaded view
+	Affected version: 0.2
+0.3.0
+-----
+#00006:
+	Title: Many queries
+	Priority: Middle
+	More info: Many database queries are used, they are used for config from users but the same config is
+		accessed many times in one page
+	Affected versions: 0.2 mainly but also 0.1-0.1.1
+#00010:
+	Title: Timezine
+	More info: a wrong timezone was uses
+	affected versions: 0.1 - 0.2.1
+0.3.1
+-----
+#00013 
+	Title: Poll IP notice
+	Priority: Middle
+	More info: When a user is logged in an vote on a poll, 2 notices are given
+	Affected versions: 0.3.0
+
+#00014 
+	Title: not logged in translation
+	Priority: Middle
+	More info: When a user is not logged in and want to view a page where it 
+		is a requirement to login a notice is given + no error on index.php
+	Affected versions: 0.3.0
+
+#00016:
+	Title: notice in not threaded view of comments
+	Priority: High
+	Affected versions: 0.3.0
+
+#00017:
+	Title: No commentnavigator when yapcas is installed in not root server
+	Priority: Hoog
+	Affected versions: ?0.1-0.2.1? 0.3.0
+
+#00018:
+	Title: pagetitle is always 'Untitled' when yapcas is not installed in root
+	Priority: High
+	Affected versions: 0.3.0
+
+#00019
+	Title: pagecontents is always empty when yapcas is not installed in root
+	Priority: High
+	Affected versions: ?0.2? 0.3.0

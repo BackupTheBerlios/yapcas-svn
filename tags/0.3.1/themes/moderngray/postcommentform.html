@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>%title</title>
+		<link rel="stylesheet" type="text/css" href="%css" />
+	</head>
+	<body>
+		<div id="banner">
+			<h1>%title</h1>
+			<h4>%description%</h4>
+			<div id="navigation">%navigation.html %loginform.html</div>
+		</div>
+		<div id="sidebar">
+			<div class="box">
+				<h2>%headlines.lang</h2>
+				<p class="headlines">%headlines.html</p>
+			</div>
+			%shortviewcurrentpoll.html</div>
+		<div id="content">
+			%error %warning %note 
+			<div class="box">
+				<h2>
+					 %postcomment.lang
+				</h2>
+				<p>
+					<object>
+						<form class="login" action="%postcomment.action" method="%postcomment.method">
+							<p class="input"> 
+								%subject.lang 
+								<input type="text" size="50" maxlength="255" name="subject" />
+							</p>
+							<p  class="input">
+								%newsmessage.lang<br />
+								<textarea name="message" cols="80" rows="20"></textarea>
+							</p>
+							<input type="hidden" name="on_comment" value="%on_comment.value" />
+							<input type="hidden" name="on_news" value="%on_news.value" />
+							<p class="input">
+								<input type="submit" value="%post.lang" />
+							</p>
+						</form>
+					</object>
+				</p>
+			</div>
+		 	%contentpage
+		 </div>
+		<p id="copyright">
+			<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>
+		</p>
+	</body>
+</html>

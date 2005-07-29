@@ -1,0 +1,122 @@
+Bekende Fouten
+--------------
+#00001: 
+	Titel: Usersysteem vertoont problemen
+	Prioriteit: Hoog
+	Meer uitleg: Momenteel alleen op de site van sourceforge (werkt sowieso niet meer op sf (PHP5))
+		Localhost werkt net zoals members.lycos.nl (niet meer: PHP5 afhankelijk)
+	Versies: 0.1-0.2
+
+#00011:
+	Titel: ubbcode nested
+	Prioriteit: Laag
+	Meer uitleg: als 2 dezelfde tags, die niet genset mogen worden , per ongeluk gensest worden,
+		dan is de uitvoer verkeerd.
+	Versies: 0.3 +
+
+#00012:
+	Titel: Poll IP
+	Prioriteit: Middel
+	Het poll systeem heeft geen geavanceerde ipcheck
+	Versies: 0.3+
+
+#00015:
+	Titel: 2 of meer dezelfde newscategoriën in een andere taal
+	Prioriteit: Middel
+	Meer info: als er een nieuwsbericht wordt gepost met een nieuwscategorie die
+		in 2 of meer talen bestaat, wordt die 2maal of meer getoond
+	Versies: ?0.2-0.2.1? 0.3+
+
+Fouten die zijn opgelost
+------------------------
+0.1.1
+-----
+Geen ;-)
+0.2
+----
+#00002:
+	Titel: connection gesloten (MySQL4)
+	Uitleg: Als de datbaseverbinding onverwachts (fout in de code) wordt gesloten werkt het systeem niet meer.
+	Workarround: wordt terug automatisch terug geopend bij het versturen van een query // geen goede oplossing
+#00003:
+	Titel: Niet ingelogd
+	Pririteit: Laag
+	Meer Uitleg: Als je een newsbericht post en je bent niet ingelogd krijg je pas een waarschuwing nadat
+		de gebruiker het bericht heeft gepost.
+	Versies: 0.1-0.1.1 
+#00004:
+	Titel: Hacking
+	Prioriteit: ZEER HOOG ( SEQURITY )
+	Meer uitleg: een hacker kan de sessie-variabelen aanpassen enzo een 'root' gebruiker worden
+	Versies: 0.1-0.1.1
+#00005
+	Titel: update #reacties en Username
+	Prioriteit: Middel
+	Meer uitleg: het aantal reacties wordt niet geupdated en de username wordt gegeven als een nummer
+	Versies: 0.1-0.1.1
+0.2.1
+-----
+#00007:
+	Titel: Multi-language
+	Prioriteit: ZEER HOOG ( geen security )
+	Meer uitleg: Door een slechte organisatie van het talen-systeem wordt deze functie uitgeschakeld
+	Versies: 0.2
+#00008:
+	Titel: PostgreSQL
+	Prioriteit: ZEER HOOG ( geen security )
+	Meer uitleg: PostgreSQL is niet ondersteund, terwijl dit toch mogelijk 
+	Versies: 0.2
+#00009
+	Titel: Threaded
+	Prioriteit: ZEER HOOG ( geen security )
+	Meer uitleg: De berichten kunnen alleen maar threaded weergeven worden
+	Versies: 0.2
+0.3.0
+-----
+#00006:
+	Titel: Veel queries
+	Prioriteit: Middel
+	Meer uitleg: Er worden veel database queries uitgevoerd ( per pagina soms 4 of meer keer dezelfde config )
+		dit zou zo weinig mogelijk moeten worden
+	Versies: 0.2 vooral maar ook 0.1-0.1.1
+#00010:
+	Titel: Timezone
+	Meer uitleg: Er werd een foute tijdszone gebruikt.
+	Versies: 0.1 - 0.2.1
+
+0.3.1
+-----
+#00013
+	Titel: Poll IP notice
+	Prioriteit: Middle
+	Meer uitleg: Wanneer een gebruiker ingelogd is en stemt op een poll wordt er 
+		een php-waarschuwing gegenereerd
+	Affected versions: 0.3.0
+
+#00014 
+	Titel: not logged in translation
+	Prioriteit: Middle
+	Meer uitleg: Wanneer een gebruiker niet ingelogd is en komt op een pagina waar 
+		inloggen vereist is wordt er een phpwaarschuwing gegenereerd en verschijnt 
+		er geen melding voor de gebruiker
+	Versies: 0.3.0
+
+#00016:
+	Titel: notice bij niet threaded bekijken van comments
+	Prioriteit: Hoog
+	versies: 0.3.0
+
+#00017:
+	Titel: Geen commentnavigator als yapcas niet in de root van de server staat
+	Prioriteit: Hoog
+	versies: ?0.1-0.2.1? 0.3.0
+
+#00018:
+	Titel: titel is altijd Ongenaamd wanneer yapcas niet in de rootmap geinstalleerd is
+	Prioriteit: Hoog
+	versies: 0.3.0
+
+#00019:
+	Titel: de paginainhoud is altijd leeg wanneer yapcas niet in de root is geinstalleerd
+	Prioriteit: Hoog
+	versies: ?0.2? 0.3
