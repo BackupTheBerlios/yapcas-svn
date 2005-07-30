@@ -29,7 +29,7 @@ class theme {
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
-		if (! file_exists ('.install.php')) {
+		if (! file_exists ('install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
 			$lang = new lang ();
