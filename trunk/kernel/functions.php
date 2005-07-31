@@ -220,6 +220,10 @@ function setdate ($time) {
 	return date ($timeformat,$time);
 }
 
+function showDate ($time) {
+	return setDate ($time);
+}
+
 function getUTCtime (&$config) {
 	try {
 		$sitetimezone = $config->getConfigByNameType ('general/servertimezone',TYPE_INT);

@@ -14,8 +14,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
 	$this->name = 'ModernGray';
-	$this->version = '0.3';
-	$this->version_cms = '0.3';
+	$this->version = '0.3+';
+	$this->version_cms = '0.3+';
 	$this->css[1] = 'standard.css';
 	$this->alternativecss[1] = 'alt.css';
 	
@@ -78,13 +78,20 @@
 	$this->helpcontent = array ();
 	$this->helpindexquestion = '<li><a href="#%itemid%">%question%</a></li>';
 	$this->helpcontentquestion = '<li id="%itemid%">%question%<br />%answer%</li>';
+	$this->titleFormat = ' S :: P';
 
 	/*--------------------------------NEW VARS--------------------------------*/
 	$this->items = array ();
 	$this->items['theme.shortviewpoll'] = '{include shortviewpoll.html}';
 	$this->items['moderngray.standardcss'] = $this->convertFile ('standard.css');
+	$this->items['news.item'] = '{include newsitem.html}';
+	$this->items['message.error'] = '<p class="note">{message error}</p>';
+	$this->items['message.warning'] = '<p class="note">{message warning}</p>';
+	$this->items['message.note'] = '<p class="note">{message note}</p>';
+	$this->items['navigation.item'] = '<a href="{navigation link}">{navigation name}</a> ';
+	$this->items['user.userform'] = '{include userform.html}';
 	$this->childsOfSideBar = '&theme.shortviewpoll;';
+	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
-	$this->pages['index.html'] = '&theme.shortviewpoll;';
-	$this->titleFormat = ' S :: P';
+	$this->pages['index.html'] = '&theme.shortviewpoll;,&site.navigation;,&user.userform;';
 ?>

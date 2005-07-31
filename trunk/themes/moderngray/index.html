@@ -5,17 +5,16 @@
 		<link rel="stylesheet" type="text/css" href="&moderngray.standardcss;" />
 	</head>
 	<body>
-		
 		<div id="banner">
 			<h1>&site.title; :: &page.title;</h1>
 			<h4>&site.description;</h4>
-			<div id="navigation">%navigation.html %loginform.html</div>
+			<div id="navigation">{navigation}</div>
 		</div>
 		<div id="sidebar">
 			{sidebar}
 		</div>
-		<div id="content">%error %db_error %warning %db_warning %note %news.html &page.content;</div>
-		<p id="copyright">
+		<div id="content">&page.errors; &page.warnings; &page.notes; &news.items; &page.content;</div>
+	<p id="copyright">
 			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
 			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
 		</p>

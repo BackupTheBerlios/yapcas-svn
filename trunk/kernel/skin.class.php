@@ -154,6 +154,93 @@ class CSkin {
 		$this->fileCont = preg_replace ('#{sidebar}#',$intersect,$this->fileCont);
 	}
 
+	private function loadNavigationBar () {
+		$childsOfNavigation = $this->loadGroup ($this->childsOfNavigation);
+		$onThisPage = $this->loadGroup ($this->pages['index.html']);
+		$intersect = implode (' ',array_intersect ($childsOfNavigation,$onThisPage));
+		$this->fileCont = preg_replace ('#{navigation}#',$intersect,$this->fileCont);
+	}
+
+	private function showNewsItem ($item) {
+		$output = $this->items['news.item'];
+		$this->includes ($output);
+		preg_match_all ('#{news (.+?)}#',$output,$matches);
+		foreach ($matches[0] as $number => $match) {
+			$what = $matches[1][$number];
+			switch ($what) {
+				case 'subject':
+					$tmp = $item[FIELD_NEWS_SUBJECT];
+					break;
+				case 'author':
+					$tmp = $item[FIELD_NEWS_AUTHOR];
+					break;
+				case 'date':
+					$tmp = showDate ($item[FIELD_NEWS_DATE]);
+					break;
+				case 'message':
+					$tmp = $item[FIELD_NEWS_MESSAGE];
+					break;
+				case 'linkreadcomments':
+					$tmp = $item[FIELD_NEWS_ID];
+					break;
+				default:
+					$tmp = NULL;
+			}
+			$output = ereg_replace ($match,$tmp,$output);
+		}
+		return $output;
+	}
+
+	private function getNewsItems () {
+		$newsitems = $this->news->getAllNews ($this->get ('offset'),$this->get ('category'));
+		$output = NULL;
+		foreach ($newsitems as $item) {
+			$output .= $this->showNewsItem ($item);
+		}
+		return $output;
+	}
+
+	private function showMessages ($what) {
+		$output = NULL;
+		switch ($what) {
+			case 'errors':
+				if ($this->get ('error') !== false) {
+					$output = $this->items['message.error'];
+					$output = ereg_replace ('{message error}',$this->get ('error'),$output);
+					$output = ereg_replace ('{message link}',$this->get ('errorid'),$output);
+				}
+				break;
+			case 'warnings':
+				if ($this->get ('warning') !== false) {
+					$output = $this->items['message.warning'];
+					$output = ereg_replace ('{message warning}',$this->get ('warning'),$output);
+					$output = ereg_replace ('{message link}',$this->get ('warningid'),$output);
+				}
+				break;
+			case 'notes':
+				if ($this->get ('note') !== false) {
+					$output = $this->items['message.note'];
+					$output = ereg_replace ('{message note}',$this->get ('note'),$output);
+					$output = ereg_replace ('{message link}',$this->get ('noteid'),$output);
+				}
+				break;
+			default:
+				throw exceptionlist ('Uknown message type');
+		}
+		return $output;
+	}
+
+	private function loadNavigation () {
+		$items = array ('Home','something else','foo','bar');
+		$output = NULL;
+		foreach ($items as $item) {
+			$output .= $this->items['navigation.item'];
+			$output = ereg_replace ('{navigation link}',$item . '.html',$output);
+			$output = ereg_replace ('{navigation name}',$item,$output);
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -161,6 +248,11 @@ class CSkin {
 			$this->config->getConfigByNameType ('general/description',TYPE_STRING);
 		$this->items['page.title'] = $this->getPageTitle ();
 		$this->items['page.content'] = $this->getPageContent ();
+		$this->items['news.items'] = $this->getNewsItems ();
+		$this->items['page.errors'] = $this->showMessages ('errors');
+		$this->items['page.warnings'] = $this->showMessages ('warnings');
+		$this->items['page.notes'] = $this->showMessages ('notes');
+		$this->items['site.navigation'] = $this->loadNavigation ();
 		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
@@ -170,12 +262,12 @@ class CSkin {
 		}
 	}
 
-	private function includes () {
-		preg_match_all ('#{include (.+?)}#',$this->fileCont,$matches);
+	private function includes (&$string) {
+		preg_match_all ('#{include (.+?)}#',$string,$matches);
 		foreach ($matches[0] as $number => $match) {
 			$fileName = $this->convertFile ($matches[1][$number]);
 			$fileC = $this->file ($fileName);
-			$this->fileCont = ereg_replace ($match,$fileC,$this->fileCont);
+			$string = ereg_replace ($match,$fileC,$string);
 		}
 	}
 
@@ -187,6 +279,14 @@ class CSkin {
 		$pagename = $_SERVER['PHP_SELF'];
 		// removes everything before and '/'
 		return preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+	}
+
+	public function get ($string) {
+		if (! empty ($_GET[$string])) {
+			return $_GET[$string];
+		} else {
+			return false;
+		}
 	}
 
 	public function getPageTitle () {
@@ -227,8 +327,9 @@ class CSkin {
 		try {
 			$this->fileCont = $this->file ($this->convertFile ($skinFile));
 			$this->loadSideBar ();
+			$this->loadNavigationBar ();
 			$this->loadItems ();
-			$this->includes ();
+			$this->includes ($this->fileCont);
 			$this->localize ();
 			echo $this->fileCont;
 		}
