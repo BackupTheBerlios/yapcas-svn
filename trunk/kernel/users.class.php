@@ -299,12 +299,12 @@ class user {
 				}
 				$sql = 'INSERT INTO ' . TBL_USERS;
 				$fields = array (FIELD_USERS_NAME,FIELD_USERS_PASSWORD,
-					FIELD_USERS_EMAIL,FIELD_USERS_TYPE,FIELD_USERS_ACTIVATE,FIELD_USERS_IP);
+					FIELD_USERS_EMAIL,FIELD_USERS_TYPE,FIELD_USERS_ACTIVATE,FIELD_USERS_IP,FIELD_USERS_BLOCKED);
 				$strfields = implode (',',$fields);
 				$sql .= ' (' . $strfields . ')';
 				$content = array ('\''.$name.'\'','\''.$password.'\'',
 					'\''.$email.'\'','\''.$type.'\'','\''.$activated.'\'',
-					'\''.$ip.'\'');
+					'\''.$ip.'\'','\''. NO .'\'');
 				$strcontent = implode (',',$content);
 				$sql .= ' VALUES ( ' . $strcontent . ')';
 				$query = $this->database->query ($sql);
@@ -320,7 +320,7 @@ class user {
 						FIELD_ACTIVATE_QUEUE_ID,FIELD_ACTIVATE_QUEUE_START);
 					$strfields = implode (',',$fields);
 					$sql .= ' ( ' . $strfields . ' )';
-					$id = $this->randompassword (ACTIVATE_ID_LENGTH);
+					$id = $this->getRandomPassword (ACTIVATE_ID_LENGTH);
 					$content = array ('\''.$name.'\'','\''.$id.'\'','\''.time ().'\'');
 					$strcontent = implode (',',$content);
 					$sql .= ' VALUES ( ' . $strcontent . ' )';
@@ -366,7 +366,7 @@ class user {
 		mt_srand ((double) microtime () * 1000000);
 		$password = NULL;
 
-		while (strlen ($password) <= $length) {
+		while (strlen ($password) < $length) {
 			$i = chr (mt_rand(0,255)); 
 			if (eregi("^[a-z0-9A-Z]$",$i)) { // only add it if it is a-z,A-Z or 0-9
 				$password .= $i; 

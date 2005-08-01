@@ -116,3 +116,10 @@ None ;-)
 	Title: pagecontents is always empty when yapcas is not installed in root
 	Priority: High
 	Affected versions: ?0.2? 0.3.0
+
+0.3.2
+-----
+#00020:
+	Title: user can not register, because of a SQL error
+	Priority: SUPER HIGH (NO SEQURITY)
+	Affected versions: 0.3.0-0.3.1

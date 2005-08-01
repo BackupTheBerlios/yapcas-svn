@@ -120,3 +120,8 @@ Geen ;-)
 	Titel: de paginainhoud is altijd leeg wanneer yapcas niet in de root is geinstalleerd
 	Prioriteit: Hoog
 	versies: ?0.2? 0.3
+
+#00020:
+	Title: gebruiker kan niet registreren wegens een SQL fout
+	Prioriteit: SUPER HOOG (GEEN VEILIGHEID)
+	versies: 0.3.0-0.3.1

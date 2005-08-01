@@ -257,6 +257,8 @@ class CSkin {
 		$this->items['userlogin.action'] = './users.php?action=login';
 		$this->items['userlogin.username'] = POST_NAME;
 		$this->items['userlogin.password'] = POST_PASSWORD;
+		$this->items['to.registerform'] = './users.php?action=registerform';
+		$this->items['to.lostpasswordform'] = './users.php?action=lostpasswordform';
 		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
