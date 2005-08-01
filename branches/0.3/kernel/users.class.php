@@ -366,7 +366,7 @@ class user {
 		mt_srand ((double) microtime () * 1000000);
 		$password = NULL;
 
-		while (strlen ($password) <= $length) {
+		while (strlen ($password) < $length) {
 			$i = chr (mt_rand(0,255)); 
 			if (eregi("^[a-z0-9A-Z]$",$i)) { // only add it if it is a-z,A-Z or 0-9
 				$password .= $i; 
