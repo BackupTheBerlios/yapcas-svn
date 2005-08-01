@@ -122,4 +122,4 @@ None ;-)
 #00020:
 	Title: user can not register, because of a SQL error
 	Priority: SUPER HIGH (NO SEQURITY)
-	Affected versions: 0.3.0-0.3.1 ?PostgreSQL?
+	Affected versions: 0.3.0-0.3.1

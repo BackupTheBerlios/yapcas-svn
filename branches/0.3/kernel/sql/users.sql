@@ -42,7 +42,7 @@ CREATE TABLE %prefix%users (
 
 CREATE TABLE %prefix%activate_queue (
   username varchar (50) NOT NULL,
-  id varchar (18) NOT NULL,
+  id varchar (32) NOT NULL,
   start int NOT NULL,
   PRIMARY KEY (username)
 );
