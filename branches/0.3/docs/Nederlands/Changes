@@ -83,6 +83,10 @@ Eerste release
 	* #00018
 	* #00019
 
+0.3.2
+-----
++ Bug fix #00020
+
 0.4
 -----
 TODO
@@ -90,6 +94,7 @@ TODO
 + Herwerken van themes systeem
 + Extensies mogelijk maken
 + contentlocale en uilocale maken
++ Verwijderen van nodeloze try / catch blokken in de core
 ?+ Rechten/Groepen systeem schrijven? mogelijk in 0.4
 ?+ configsysteem wijzigen? mogelijk in een latere versie
 
@@ -154,6 +159,8 @@ Databases
 ---------
 + XML database
 + SQLite db
++ ODBC
++ MySQLi
 
 Extensies
 ---------

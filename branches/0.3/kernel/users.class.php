@@ -299,12 +299,12 @@ class user {
 				}
 				$sql = 'INSERT INTO ' . TBL_USERS;
 				$fields = array (FIELD_USERS_NAME,FIELD_USERS_PASSWORD,
-					FIELD_USERS_EMAIL,FIELD_USERS_TYPE,FIELD_USERS_ACTIVATE,FIELD_USERS_IP);
+					FIELD_USERS_EMAIL,FIELD_USERS_TYPE,FIELD_USERS_ACTIVATE,FIELD_USERS_IP,FIELD_USERS_BLOCKED);
 				$strfields = implode (',',$fields);
 				$sql .= ' (' . $strfields . ')';
 				$content = array ('\''.$name.'\'','\''.$password.'\'',
 					'\''.$email.'\'','\''.$type.'\'','\''.$activated.'\'',
-					'\''.$ip.'\'');
+					'\''.$ip.'\'','\''. NO .'\'');
 				$strcontent = implode (',',$content);
 				$sql .= ' VALUES ( ' . $strcontent . ')';
 				$query = $this->database->query ($sql);
