@@ -1,12 +1,12 @@
-{loggedin}
-	<form class="login" action="%login.action" method="%login.method">
-		%username.lang: <input class="text" type="text" name="%username.formname" size="10" />
-		%password.lang: <input class="text" type="password" name="%password.formname" size="10" />
+{if loggedin}
+	<form class="login" action="&userlogin.action;" method="&userlogin.method;">
+		%username.lang: <input class="text" type="text" name="&userlogin.username;" size="10" />
+		%password.lang: <input class="text" type="password" name="&userlogin.password;" size="10" />
 		<input class="button" type="submit" value="%login.lang" />
 		<a href="%toregisterform_action">%notyetregisterd.lang</a>
 		<a href="%getusernameorpassword.link">%getusernameorpassword.lang</a>
 	</form>
-{/loggedin}
-{notloggedin}
+{endif}
+{if !loggedin}
 	%user.links
-{/notloggedin}
+{endif}

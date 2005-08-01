@@ -135,7 +135,7 @@ class CSkin {
 			if (is_readable ($fileName)) {
 				return file_get_contents ($fileName);
 			} else {
-				throw new exceptionlist ('Failed to open file' . $fileName,ERROR_THEME);
+				throw new exceptionlist ('Failed to open file: ' . $fileName,ERROR_THEME);
 			}
 	}
 
@@ -253,12 +253,52 @@ class CSkin {
 		$this->items['page.warnings'] = $this->showMessages ('warnings');
 		$this->items['page.notes'] = $this->showMessages ('notes');
 		$this->items['site.navigation'] = $this->loadNavigation ();
+		$this->items['userlogin.method'] = 'post';
+		$this->items['userlogin.action'] = './users.php?action=login';
+		$this->items['userlogin.username'] = POST_NAME;
+		$this->items['userlogin.password'] = POST_PASSWORD;
 		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
 				$item = $this->items[$matches[1][$number]];
 				$this->fileCont = ereg_replace ($match,$item,$this->fileCont);
 			}
+		}
+		// the 'i' is appendend to be not case sesitive
+		// the 's' is appendend to inlcude the newline char in DOT
+		preg_match_all ('/\{if (.+?)\}(.+?)\{endif\}/is',$this->fileCont,$matches);
+		foreach ($matches[0] as $number => $match) {
+			trim ($matches[1][$number]);
+			if ($matches[1][$number][0] == '!') {
+				$var = substr ($matches[1][$number],1);
+				$not = true;
+			} else {
+				$var = $matches[1][$number];
+				$not = false;
+			}
+			/* Horrible code, FIXME */
+			switch ($var) {
+				case 'loggedin':
+					if ($this->user->isLoggedIn () == true) {
+						if ($not == true) {
+							$replace = $matches[2][$number];
+						} else {
+							$replace = NULL;
+						}
+					} else {
+						if ($not == true) {
+							$replace = NULL;
+						} else {
+							$replace = $matches[2][$number];
+						}
+					}
+					break;
+				default:
+					throw new Exceptionlist ('Uknown variable');
+			}
+			// I'm using str_replace and not ereg_replace because
+			// ereg causes problems with a '?' mark
+			$this->fileCont = str_replace ($match,$replace,$this->fileCont);
 		}
 	}
 
@@ -330,7 +370,7 @@ class CSkin {
 			$this->loadNavigationBar ();
 			$this->loadItems ();
 			$this->includes ($this->fileCont);
-			$this->localize ();
+			$this->localize ();$this->loadItems ();
 			echo $this->fileCont;
 		}
 		catch (exceptionlist $e) {

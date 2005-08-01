@@ -1078,5 +1078,8 @@ class theme {
 		$output = $this->replace_all ( $output );
 		echo $output;
 	}
+
+	function convertFile () {
+	}
 } // layout
 ?>

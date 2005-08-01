@@ -255,6 +255,7 @@ function catch_error ($exc,$link,$message,$moreinf) {
 }
 
 function init () {
+	session_start ();
 	global $skin; 
 	include ('kernel/help.class.php');
 	//include ('kernel/error.class.php'); // This should not be in the release
@@ -263,7 +264,6 @@ function init () {
 	include ('kernel/polls.class.php');
 	include ('kernel/skin.class.php');
 	$skin = new CSkin ();
-	session_start ();
 	//include ('kernel/constants.php');
 }
 ?>
