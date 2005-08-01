@@ -1,7 +1,7 @@
 <?php
 	// some version constants
-	define ('majorversion', 0);
-	define ('minorversion', 3);
+	define ('majorversion',0);
+	define ('minorversion',4);
 	define ('patchlevel',0);
 	define ('version', majorversion . '.' . minorversion . '.' . patchlevel);
 	define ('threaded',1);
@@ -18,7 +18,8 @@
 	define ('STANDARD_THEME','moderngray');
 	define ('STANDARD_DATABASE_TYPE',MySQL4);
 	define ('COPYRIGHT','&copy; 2005 Nathan Samson Yapcas is Licensed under the GPL');
-
+	define ('NL',chr (10)); // NewLine
+	define ('TAB',chr (9)); // TAB
 	define ('FIELD_PAGES_NAME','name');
 	define ('FIELD_PAGES_LANGUAGE','language');
 ?>
