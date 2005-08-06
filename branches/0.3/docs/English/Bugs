@@ -123,3 +123,13 @@ None ;-)
 	Title: user can not register, because of a SQL error
 	Priority: SUPER HIGH (NO SEQURITY)
 	Affected versions: 0.3.0-0.3.1
+
+#00021:
+	Title: update settings is not possible, because of a SQL error
+	Priority: SUPER HIGH (NO SEQURITY)
+	Versions 0.3.0-0.3.1
+
+#00022:
+	Title: bug #00017-#00019 but if it is installed in the root
+	Priority: SUPER HIGH (NO SEQURITY)
+	Versions: 0.3.1
