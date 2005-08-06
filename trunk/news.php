@@ -16,12 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
 include ('kernel/functions.php');
-loadall ();
+init ();
 
 if (! empty ($_GET['action'])) {
 	$action = $_GET['action'];
 } else {
-	$theme->redirect ('index.php');
+	$skin->redirect ('index.php');
 }
 try {
 	$errorrep = $config->getConfigByNameType ('general/errorreporting',TYPE_INT);
@@ -35,24 +35,24 @@ catch (exceptionlist $e) {
 switch ($action) {
 	case 'viewcomments': 
 		try {
-			$theme->themefile ('comments.html');
+			$skin>loadSkinFile ('comments.html');
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('Your action has no effect'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin>redirect ($link);
 		}
 		break;
 	case 'postcommentform':
 		try {
-			$theme->themefile ('postcommentform.html',true);
+			$skin>loadSkinFile ('postcommentform.html',true);
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'postcomment':
@@ -95,13 +95,13 @@ switch ($action) {
 				$user->getconfig ('name'),$_POST[POST_ID_NEWS],$idcomment);
 			$id = $_POST['on_news'];
 			$database->close ();
-			$theme->redirect ('news.php?action=viewcomments&id='.$id.
+			$skin->redirect ('news.php?action=viewcomments&id='.$id.
 				'&note=' . $lang->translate ('Your comment is posted'));
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('Your comment is not posted'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'postnews':
@@ -138,24 +138,24 @@ switch ($action) {
 			$language = $config->getConfigByNameType ('general/language',TYPE_STRING);
 			$error = $news->postnews ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],
 				$_POST[POST_CATEGORY],$date,$language,$user->getconfig ('name'));
-			$theme->redirect ('index.php?note=' . $lang->translate ('Your message is posted'));
+			$skin->redirect ('index.php?note=' . $lang->translate ('Your message is posted'));
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('Your message is not posted'),$errorrep);
 			$database->close ();
-			$link = $theme->redirect ($link);
+			$link = $skin->redirect ($link);
 		}
 		break;
 	case 'postnewsform':
 		try {
-			$theme->themefile ('postnewsform.html',true);
+			$skin->loadSkinFile ('postnewsform.html',true);
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'editcomment':
@@ -191,23 +191,23 @@ switch ($action) {
 			}
 			$news->editcomment ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$_GET[GET_ID]);
 			$database->close ();
-			$theme->redirect ('index.php?note=' . $lang->translate ('Your message is edited'));
+			$skin->redirect ('index.php?note=' . $lang->translate ('Your message is edited'));
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('Your message is not edited'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'editcommentform':
 		try {
-			$theme->themefile ('editcomment.html',true);
+			$skin->loadSkinFile ('editcomment.html',true);
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'viewfeed':
@@ -226,11 +226,11 @@ switch ($action) {
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('error running feed'),$errorrep);
 			$database->close ();
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	default: 
 		$database->close ();
-		$theme->redirect ('index.php');
+		$skin->redirect ('index.php');
 }
 ?>

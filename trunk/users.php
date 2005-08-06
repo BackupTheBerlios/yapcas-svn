@@ -19,12 +19,12 @@ if (!defined ('EXCEPTION_CLASS')) {
 	include ('kernel/exception.class.php');
 }
 include ('kernel/functions.php');
-loadall ();
+init ();
 
 if (!empty ($_GET['action'])) {
 	$action = $_GET['action'];
 } else {
-	$theme->redirect ('index.php');
+	$skin->redirect ('index.php');
 }
 try {
 	$errorrep = $config->getConfigByNameType ('general/errorreporting',TYPE_INT);
@@ -33,7 +33,7 @@ catch (exceptionlist $e) {
 	// this is a big errror so $errorep = true
 	$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t view this page'),true);
 	$database->close ();
-	$theme->redirect ($link);
+	$skin->redirect ($link);
 }
 switch ($action) {
 	case 'login':
@@ -62,9 +62,9 @@ switch ($action) {
 			$database->close ();
 			if ($user->hasSetConfig () == true) {
 				// this is not the first time the user logged in
-				$theme->redirect ('index.php?note=' . $lang->translate ('You are logged in'));
+				$skin->redirect ('index.php?note=' . $lang->translate ('You are logged in'));
 			} else {
-				$theme->redirect ('users.php?action=changeoptionsform' . 
+				$skin->redirect ('users.php?action=changeoptionsform' . 
 					'&note=' . $lang->translate ('This is the first time you log in, configure your account'));
 			}
 		}
@@ -73,29 +73,29 @@ switch ($action) {
 			// FIXME
 			// save some loginthings like username in a cookie and retrieve them later??
 			$link = catch_error ($e,'index.php?',$lang->translate ('You are not logged in'),$errorrep);
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'logout':
 		try {
 			$user->logout ();
 			$database->close ();
-			$theme->redirect ('index.php?note=' . $lang->translate ('You are logged out'));
+			$skin->redirect ('index.php?note=' . $lang->translate ('You are logged out'));
 		}
 		catch (exceptionlist $e) {
 			$database->close ();
 			$link = catch_error ($e,'index.php?',$lang->translate ('You are not logged out'),$errorrep);
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'registerform':
 		try {
-			$theme->themefile ('registerform.html');
+			$skin->loadSkinFile ('registerform.html');
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'register':
@@ -118,12 +118,12 @@ switch ($action) {
 			} else {
 				$link = 'index.php?note=' . $lang->translate ('You are now registerd, you can login now');
 			}
-			$theme->redirect ($link); 
+			$skin->redirect ($link); 
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'users.php?action=registerform&',
 				$lang->translate ('You are not registerd'),$errorrep);
-			$theme->redirect ($link); 
+			$skin->redirect ($link); 
 		}
 		break;
 	case 'sendpassword':
@@ -145,20 +145,20 @@ switch ($action) {
 			$user->lostpasw ($mail,$username,$cmail,$webmastermail); 
 			$database->close ();
 			$link = 'index.php?note=' . $lang->translate ('Your password is send to your emailadress');
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',
 				$lang->translate ('Your password isn\'t send'),$errorrep);
-			$theme->redirect ($link); 
+			$skin->redirect ($link); 
 		}
 		break;
 	case 'sendpasswordform':
-		$theme->themefile ('sendpasswordform.html');
+		$skin->loadSkinFile ('sendpasswordform.html');
 		$database->close ();
 		break;
 	case 'changeoptionsform':
-		$theme->themefile ('changeoptionsform.html',true);
+		$skin->loadSkinFile ('changeoptionsform.html',true);
 		$database->close ();
 		break;
 	case 'changeoptions':
@@ -192,25 +192,25 @@ switch ($action) {
 				// $user->logout ();
 				$database->close ();
 				$link = 'index.php?note=' . $lang->translate ('Your options are saved: Login again with your new password');
-				$theme->redirect ($link);
+				$skin->redirect ($link);
 			} else {
 				$database->close ();
 				$link = 'users.php?action=changeoptionsform&note=' . $lang->translate ('Your options are saved');
-				$theme->redirect ($link);
+				$skin->redirect ($link);
 			}
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'users.php?action=changeoptionsform&',
 				$lang->translate ('Options are not saved or saved partionelly'),$errorrep);
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		break;
 	case 'viewuserlist':
-		$theme->themefile ('viewuserlist.html',true);
+		$skin->loadSkinFile ('viewuserlist.html',true);
 		$database->close ();
 		break;
 	case 'viewuser':
-		$theme->themefile ('viewuserprofile.html',true);
+		$skin->loadSkinFile ('viewuserprofile.html',true);
 		$database->close ();
 		break;
 	case 'activate':
@@ -220,12 +220,12 @@ switch ($action) {
 			}
 			$user->activate ($_GET['id']);
 			$link = 'index.php?note=' . $lang->translate ('Your account is activated, you can login now');
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php&',
 				$lang->translate ('Your account is not activated'),$errorrep);
-			$theme->redirect ($link);
+			$skin->redirect ($link);
 		}
 	default:
 		$theme->redirect ('index.php');

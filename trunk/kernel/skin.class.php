@@ -441,6 +441,10 @@ class CSkin {
 		// removes everything before and '/' sign itself
 		// example /dir/yapcas/index.php --> index.php
 		$ID = preg_replace ('/(.+?)*\/(.+?)/','\\2',$pagename);
+		// add the action if needed
+		if ($this->get ('action') !== false) {
+			$ID .= '?action=' . $this->get ('action');
+		}
 		return $ID;
 	}
 
@@ -486,8 +490,21 @@ class CSkin {
 		return $content;
 	}
 
+	public function redirect ($link) {
+		error_reporting (E_NONE);
+		header ('Location: ' . $link);
+		$output = $this->getfile ('themes/' . $this->themedir . '/redirect.html');
+		$output = ereg_replace ('%redirect.content',$link,$output);
+		echo $output;
+		exit ();
+	}
+
 	public function loadSkinFile ($skinFile,$loginReq = true) {
 		try {
+			if (($loginReq == true) and ($this->user->isLoggedIn () == false)) {
+				$this->redirect ('index.php?error=' .
+					$this->lang->translate ('You need to be logged in to access this page'));
+			}
 			$this->fileCont = $this->file ($this->convertFile ($skinFile));
 			$this->loadSideBar ();
 			$this->loadNavigationBar ();

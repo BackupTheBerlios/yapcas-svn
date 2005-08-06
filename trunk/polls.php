@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
 include ('kernel/functions.php');
-loadall ();
+init ();
 
 if ( ! empty ( $_GET['action'] ) ) {
 	$action = $_GET['action'];
@@ -31,23 +31,23 @@ catch (exceptionlist $e) {
 	// this is a big errror so $errorep = true
 	$link = catch_error ($e,'index.php?',$lang->translate ('Your action has no effect'),true);
 	$database->close ();
-	$theme->redirect ($link);
+	$skin->redirect ($link);
 }
 switch ( $action ) {
 	case 'vote':
 		try {
 			$return = $poll->vote ($_POST,$user->getconfig ('name'));
 			$database->close ();
-			$theme->redirect ('index.php?note='.$lang->translate ('You have voted'));
+			$skin->redirect ('index.php?note='.$lang->translate ('You have voted'));
 			break;
 		}
 		catch (exceptionlist $e) {
-			$theme->redirect (catch_error ($e,'index.php?',$lang->translate ('Your vote is not saved'),$errorrep));
+			$skin->redirect (catch_error ($e,'index.php?',$lang->translate ('Your vote is not saved'),$errorrep));
 		}
 	case 'allpolls':
-		$theme->themefile ('viewpolls.html' );
+		$skin->loadSkinFile ('viewpolls.html');
 		break;
 	default: 
-		$theme->redirect ('index.php');
+		$skin->redirect ('index.php');
 }
 ?>
