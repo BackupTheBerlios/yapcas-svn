@@ -90,6 +90,8 @@
 	$this->items['message.note'] = '<p class="note">{message note}</p>';
 	$this->items['navigation.item'] = '<a href="{navigation link}">{navigation name}</a> ';
 	$this->items['user.userform'] = '{include userform.html}';
+	$this->items['poll.choice'] = '{choice text}: <input name="voted_on" type="radio" value="{choice number}" /><br />';
+	$this->items['poll.result'] = '{choice text}: {choice resultprocent}% <br />' ;
 	$this->childsOfSideBar = '&theme.shortviewpoll;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();

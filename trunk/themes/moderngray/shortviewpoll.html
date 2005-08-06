@@ -1,17 +1,20 @@
 <div class="box">
-	<h2>%poll.language</h2>
+	<h2>&lang.poll;</h2>
 	<p>
-		<h3>%poll.question</h3>
-		{ifvoted}
-			%poll.result
-			<a href="%viewallpolls.link">%viewallpols.lang</a>
-		{/ifvoted}
-		{ifnotvoted}
-			<form action="%poll.action" method="%poll.method">
-			%poll.choice
-			<input type="submit" value="%vote.lang" />
-			</form>
-			<a href="%viewallpolls.link">%viewallpols.lang</a>
-		{/ifnotvoted}
+		
+			<h3>{poll question}</h3>
+			{if pollvoted}
+				{poll results}
+				<a href="&to.pollslist;">&lang.viewpollslist;</a>
+			{endif}
+			{if !pollvoted}
+				<form action="{poll voteaction}" method="{poll votemethod}">
+					{poll choices}
+					<input type="submit" value="&lang.vote;" />
+				</form>
+				<a href="{poll linktoresults}">&lang.viewpollresults;</a>
+				<a href="&to.pollslist;">&lang.viewpollslist;</a>
+			{endif}
+		
 	</p>
 </div>

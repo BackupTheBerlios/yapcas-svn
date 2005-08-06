@@ -53,6 +53,7 @@ class database {
 	} /* public function close () */
 
 	public function query ($sql,$fatal = true) {
+		//echo $sql . '<br />';
 		if (! isset ($this->connection)) {
 			throw new exceptionlist ('There is no db-connection');
 		} else {

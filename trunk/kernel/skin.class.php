@@ -241,6 +241,53 @@ class CSkin {
 		return $output;
 	}
 
+	private function loadPoll () {
+		$poll = $this->poll->getPollByID ($this->poll->getIDCurrentPollByLanguage ('dutch'));
+		preg_match_all ('/{poll (.+?)}/is',$this->fileCont,$matches);
+		foreach ($matches[0] as $number => $match) {
+			switch ($matches[1][$number]) {
+				case 'question':
+					$this->fileCont = str_replace ($match,$poll[FIELD_POLL_QUESTION],$this->fileCont);
+					break;
+				case 'choices':
+					$choices = explode (';',$poll[FIELD_POLL_CHOICES]);
+					$output = NULL;
+					foreach ($choices as $number => $choice) {
+						$output .= $this->items['poll.choice'];
+						$output = str_replace ('{choice text}',$choice,$output);
+						// stupid thing with integers
+						$output = str_replace ('{choice number}',"$number",$output);
+					}
+					$this->fileCont = str_replace ($match,$output,$this->fileCont);
+					break;
+				case 'voteaction':
+					$this->fileCont = str_replace ($match,
+						'polls.php?action=vote&id=' . $poll[FIELD_POLL_ID],
+						$this->fileCont);
+					break;
+				case 'votemethod':
+					$this->fileCont = str_replace ($match,'post',$this->fileCont);
+					break;
+				case 'results':
+					$choices = explode (';',$poll[FIELD_POLL_CHOICES]);
+					$results = explode (';',$poll[FIELD_POLL_RESULTS]);
+					$output = NULL;
+					foreach ($choices as $number => $choice) {
+						$output .= $this->items['poll.result'];
+						$output = str_replace ('{choice text}',$choice,$output);
+						$output = str_replace ('{choice result}',$results[$number],$output);
+						$totalvotes = array_sum ($results);
+						$procent = round ($results[$number] / $totalvotes * 100);
+						$output = str_replace ('{choice resultprocent}',$procent,$output);
+					}
+					$this->fileCont = str_replace ($match,$output,$this->fileCont);
+					break;
+					$this->fileCont = str_replace ($match,$output,$this->fileCont);
+					break;
+			}
+		}
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -295,11 +342,26 @@ class CSkin {
 						}
 					}
 					break;
+				case 'pollvoted':
+					if ($this->poll->userHasVoted ($this->user->getConfig ('name')) == true) {
+						if ($not != true) {
+							$replace = $matches[2][$number];
+						} else {
+							$replace = NULL;
+						}
+					} else {
+						if ($not != true) {
+							$replace = NULL;
+						} else {
+							$replace = $matches[2][$number];
+						}
+					}
+					break;
 				default:
 					throw new Exceptionlist ('Uknown variable');
 			}
 			// I'm using str_replace and not ereg_replace because
-			// ereg causes problems with a '?' mark
+			// ereg causes problems with a '?'
 			$this->fileCont = str_replace ($match,$replace,$this->fileCont);
 		}
 	}
@@ -372,7 +434,9 @@ class CSkin {
 			$this->loadNavigationBar ();
 			$this->loadItems ();
 			$this->includes ($this->fileCont);
-			$this->localize ();$this->loadItems ();
+			$this->loadItems ();
+			$this->loadPoll ();
+			$this->localize ();
 			echo $this->fileCont;
 		}
 		catch (exceptionlist $e) {
