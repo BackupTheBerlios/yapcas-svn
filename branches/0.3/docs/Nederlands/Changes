@@ -150,6 +150,14 @@ TODO
 + automatisch invullen van onderwerp bij het schrijven van een commenteaar (RE: TODO)
 + bettere terugkoppeling (je hebt een commentaar geschreven -> automatisch terechtkomen op je commentaar)
 + groepen en rechten
++ beter poll systeem
+	* dezelfde poll, met dezelfde resultaten in verschillende talen
+	* zorgen dat er op oude polls gestemd kan worden (momenteel is er een cookie)
+	* mogelijkheid tot stemmen op meerdere mogelijkheden
+	* betere layout van de poll 
+		-met een balk ipv procent
+		-met een lijst
+	*...
 
 1.0 ( Stable )
 ---
