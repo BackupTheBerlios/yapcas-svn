@@ -35,7 +35,7 @@ catch (exceptionlist $e) {
 switch ($action) {
 	case 'viewcomments': 
 		try {
-			$skin>loadSkinFile ('comments.html');
+			$skin->loadSkinFile ('comments.html');
 			$database->close ();
 		}
 		catch (exceptionlist $e) {

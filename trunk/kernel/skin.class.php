@@ -163,8 +163,12 @@ class CSkin {
 		$this->fileCont = preg_replace ('#{navigation}#',$intersect,$this->fileCont);
 	}
 
-	private function showNewsItem ($item) {
-		$output = $this->items['news.item'];
+	private function showNewsItem ($item,$full = false) {
+		if ($full) {
+			$output = $this->items['news.fullitem'];
+		} else {
+			$output = $this->items['news.item'];
+		}
 		$this->includes ($output);
 		preg_match_all ('#{news (.+?)}#',$output,$matches);
 		foreach ($matches[0] as $number => $match) {
@@ -183,7 +187,7 @@ class CSkin {
 					$tmp = $item[FIELD_NEWS_MESSAGE];
 					break;
 				case 'linkreadcomments':
-					$tmp = $item[FIELD_NEWS_ID];
+					$tmp = $tmp = 'news.php?action=viewcomments&id=' . $item[FIELD_NEWS_ID] . '#readcomments';
 					break;
 				default:
 					$tmp = NULL;
@@ -343,6 +347,37 @@ class CSkin {
 		}
 	}
 
+	private function showComment ($id) {
+		return 'COMMENT';
+	}
+
+	private function startCommentThread ($parentID) {
+		$output = $this->showComment ($parentID);
+		$parentItem = $this->news->getComment ($parentID);
+		foreach ($this->news->getThreadChildren ($this->get (GET_NEWSID),$parentItem) as $child) {
+			$output .= $this->items['thread.open'];
+			$output .= $this->startthread ($child);
+			$output .= $this->items['thread.close'];
+		}
+		return $output;
+	}
+
+	private function showComments () {
+		if ($this->config->getConfigByNameType ('news/threaded',TYPE_BOOL) == YES) {
+			$output = $this->items['comments.threaded'];
+			$this->includes ($output);
+			$comments = NULL;
+			foreach ($this->news->startthreads ($this->get (GET_NEWSID)) as $parent) {
+				$comments .= $this->startCommentTread ($parent);
+			}
+			$output = str_replace ('{comments}',$comments,$output);
+		} else {
+			$output = $this->items['comments.nonthreaded'];
+			$this->includes ($output);
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -363,6 +398,21 @@ class CSkin {
 		$this->items['userlogin.password'] = POST_PASSWORD;
 		$this->items['to.registerform'] = './users.php?action=registerform';
 		$this->items['to.lostpasswordform'] = './users.php?action=lostpasswordform';
+		if ($this->getPageID () == 'news.php?action=viewcomments') {
+			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
+			foreach ($matches[0] as $number => $match) {
+				switch ($matches[1][$number]) {
+					case 'item':
+						$item = $this->news->getNews ($this->get ('id'));
+						$replace = $this->showNewsItem ($item,true);
+						break;
+					case 'comments':
+						$replace = $this->showComments ($this->get ('id'));
+						break;
+				}
+				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			}
+		}
 		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
@@ -499,7 +549,7 @@ class CSkin {
 		exit ();
 	}
 
-	public function loadSkinFile ($skinFile,$loginReq = true) {
+	public function loadSkinFile ($skinFile,$loginReq = false) {
 		try {
 			if (($loginReq == true) and ($this->user->isLoggedIn () == false)) {
 				$this->redirect ('index.php?error=' .

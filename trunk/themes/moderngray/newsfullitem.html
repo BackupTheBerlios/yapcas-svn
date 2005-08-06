@@ -1,0 +1,15 @@
+<div class="news">
+	<h3>
+		{news subject}
+	</h3>
+	<h6>
+		<span class="author">{news author}</span>
+		<span class="date">{news date}</span>
+	</h6>
+	<div class="message">
+		{news message}
+	</div>
+	<p>
+		{if loggedin}<a href="{news linktonewcomment}">&lang.newcomment;</a>{endif}
+	</p>
+</div>

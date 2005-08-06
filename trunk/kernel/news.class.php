@@ -136,7 +136,7 @@ class news {
 		}
 	} /* public function showAllNews ($offset = NULL,$category = NULL) */
 
-	public function getThreadFollows ($idnews,$comment) {
+	public function getThreadChildren ($idnews,$comment) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_COMMENTS;
 			$sql .= ' WHERE id_news=\'' . $idnews .'\'';
@@ -153,7 +153,7 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function getThreadFollows ($idnews,$comment) */
+	} /* public function getThreadChildren ($idnews,$comment) */
 
 	public function startThreads ($idnews) {
 		try {
