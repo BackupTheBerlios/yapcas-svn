@@ -1,4 +1,4 @@
-{if loggedin}
+{if !loggedin}
 	<form class="login" action="&userlogin.action;" method="&userlogin.method;">
 		&lang.username;: <input class="text" type="text" name="&userlogin.username;" size="10" />
 		&lang.password;: <input class="text" type="password" name="&userlogin.password;" size="10" />
@@ -7,6 +7,6 @@
 		<a href="&to.lostpasswordform;">&lang.lostpassword;</a>
 	</form>
 {endif}
-{if !loggedin}
-	%user.links
+{if loggedin}
+	&user.navigation;
 {endif}

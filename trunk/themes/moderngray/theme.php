@@ -97,5 +97,5 @@
 	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
-	$this->pages['index.html'] = '&theme.shortviewpoll;,&site.navigation;,&user.userform;,&news.headlines;';
+	$this->pages['index.php'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 ?>

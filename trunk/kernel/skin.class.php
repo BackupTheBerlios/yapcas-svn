@@ -116,7 +116,7 @@ class CSkin {
 		}
 	}
 
-	private function loadtheme ($themedir) {
+	private function loadTheme ($themedir) {
 		$this->themedir = $themedir;
 		if (file_exists ('themes/' . $this->themedir . '/theme.php')) {
 			include_once ('themes/' . $this->themedir . '/theme.php');
@@ -149,15 +149,17 @@ class CSkin {
 
 	private function loadSideBar () {
 		$childsOfSideBar = $this->loadGroup ($this->childsOfSideBar);
-		$onThisPage = $this->loadGroup ($this->pages['index.html']);
-		$intersect = implode (',',array_intersect ($childsOfSideBar,$onThisPage));
+		$onThisPage = $this->loadGroup ($this->pages[$this->getPageID ()]);
+		// implode char is empty because between the parts must be nothing
+		$intersect = implode ('',array_intersect ($childsOfSideBar,$onThisPage));
 		$this->fileCont = preg_replace ('#{sidebar}#',$intersect,$this->fileCont);
 	}
 
 	private function loadNavigationBar () {
 		$childsOfNavigation = $this->loadGroup ($this->childsOfNavigation);
-		$onThisPage = $this->loadGroup ($this->pages['index.html']);
-		$intersect = implode (' ',array_intersect ($childsOfNavigation,$onThisPage));
+		$onThisPage = $this->loadGroup ($this->pages[$this->getPageID ()]);
+		// implode char is empty because between the parts must be nothing
+		$intersect = implode ('',array_intersect ($childsOfNavigation,$onThisPage));
 		$this->fileCont = preg_replace ('#{navigation}#',$intersect,$this->fileCont);
 	}
 
@@ -275,13 +277,23 @@ class CSkin {
 		return $output;
 	}
 
-	private function loadNavigation () {
-		$items = array ('Home','something else','foo','bar');
+	private function loadNavigation ($usernav = false) {
+		$lang = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
+		$sql = 'SELECT ' . FIELD_PAGES_SHOWN_NAME . ',' . FIELD_PAGES_LINK;
+		$sql .= ' FROM '  . TBL_PAGES;
+		$sql .= ' WHERE ' . FIELD_PAGES_IN_NAVIGATION . '=\'' . YES . '\'';
+		if ($usernav != true) {
+			$sql .= ' AND ' . FIELD_PAGES_IN_USER_NAVIGATION . '=\'' . NO . '\'';
+		} else {
+			$sql .= ' AND ' . FIELD_PAGES_IN_USER_NAVIGATION . '=\'' . YES . '\'';
+		}
+		$sql .= ' AND ' . FIELD_PAGES_LANGUAGE . '=\'' . $lang . '\'';
+		$query = $this->database->query ($sql);
 		$output = NULL;
-		foreach ($items as $item) {
+		while ($item = $this->database->fetch_array ($query)) {
 			$output .= $this->items['navigation.item'];
-			$output = ereg_replace ('{navigation link}',$item . '.html',$output);
-			$output = ereg_replace ('{navigation name}',$item,$output);
+			$output = ereg_replace ('{navigation link}',$item[FIELD_PAGES_LINK],$output);
+			$output = ereg_replace ('{navigation name}',$item[FIELD_PAGES_SHOWN_NAME],$output);
 		}
 		return $output;
 	}
@@ -327,8 +339,6 @@ class CSkin {
 					}
 					$this->fileCont = str_replace ($match,$output,$this->fileCont);
 					break;
-					$this->fileCont = str_replace ($match,$output,$this->fileCont);
-					break;
 			}
 		}
 	}
@@ -346,6 +356,7 @@ class CSkin {
 		$this->items['page.warnings'] = $this->showMessages ('warnings');
 		$this->items['page.notes'] = $this->showMessages ('notes');
 		$this->items['site.navigation'] = $this->loadNavigation ();
+		$this->items['user.navigation'] = $this->loadNavigation (true);
 		$this->items['userlogin.method'] = 'post';
 		$this->items['userlogin.action'] = './users.php?action=login';
 		$this->items['userlogin.username'] = POST_NAME;
@@ -376,15 +387,15 @@ class CSkin {
 				case 'loggedin':
 					if ($this->user->isLoggedIn () == true) {
 						if ($not == true) {
-							$replace = $matches[2][$number];
-						} else {
 							$replace = NULL;
+						} else {
+							$replace = $matches[2][$number];
 						}
 					} else {
 						if ($not == true) {
-							$replace = NULL;
-						} else {
 							$replace = $matches[2][$number];
+						} else {
+							$replace = NULL;
 						}
 					}
 					break;
