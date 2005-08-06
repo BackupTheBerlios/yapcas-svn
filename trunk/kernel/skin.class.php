@@ -116,7 +116,7 @@ class CSkin {
 		}
 	}
 
-	function loadtheme ($themedir) {
+	private function loadtheme ($themedir) {
 		$this->themedir = $themedir;
 		if (file_exists ('themes/' . $this->themedir . '/theme.php')) {
 			include_once ('themes/' . $this->themedir . '/theme.php');
@@ -196,6 +196,51 @@ class CSkin {
 		$output = NULL;
 		foreach ($newsitems as $item) {
 			$output .= $this->showNewsItem ($item);
+		}
+		return $output;
+	}
+
+	private function showHeadline ($item) {
+		$output = $this->items['news.headline'];
+		$this->includes ($output);
+		preg_match_all ('#{headline (.+?)}#',$output,$matches);
+		foreach ($matches[0] as $number => $match) {
+			$what = $matches[1][$number];
+			switch ($what) {
+				case 'subject':
+					$tmp = $item[FIELD_NEWS_SUBJECT];
+					break;
+				case 'author':
+					$tmp = $item[FIELD_NEWS_AUTHOR];
+					break;
+				case 'date':
+					$tmp = showDate ($item[FIELD_NEWS_DATE]);
+					break;
+				case 'message':
+					$tmp = $item[FIELD_NEWS_MESSAGE];
+					break;
+				case 'link':
+					$tmp = 'news.php?action=viewcomments&id=' . $item[FIELD_NEWS_ID];
+					break;
+				default:
+					$tmp = NULL;
+			}
+			$output = ereg_replace ($match,$tmp,$output);
+		}
+		return $output;
+	}
+
+	private function getHeadlines () {
+		$output = $this->items['news.headlines'];
+		$this->includes ($output);
+		preg_match ('/{headlines}/si',$output,$match);
+		if ($match) {
+			$newsitems = $this->news->getHeadlines ();
+			$outputitems = NULL;
+			foreach ($newsitems as $item) {
+				$outputitems .= $this->showHeadline ($item);
+			}
+			$output = str_replace ($match,$outputitems,$output);
 		}
 		return $output;
 	}
@@ -296,6 +341,7 @@ class CSkin {
 		$this->items['page.title'] = $this->getPageTitle ();
 		$this->items['page.content'] = $this->getPageContent ();
 		$this->items['news.items'] = $this->getNewsItems ();
+		$this->items['news.headlines'] = $this->getHeadlines ();
 		$this->items['page.errors'] = $this->showMessages ('errors');
 		$this->items['page.warnings'] = $this->showMessages ('warnings');
 		$this->items['page.notes'] = $this->showMessages ('notes');
@@ -381,8 +427,10 @@ class CSkin {
 
 	private function getPageID () {
 		$pagename = $_SERVER['PHP_SELF'];
-		// removes everything before and '/'
-		return preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+		// removes everything before and '/' sign itself
+		// example /dir/yapcas/index.php --> index.php
+		$ID = preg_replace ('/(.+?)*\/(.+?)/','\\2',$pagename);
+		return $ID;
 	}
 
 	public function get ($string) {
@@ -422,7 +470,7 @@ class CSkin {
 			$content = NULL;
 		} else {
 			$content = $this->database->fetch_array ($query);
-			$content = $pagetitle['content'];
+			$content = $content['content'];
 		}
 		return $content;
 	}

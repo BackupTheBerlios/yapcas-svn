@@ -85,6 +85,8 @@
 	$this->items['theme.shortviewpoll'] = '{include shortviewpoll.html}';
 	$this->items['moderngray.standardcss'] = $this->convertFile ('standard.css');
 	$this->items['news.item'] = '{include newsitem.html}';
+	$this->items['news.headlines'] = '{include headlines.html}';
+	$this->items['news.headline'] = '<a href="{headline link}">{headline subject}</a><br />';
 	$this->items['message.error'] = '<p class="note">{message error}</p>';
 	$this->items['message.warning'] = '<p class="note">{message warning}</p>';
 	$this->items['message.note'] = '<p class="note">{message note}</p>';
@@ -92,8 +94,8 @@
 	$this->items['user.userform'] = '{include userform.html}';
 	$this->items['poll.choice'] = '{choice text}: <input name="voted_on" type="radio" value="{choice number}" /><br />';
 	$this->items['poll.result'] = '{choice text}: {choice resultprocent}% <br />' ;
-	$this->childsOfSideBar = '&theme.shortviewpoll;';
+	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
-	$this->pages['index.html'] = '&theme.shortviewpoll;,&site.navigation;,&user.userform;';
+	$this->pages['index.html'] = '&theme.shortviewpoll;,&site.navigation;,&user.userform;,&news.headlines;';
 ?>

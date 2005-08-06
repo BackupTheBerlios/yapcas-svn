@@ -7,7 +7,7 @@ CREATE TABLE %prefix%ipblocks (
 
 CREATE TABLE %prefix%user_profile (
   name varchar (50) NOT NULL,
-  icq int default NULL,
+  icq varchar (125) default NULL,
   aim varchar (125) default NULL,
   msn varchar (125) default NULL,
   yahoo varchar (125) default NULL,
