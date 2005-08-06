@@ -29,7 +29,7 @@ class theme {
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
-		if (! file_exists ('.install.php')) {
+		if (! file_exists ('install.php')) {
 			include ('kernel/config.class.php');
 			$config = new config ();
 			$lang = new lang ();
@@ -157,7 +157,7 @@ class theme {
 	function title () {
 		$sitename = $this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
 		$pagename = $_SERVER['PHP_SELF'];
-		$pagename = preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+		$pagename = preg_replace ('/(.+?)*\/(.+?)/','\\2',$pagename);
 		// removes everything before and '/'
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
 		$sql = "SELECT * FROM " . TBL_PAGES ." WHERE name='$pagename' AND language='$language' LIMIT 1";
@@ -310,7 +310,7 @@ class theme {
 	
 	function contentpage () {
 		$pagename = $_SERVER['PHP_SELF'];
-		$pagename = preg_replace ('#(.+?)/(.+?)#','\\2',$pagename);
+		$pagename = preg_replace ('/(.+?)*\/(.+?)/','\\2',$pagename);
 		// removes everything before and '/'
 		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
 		$sql = "SELECT * FROM " . TBL_PAGES . " WHERE " . FIELD_PAGES_NAME . "='$pagename' AND " . FIELD_PAGES_LANGUAGE . "='$language'";

@@ -121,7 +121,19 @@ Geen ;-)
 	Prioriteit: Hoog
 	versies: ?0.2? 0.3
 
+0.3.2
+-----
 #00020:
 	Title: gebruiker kan niet registreren wegens een SQL fout
 	Prioriteit: SUPER HOOG (GEEN VEILIGHEID)
 	versies: 0.3.0-0.3.1
+
+#00021:
+	Titel: update settings is niet mogelijk wegens SQL fout
+	Prioriteit: SUPER HOOG (GEEN VEILIGHEID)
+	Versies: 0.3.0-0.3.1
+
+#00022:
+	Titel: bug #00017-#00019 maar dan voor als het wel in de root staat
+	Prioriteit: SUPER HOOG (GEEN VEILIGHEID)
+	Versies: 0.3.1
