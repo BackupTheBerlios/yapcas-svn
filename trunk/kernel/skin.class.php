@@ -187,7 +187,10 @@ class CSkin {
 					$tmp = $item[FIELD_NEWS_MESSAGE];
 					break;
 				case 'linkreadcomments':
-					$tmp = $tmp = 'news.php?action=viewcomments&id=' . $item[FIELD_NEWS_ID] . '#readcomments';
+					$tmp = 'news.php?action=viewcomments&id=' . $item[FIELD_NEWS_ID] . '#readcomments';
+					break;
+				case 'linknewcomment':
+					$tmp = 'news.php?action=postcommentform&on_news_id=' . $item[FIELD_NEWS_ID];
 					break;
 				default:
 					$tmp = NULL;
@@ -347,16 +350,42 @@ class CSkin {
 		}
 	}
 
-	private function showComment ($id) {
-		return 'COMMENT';
+	private function showComment ($comment) {
+		$output = $this->items['newscomment.item'];
+		$this->includes ($output);
+		preg_match_all ('/{comment (.+?)}/is',$output,$matches);
+		foreach ($matches[0] as $number => $match) {
+			$replace = NULL;
+			switch ($matches[1][$number]) {
+				case 'subject':
+					$replace = $comment[FIELD_COMMENTS_SUBJECT];
+					break;
+				case 'author':
+					$replace = $comment[FIELD_COMMENTS_AUTHOR];
+					break;
+				case 'date':
+					$replace = formatDate ($comment[FIELD_COMMENTS_DATE]);
+					break;
+				case 'newcommentlink':
+					$replace = 'news.php?action=postcommentform';
+					$replace .= '&amp;' . POST_ID_NEWS . '=' . $comment[FIELD_COMMENTS_ID_NEWS];
+					$replace .= '&amp;' . POST_ID_COMMENT . '=' . $comment[FIELD_COMMENTS_ID];
+					break;
+				case 'message':
+					$replace = $comment[FIELD_COMMENTS_MESSAGE];
+					break;
+			}
+			$output = str_replace ($match,$replace,$output);
+		}
+		return $output;
 	}
 
-	private function startCommentThread ($parentID) {
-		$output = $this->showComment ($parentID);
-		$parentItem = $this->news->getComment ($parentID);
-		foreach ($this->news->getThreadChildren ($this->get (GET_NEWSID),$parentItem) as $child) {
+	private function startCommentThread ($parent) {
+		//$parent = $this->news->getComment ($parentID);
+		$output = $this->showComment ($parent);
+		foreach ($this->news->getThreadChildren ($this->get (GET_NEWSID),$parent) as $child) {
 			$output .= $this->items['thread.open'];
-			$output .= $this->startthread ($child);
+			$output .= $this->startCommentThread ($child);
 			$output .= $this->items['thread.close'];
 		}
 		return $output;
@@ -368,7 +397,8 @@ class CSkin {
 			$this->includes ($output);
 			$comments = NULL;
 			foreach ($this->news->startthreads ($this->get (GET_NEWSID)) as $parent) {
-				$comments .= $this->startCommentTread ($parent);
+				//print_r ($parent);
+				$comments .= $this->startCommentThread ($parent);
 			}
 			$output = str_replace ('{comments}',$comments,$output);
 		} else {
@@ -398,6 +428,12 @@ class CSkin {
 		$this->items['userlogin.password'] = POST_PASSWORD;
 		$this->items['to.registerform'] = './users.php?action=registerform';
 		$this->items['to.lostpasswordform'] = './users.php?action=lostpasswordform';
+		$this->items['newcomment.action'] = 'news.php?action=postcomment';
+		$this->items['newcomment.method'] = 'post';
+		$this->items['newcomment.subject'] = POST_SUBJECT;
+		$this->items['newcomment.message'] = POST_MESSAGE;
+		$this->items['newcomment.on_comment'] = POST_ID_COMMENT;
+		$this->items['newcomment.on_news'] = POST_ID_NEWS;
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -408,6 +444,20 @@ class CSkin {
 						break;
 					case 'comments':
 						$replace = $this->showComments ($this->get ('id'));
+						break;
+				}
+				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			}
+		}
+		if ($this->getPageID () == 'news.php?action=postcommentform') {
+			preg_match_all ('/{newcomment (.+?)}/is',$this->fileCont,$matches);
+			foreach ($matches[0] as $number => $match) {
+				switch ($matches[1][$number]) {
+					case 'id_on_comment':
+						$replace = $this->get (POST_ID_COMMENT);
+						break;
+					case 'on_news':
+						$replace = $this->get (POST_ID_NEWS);
 						break;
 				}
 				$this->fileCont = str_replace ($match,$replace,$this->fileCont);

@@ -89,6 +89,7 @@
 	$this->items['news.headlines'] = '{include headlines.html}';
 	$this->items['news.headline'] = '<a href="{headline link}">{headline subject}</a><br />';
 	$this->items['comments.threaded'] = '{comments}';
+	$this->items['newscomment.item'] = '{include newscomment.html}';
 	$this->items['thread.open'] = '<div class="thread">';
 	$this->items['thread.close'] = '</div>';
 	$this->items['message.error'] = '<p class="note">{message error}</p>';
@@ -103,4 +104,5 @@
 	$this->pages = array ();
 	$this->pages['index.php'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=viewcomments'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['news.php?action=postcommentform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 ?>

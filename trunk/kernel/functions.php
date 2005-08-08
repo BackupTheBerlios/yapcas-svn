@@ -212,6 +212,7 @@ function loadall () {
 	$theme = new theme ();
 }
 
+// deprecated
 function setdate ($time) {
 	global $config;
 	$timezone = $config->getConfigByNameType ('general/timezone',TYPE_INT);
@@ -220,7 +221,13 @@ function setdate ($time) {
 	return date ($timeformat,$time);
 }
 
+// deprecated
 function showDate ($time) {
+	return setDate ($time);
+}
+
+// This is the one that is preferred
+function formatDate ($time) {
 	return setDate ($time);
 }
 

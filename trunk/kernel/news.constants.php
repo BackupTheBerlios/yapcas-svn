@@ -34,6 +34,6 @@
 	define ('POST_DATE','date');
 	define ('POST_CATEGORY','category');
 	define ('POST_ID','id');
-	define ('POST_ID_COMMENT','on_comment');
-	define ('POST_ID_NEWS','on_news');
+	define ('POST_ID_COMMENT','on_comment_id');
+	define ('POST_ID_NEWS','on_news_id');
 ?>

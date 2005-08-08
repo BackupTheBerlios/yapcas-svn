@@ -46,7 +46,7 @@ switch ($action) {
 		break;
 	case 'postcommentform':
 		try {
-			$skin>loadSkinFile ('postcommentform.html',true);
+			$skin->loadSkinFile ('postcommentform.html',true);
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
@@ -93,7 +93,7 @@ switch ($action) {
 			}
 			$news->postcomment ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$date,
 				$user->getconfig ('name'),$_POST[POST_ID_NEWS],$idcomment);
-			$id = $_POST['on_news'];
+			$id = $_POST[POST_ID_NEWS];
 			$database->close ();
 			$skin->redirect ('news.php?action=viewcomments&id='.$id.
 				'&note=' . $lang->translate ('Your comment is posted'));
