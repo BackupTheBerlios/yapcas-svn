@@ -380,5 +380,16 @@ class news {
 			throw $e;
 		}
 	} /* public function viewFeed ($meta,$category = NULL,$method = 'RSS2') */
+
+	public function getAllCategoriesByLanguage ($language) {
+		$sql = 'SELECT * FROM ' . TBL_CATEGORIES;
+		$sql .= ' WHERE ' . FIELD_CATEGORIES_LANGUAGE . '=\'' . $language . '\'';
+		$query = $this->database->query ($sql);
+		$categories = array ();
+		while ($cat = $this->database->fetch_array ($query)) {
+			$categories[] = $cat;
+		}
+		return $categories;
+	}
 } // Class news
 ?>

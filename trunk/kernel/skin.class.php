@@ -408,6 +408,17 @@ class CSkin {
 		return $output;
 	}
 
+	private function showNewsCategories () {
+		$output = NULL;
+		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
+		$categories = $this->news->getAllCategoriesByLanguage ($language);
+		foreach ($categories as $category) {
+			$output .= $this->items['news.categoryoption'];
+			$output = str_replace ('&category.name;',$category[FIELD_CATEGORIES_NAME],$output);
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -428,12 +439,19 @@ class CSkin {
 		$this->items['userlogin.password'] = POST_PASSWORD;
 		$this->items['to.registerform'] = './users.php?action=registerform';
 		$this->items['to.lostpasswordform'] = './users.php?action=lostpasswordform';
+		$this->items['to.postnewsform'] = 'news.php?action=postnewsform';
 		$this->items['newcomment.action'] = 'news.php?action=postcomment';
 		$this->items['newcomment.method'] = 'post';
 		$this->items['newcomment.subject'] = POST_SUBJECT;
 		$this->items['newcomment.message'] = POST_MESSAGE;
 		$this->items['newcomment.on_comment'] = POST_ID_COMMENT;
 		$this->items['newcomment.on_news'] = POST_ID_NEWS;
+		$this->items['postnews.availablecategories'] = $this->showNewsCategories ();
+		$this->items['postnews.category'] = 'category';
+		$this->items['postnews.message'] = 'message';
+		$this->items['postnews.subject'] = 'subject';
+		$this->items['postnews.action'] = 'news.php?action=postnews';
+		$this->items['postnews.method'] = 'post';
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {

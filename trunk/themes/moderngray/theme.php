@@ -99,10 +99,12 @@
 	$this->items['user.userform'] = '{include userform.html}';
 	$this->items['poll.choice'] = '{choice text}: <input name="voted_on" type="radio" value="{choice number}" /><br />';
 	$this->items['poll.result'] = '{choice text}: {choice resultprocent}% <br />' ;
+	$this->items['news.categoryoption'] = '<option>&category.name;</option>';
 	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
 	$this->pages['index.php'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=viewcomments'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=postcommentform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['news.php?action=postnewsform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 ?>

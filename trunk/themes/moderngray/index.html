@@ -13,7 +13,13 @@
 		<div id="sidebar">
 			{sidebar}
 		</div>
-		<div id="content">&page.errors; &page.warnings; &page.notes; &news.items; &page.content;</div>
+		<div id="content">
+			&page.errors; &page.warnings; &page.notes; 
+			&news.items;
+			{if loggedin}
+				<p><a href="&to.postnewsform;">&lang.postnews;</a></p>
+			{endif}
+			&page.content;</div>
 		<p id="copyright">
 			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
 			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
