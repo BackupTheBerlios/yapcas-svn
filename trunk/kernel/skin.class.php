@@ -202,10 +202,12 @@ class CSkin {
 
 	private function getNewsItems () {
 		$newsitems = $this->news->getAllNews ($this->get ('offset'),$this->get ('category'));
-		$output = NULL;
+		$news = NULL;
+		$output = $this->items['news.index'];
 		foreach ($newsitems as $item) {
-			$output .= $this->showNewsItem ($item);
+			$news .= $this->showNewsItem ($item);
 		}
+		$output = str_replace ('{newsitems}',$news,$output);
 		return $output;
 	}
 

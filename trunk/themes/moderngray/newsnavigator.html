@@ -1,6 +1,5 @@
-%ifprev0 &lt;&nbsp; %/ifprev0
-%ifprev>0 <a href="%prev.link"> &lt; </a> %/ifprev>0
+{if !commentsprev}&lt;&nbsp;{endif}
+{if commentsprev} <a href="&prevcomments.link;"> &lt; </a>{endif}
 |
-%ifnext0 &nbsp;&gt; %/ifnext0
-%ifnext>0 <a href="%next.link"> &gt; </a> %/ifnext>0			
-%newspostlink
+{if !commentsnext}&nbsp;&gt;{endif}
+{if commentsnext}<a href="&nextcomments.link;">&gt;</a>{endif}

@@ -84,6 +84,7 @@
 	$this->items = array ();
 	$this->items['theme.shortviewpoll'] = '{include shortviewpoll.html}';
 	$this->items['moderngray.standardcss'] = $this->convertFile ('standard.css');
+	$this->items['news.index'] = '{newsitems}&news.navigator;';
 	$this->items['news.item'] = '{include newsitem.html}';
 	$this->items['news.fullitem'] = '{include newsfullitem.html}';
 	$this->items['news.headlines'] = '{include headlines.html}';
