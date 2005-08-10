@@ -103,6 +103,7 @@
 	$this->items['poll.result'] = '{choice text}: {choice resultprocent}% <br />' ;
 	$this->items['news.categoryoption'] = '<option>&category.name;</option>';
 	$this->items['comments.navigator'] = '{include commentnavigator.html}';
+	$this->items['news.navigator'] = '{include newsnavigator.html}';
 	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();

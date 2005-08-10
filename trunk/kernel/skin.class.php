@@ -440,6 +440,13 @@ class CSkin {
 		return $output;
 	}
 
+	private function showNewsNavigator () {
+		$output = NULL;
+		$output .= $this->items['news.navigator'];
+		$this->includes ($output);
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -471,6 +478,14 @@ class CSkin {
 		$next = $this->get ('offset') + $this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
 		$this->items['nextcomments.link'] .= '&offset=' . $next;
 
+		$this->items['prevnews.link'] = 'index.php';
+		$prev = $this->get ('offset') - $this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+		$this->items['prevnews.link'] .= '?offset=' . $prev;
+
+		$this->items['nextnews.link'] = 'index.php';
+		$next = $this->get ('offset') + $this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+		$this->items['nextnews.link'] .= '?offset=' . $next;
+
 		$this->items['newcomment.method'] = 'post';
 		$this->items['newcomment.subject'] = POST_SUBJECT;
 		$this->items['newcomment.message'] = POST_MESSAGE;
@@ -483,6 +498,7 @@ class CSkin {
 		$this->items['postnews.action'] = 'news.php?action=postnews';
 		$this->items['postnews.method'] = 'post';
 		$this->items['comments.navigator'] = $this->showCommentNavigator ();
+		$this->items['news.navigator'] = $this->showNewsNavigator ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -535,6 +551,19 @@ class CSkin {
 			$varlist['commentsnext'] = false;
 		} else {
 			$varlist['commentsnext'] = true;
+		}
+
+		$limit = $this->news->getLimitNews ($this->get ('offset'),$this->get ('category'));
+		if ($limit['previous'] < 0) {
+			$varlist['newsprev'] = false;
+		} else {
+			$varlist['newsprev'] = true;
+		}
+
+		if ($limit['next'] >= $limit['total']) {
+			$varlist['newsnext'] = false;
+		} else {
+			$varlist['newsnext'] = true;
 		}
 
 		preg_match_all ('/\{if (.+?)\}(.+?)\{endif\}/is',$this->fileCont,$matches);
@@ -656,7 +685,7 @@ class CSkin {
 			$this->loadNavigationBar ();
 			$this->loadItems ();
 			$this->includes ($this->fileCont);
-			$this->loadItems ();
+			$this->loadItems ();$this->loadItems ();
 			$this->loadPoll ();
 			$this->localize ();
 			echo $this->fileCont;
