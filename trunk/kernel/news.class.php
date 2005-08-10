@@ -56,9 +56,9 @@ class news {
 		}
 	} /* public function getHeadlines ($outputmethod,$category = NULL) */
 
-	public function getLimitNews ($offset = NULL,$category = NULL) {
+	public function getLimitNews ($offset = false,$category = NULL) {
 		try {
-			if (empty ($offset)) {
+			if ($offset === false) {
 				$limit['offset'] = 0;
 			} else {
 				$limit['offset'] = $offset;
@@ -84,12 +84,16 @@ class news {
 		}
 	} /* public function getLimitNews ($offset = NULL,$category = NULL) */
 
-	public function getLimitComments ($newsid,$offset = NULL) {
+	public function getLimitComments ($newsid,$offset = false) {
 		try {
-			if (empty ($offset)) {
+			if ($offset === false) {
 				$limit['offset'] = 0;
 			} else {
 				$limit['offset'] = $offset;
+			}
+			// not a good hack
+			if ($newsid === false) {
+				return;
 			}
 			$language = $this->config->getConfigByNameType('general/language',TYPE_STRING);
 			$limit['limit'] =

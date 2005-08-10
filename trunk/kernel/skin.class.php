@@ -391,19 +391,29 @@ class CSkin {
 		return $output;
 	}
 
+	private function showCommentsFlat ($newsID) {
+		$output = NULL;
+		$comments = $this->news->getAllComments ($newsID,$this->get ('offset'));
+		foreach ($comments as $comment) {
+			$output .= $this->showComment ($comment);
+		}
+		return $output;
+	}
+
 	private function showComments () {
 		if ($this->config->getConfigByNameType ('news/threaded',TYPE_BOOL) == YES) {
 			$output = $this->items['comments.threaded'];
 			$this->includes ($output);
 			$comments = NULL;
 			foreach ($this->news->startthreads ($this->get (GET_NEWSID)) as $parent) {
-				//print_r ($parent);
 				$comments .= $this->startCommentThread ($parent);
 			}
 			$output = str_replace ('{comments}',$comments,$output);
 		} else {
 			$output = $this->items['comments.nonthreaded'];
 			$this->includes ($output);
+			$comments = $this->showCommentsFlat ($this->get (GET_NEWSID));
+			$output = str_replace ('{comments}',$comments,$output);
 		}
 		return $output;
 	}
@@ -415,6 +425,15 @@ class CSkin {
 		foreach ($categories as $category) {
 			$output .= $this->items['news.categoryoption'];
 			$output = str_replace ('&category.name;',$category[FIELD_CATEGORIES_NAME],$output);
+		}
+		return $output;
+	}
+
+	private function showCommentNavigator () {
+		$output = NULL;
+		if (! $this->config->getConfigByNameType ('news/threaded',TYPE_BOOL)) {
+			$output .= $this->items['comments.navigator'];
+			$this->includes ($output);
 		}
 		return $output;
 	}
@@ -441,6 +460,15 @@ class CSkin {
 		$this->items['to.lostpasswordform'] = './users.php?action=lostpasswordform';
 		$this->items['to.postnewsform'] = 'news.php?action=postnewsform';
 		$this->items['newcomment.action'] = 'news.php?action=postcomment';
+
+		$this->items['prevcomments.link'] = 'news.php?action=viewcomments&id=' . $this->get (GET_ID);
+		$prev = $this->get ('offset') - $this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+		$this->items['prevcomments.link'] .= '&offset=' . $prev;
+
+		$this->items['nextcomments.link'] = 'news.php?action=viewcomments&id=' . $this->get (GET_ID);
+		$next = $this->get ('offset') + $this->config->getConfigByNameType ('news/postsonpage',TYPE_INT);
+		$this->items['nextcomments.link'] .= '&offset=' . $next;
+
 		$this->items['newcomment.method'] = 'post';
 		$this->items['newcomment.subject'] = POST_SUBJECT;
 		$this->items['newcomment.message'] = POST_MESSAGE;
@@ -452,6 +480,7 @@ class CSkin {
 		$this->items['postnews.subject'] = 'subject';
 		$this->items['postnews.action'] = 'news.php?action=postnews';
 		$this->items['postnews.method'] = 'post';
+		$this->items['comments.navigator'] = $this->showCommentNavigator ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -490,8 +519,25 @@ class CSkin {
 		}
 		// the 'i' is appendend to be not case sesitive
 		// the 's' is appendend to inlcude the newline char in DOT
+
+		$varlist['loggedin'] = $this->user->isLoggedIn ();
+		$varlist['pollvoted'] = $this->poll->userHasVoted ($this->user->getConfig ('name'));
+		$limit = $this->news->getLimitComments ($this->get (GET_ID),$this->get ('offset'));
+		if ($limit['previous'] < 0) {
+			$varlist['commentsprev'] = false;
+		} else {
+			$varlist['commentsprev'] = true;
+		}
+
+		if ($limit['next'] >= $limit['total']) {
+			$varlist['commentsnext'] = false;
+		} else {
+			$varlist['commentsnext'] = true;
+		}
+
 		preg_match_all ('/\{if (.+?)\}(.+?)\{endif\}/is',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
+			$replace = NULL;
 			trim ($matches[1][$number]);
 			if ($matches[1][$number][0] == '!') {
 				$var = substr ($matches[1][$number],1);
@@ -500,43 +546,23 @@ class CSkin {
 				$var = $matches[1][$number];
 				$not = false;
 			}
-			/* Horrible code, FIXME */
-			switch ($var) {
-				case 'loggedin':
-					if ($this->user->isLoggedIn () == true) {
-						if ($not == true) {
-							$replace = NULL;
-						} else {
-							$replace = $matches[2][$number];
-						}
-					} else {
-						if ($not == true) {
-							$replace = $matches[2][$number];
-						} else {
-							$replace = NULL;
-						}
+
+			if (array_key_exists ($var,$varlist)) {
+				if ($varlist[$var] == true) {
+					if ($not == false) {
+						$replace = $matches[2][$number];
 					}
-					break;
-				case 'pollvoted':
-					if ($this->poll->userHasVoted ($this->user->getConfig ('name')) == true) {
-						if ($not != true) {
-							$replace = $matches[2][$number];
-						} else {
-							$replace = NULL;
-						}
-					} else {
-						if ($not != true) {
-							$replace = NULL;
-						} else {
-							$replace = $matches[2][$number];
-						}
+				} else {
+					if ($not == true) {
+						$replace = $matches[2][$number];
 					}
-					break;
-				default:
-					throw new Exceptionlist ('Uknown variable');
+				}
+			} else {
+				throw new exceptionlist ('Uknown variable');
 			}
 			// I'm using str_replace and not ereg_replace because
 			// ereg causes problems with a '?'
+			// and str_replace is faster
 			$this->fileCont = str_replace ($match,$replace,$this->fileCont);
 		}
 	}

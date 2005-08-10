@@ -89,6 +89,7 @@
 	$this->items['news.headlines'] = '{include headlines.html}';
 	$this->items['news.headline'] = '<a href="{headline link}">{headline subject}</a><br />';
 	$this->items['comments.threaded'] = '{comments}';
+	$this->items['comments.nonthreaded'] = '{comments}';
 	$this->items['newscomment.item'] = '{include newscomment.html}';
 	$this->items['thread.open'] = '<div class="thread">';
 	$this->items['thread.close'] = '</div>';
@@ -100,6 +101,7 @@
 	$this->items['poll.choice'] = '{choice text}: <input name="voted_on" type="radio" value="{choice number}" /><br />';
 	$this->items['poll.result'] = '{choice text}: {choice resultprocent}% <br />' ;
 	$this->items['news.categoryoption'] = '<option>&category.name;</option>';
+	$this->items['comments.navigator'] = '{include commentnavigator.html}';
 	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
