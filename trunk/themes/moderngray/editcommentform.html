@@ -1,13 +1,11 @@
-<object>
-	<form class="login" action="%editcomment.action" method="%editcomment.method">
+<form class="login" action="{editcomment action}" method="&editcomment.method;">
 		<p class="input"> 
-			%subject.lang 
-			<input type="text" size="50" maxlength="255" name="subject" value="%subject.current"/>
+			&subject.lang;
+			<input type="text" size="50" maxlength="255" name="&editcomment.subject;" value="{editcomment currentsubject}"/>
 		</p>
-		<p  class="input">
-			%newsmessage.lang<br />
-			<textarea name="message" cols="80" rows="20">%message.current</textarea>
+		<p class="input">
+			&message.lang;<br />
+			<textarea name="&editcomment.message;" cols="80" rows="20">{editcomment currentmessage}</textarea>
 		</p>
-		<input type="submit" value="%editcomment.lang" />
-	</form>
-</object>
+		<input type="submit" value="&lang.editcomment;" />
+</form>

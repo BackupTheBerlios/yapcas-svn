@@ -376,6 +376,9 @@ class CSkin {
 				case 'message':
 					$replace = $comment[FIELD_COMMENTS_MESSAGE];
 					break;
+				case 'linkeditcommentform':
+					$replace = 'news.php?action=editcommentform&' . GET_ID . '=' . $comment[FIELD_COMMENTS_ID];
+					break;
 			}
 			$output = str_replace ($match,$replace,$output);
 		}
@@ -492,11 +495,14 @@ class CSkin {
 		$this->items['newcomment.on_comment'] = POST_ID_COMMENT;
 		$this->items['newcomment.on_news'] = POST_ID_NEWS;
 		$this->items['postnews.availablecategories'] = $this->showNewsCategories ();
-		$this->items['postnews.category'] = 'category';
-		$this->items['postnews.message'] = 'message';
-		$this->items['postnews.subject'] = 'subject';
+		$this->items['postnews.category'] = POST_CATEGORY;
+		$this->items['postnews.message'] = POST_MESSAGE;
+		$this->items['postnews.subject'] = POST_SUBJECT;
 		$this->items['postnews.action'] = 'news.php?action=postnews';
 		$this->items['postnews.method'] = 'post';
+		$this->items['editcomment.message'] = POST_MESSAGE;
+		$this->items['editcomment.subject'] = POST_SUBJECT;
+		$this->items['editcomment.method'] = 'post';
 		$this->items['comments.navigator'] = $this->showCommentNavigator ();
 		$this->items['news.navigator'] = $this->showNewsNavigator ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
@@ -528,6 +534,27 @@ class CSkin {
 				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
 			}
 		}
+
+		if ($this->getPageID () == 'news.php?action=editcommentform') {
+			preg_match_all ('/{editcomment (.+?)}/is',$this->fileCont,$matches);
+			$comment = $this->news->getComment ($this->get (GET_ID));
+			foreach ($matches[0] as $number => $match) {
+				$replace = NULL;
+				switch ($matches[1][$number]) {
+					case 'action':
+						$replace = 'news.php?action=editcomment&amp;' . GET_ID . '=' . $this->get (GET_ID);
+						break;
+					case 'currentsubject':
+						$replace = $comment[FIELD_COMMENTS_SUBJECT];
+						break;
+					case 'currentmessage':
+						$replace = $comment[FIELD_COMMENTS_MESSAGE];
+						break;
+				}
+				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			}
+		}
+
 		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
@@ -535,6 +562,15 @@ class CSkin {
 				$this->fileCont = ereg_replace ($match,$item,$this->fileCont);
 			}
 		}
+
+		preg_match_all ('/{button (.+?) (.+?)}/',$this->fileCont,$matches);
+		foreach ($matches[0] as $number => $match) {
+			$button = $this->items['button'];
+			$button = str_replace ('{button text}',$matches[1][$number],$button);
+			$button = str_replace ('{button action}',$matches[2][$number],$button);
+			$this->fileCont = str_replace ($match,$button,$this->fileCont);
+		}
+
 		// the 'i' is appendend to be not case sesitive
 		// the 's' is appendend to inlcude the newline char in DOT
 

@@ -229,7 +229,7 @@ switch ($action) {
 			$skin->redirect ($link);
 		}
 		break;
-	default: 
+	default:
 		$database->close ();
 		$skin->redirect ('index.php');
 }

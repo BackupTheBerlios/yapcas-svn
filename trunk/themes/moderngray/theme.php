@@ -104,6 +104,7 @@
 	$this->items['news.categoryoption'] = '<option>&category.name;</option>';
 	$this->items['comments.navigator'] = '{include commentnavigator.html}';
 	$this->items['news.navigator'] = '{include newsnavigator.html}';
+	$this->items['button'] = '<a href="{button action}">{button text}</a>';
 	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
@@ -111,4 +112,5 @@
 	$this->pages['news.php?action=viewcomments'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=postcommentform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=postnewsform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['news.php?action=editcommentform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 ?>
