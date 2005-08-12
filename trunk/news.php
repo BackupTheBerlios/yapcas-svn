@@ -210,6 +210,58 @@ switch ($action) {
 			$skin->redirect ($link);
 		}
 		break;
+	case 'editnews':
+		try {
+			$exception = NULL;
+			if (empty ($_POST[POST_MESSAGE])) {
+				$e = new exceptionlist ($lang->translate ('You must fill in the message field'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
+			$date = getUTCtime ($config);
+			if (empty ($_POST[POST_SUBJECT])) {
+				$e = new exceptionlist ($lang->translate ('You must fill in the subject field'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
+			if (empty ($_GET[GET_ID])) {
+				$e = new exceptionlist ($lang->translate ('Core error'));
+				if ($exception == NULL) {
+					$exception = $e;
+				} else {
+					$exception->setNext ($e);
+				}
+			}
+			if (! empty ($exception)) {
+				throw $exception;
+			}
+			$news->editNews ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$_GET[GET_ID]);
+			$database->close ();
+			$skin->redirect ('index.php?note=' . $lang->translate ('Your newsitem is edited'));
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'index.php?',$lang->translate ('Your newsitel is not edited'),$errorrep);
+			$database->close ();
+			$skin->redirect ($link);
+		}
+		break;
+	case 'editnewsform':
+		try {
+			$skin->loadSkinFile ('editnews.html',true);
+			$database->close ();
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$database->close ();
+			$skin->redirect ($link);
+		}
+		break;
 	case 'viewfeed':
 		try {
 			$meta['title'] = $config->getConfigByNameType ('general/sitename',TYPE_STRING);

@@ -172,6 +172,7 @@ class CSkin {
 		$this->includes ($output);
 		preg_match_all ('#{news (.+?)}#',$output,$matches);
 		foreach ($matches[0] as $number => $match) {
+			$tmp = NULL;
 			$what = $matches[1][$number];
 			switch ($what) {
 				case 'subject':
@@ -192,8 +193,14 @@ class CSkin {
 				case 'linknewcomment':
 					$tmp = 'news.php?action=postcommentform&on_news_id=' . $item[FIELD_NEWS_ID];
 					break;
-				default:
-					$tmp = NULL;
+				case 'editnewsbutton':
+					if ($item[FIELD_NEWS_AUTHOR] == $this->user->getConfig ('name')) {
+						$but = $this->items['editnews.button'];
+						$this->showButton ($but);
+						$tmp = str_replace ('{news linkeditnewsform}',
+								'news.php?action=editnewsform&' . GET_ID . '=' . $item[FIELD_NEWS_ID],
+								$but);
+					}
 			}
 			$output = ereg_replace ($match,$tmp,$output);
 		}
@@ -379,6 +386,14 @@ class CSkin {
 				case 'linkeditcommentform':
 					$replace = 'news.php?action=editcommentform&' . GET_ID . '=' . $comment[FIELD_COMMENTS_ID];
 					break;
+				case 'editcommentbutton':
+					if ($comment[FIELD_COMMENTS_AUTHOR] == $this->user->getConfig ('name')) {
+						$but = $this->items['editcomment.button'];
+						$this->showButton ($but);
+						$replace = str_replace ('{comment linkeditcommentform}',
+								'news.php?action=editcommentform&' . GET_ID . '=' . $comment[FIELD_COMMENTS_ID],
+								$but);
+					}
 			}
 			$output = str_replace ($match,$replace,$output);
 		}
@@ -450,6 +465,17 @@ class CSkin {
 		return $output;
 	}
 
+	private function showButton (&$subject) {
+		preg_match_all ('/{button (.+?) (.+?) }/',$subject,$matches);
+		foreach ($matches[0] as $number => $match) {
+			$button = $this->items['button'];
+			$button = str_replace ('{button text}',$matches[1][$number],$button);
+			$button = str_replace ('{button action}',$matches[2][$number],$button);
+			$subject = str_replace ($match,$button,$subject);
+		}
+		return $subject;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -503,6 +529,9 @@ class CSkin {
 		$this->items['editcomment.message'] = POST_MESSAGE;
 		$this->items['editcomment.subject'] = POST_SUBJECT;
 		$this->items['editcomment.method'] = 'post';
+		$this->items['editnews.message'] = POST_MESSAGE;
+		$this->items['editnews.subject'] = POST_SUBJECT;
+		$this->items['editnews.method'] = 'post';
 		$this->items['comments.navigator'] = $this->showCommentNavigator ();
 		$this->items['news.navigator'] = $this->showNewsNavigator ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
@@ -555,20 +584,32 @@ class CSkin {
 			}
 		}
 
+		if ($this->getPageID () == 'news.php?action=editnewsform') {
+			preg_match_all ('/{editnews (.+?)}/is',$this->fileCont,$matches);
+			$comment = $this->news->getNews ($this->get (GET_ID));
+			foreach ($matches[0] as $number => $match) {
+				$replace = NULL;
+				switch ($matches[1][$number]) {
+					case 'action':
+						$replace = 'news.php?action=editnews&amp;' . GET_ID . '=' . $this->get (GET_ID);
+						break;
+					case 'currentsubject':
+						$replace = $comment[FIELD_NEWS_SUBJECT];
+						break;
+					case 'currentmessage':
+						$replace = $comment[FIELD_NEWS_MESSAGE];
+						break;
+				}
+				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			}
+		}
+
 		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
 				$item = $this->items[$matches[1][$number]];
 				$this->fileCont = ereg_replace ($match,$item,$this->fileCont);
 			}
-		}
-
-		preg_match_all ('/{button (.+?) (.+?)}/',$this->fileCont,$matches);
-		foreach ($matches[0] as $number => $match) {
-			$button = $this->items['button'];
-			$button = str_replace ('{button text}',$matches[1][$number],$button);
-			$button = str_replace ('{button action}',$matches[2][$number],$button);
-			$this->fileCont = str_replace ($match,$button,$this->fileCont);
 		}
 
 		// the 'i' is appendend to be not case sesitive
@@ -723,6 +764,7 @@ class CSkin {
 			$this->includes ($this->fileCont);
 			$this->loadItems ();$this->loadItems ();
 			$this->loadPoll ();
+			$this->showButton ($this->fileCont);
 			$this->localize ();
 			echo $this->fileCont;
 		}

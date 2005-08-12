@@ -246,6 +246,20 @@ class news {
 	public function editComment ($newmessage,$newsubject,$idcomment) {
 		try {
 			$sql = 'UPDATE ' . TBL_COMMENTS; 
+			$sql .= ' SET ' . FIELD_COMMENTS_MESSAGE . '=\'' . $newmessage . '\'';
+			$sql .= ',' . FIELD_COMMENTS_SUBJECT . '=\'' . $newsubject . '\'';
+			$sql .= ' WHERE id=\'' . $idcomment . '\'';
+			$query = $this->database->query ($sql);
+			return true;
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* public function editComment ($newmessage,$newsubject,$idcomment) */
+
+	public function editNews ($newmessage,$newsubject,$idcomment) {
+		try {
+			$sql = 'UPDATE ' . TBL_NEWS; 
 			$sql .= ' SET ' . FIELD_NEWS_MESSAGE . '=\'' . $newmessage . '\'';
 			$sql .= ',' . FIELD_NEWS_SUBJECT . '=\'' . $newsubject . '\'';
 			$sql .= ' WHERE id=\'' . $idcomment . '\'';
@@ -255,7 +269,7 @@ class news {
 		catch (exceptionlist $e) {
 			throw $e;
 		}
-	} /* public function editComment ($newmessage,$newsubject,$idcomment) */
+	} /* public function editNews ($newmessage,$newsubject,$idcomment) */
 
 	public function postComment ($message,$subject,$date,$user,$onnews,$oncomment = 0) {
 		try {
