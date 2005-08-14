@@ -172,9 +172,14 @@ span.bericht {
 }
 
 div.message div.quote {
-	border: 2px dotted;
-	margin-left: 20px;
-	color: green;
+	display: block;
+	border: 1px dotted;
+	width: 80%;
+	margin: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 0.8em;
+	color: blue;
 }
 
 div.message .u {
@@ -223,4 +228,23 @@ div.headline a.message {
 
 .login input.text {
 	border: solid 1px;
+}
+
+#formatlist img.emoticon {
+	border: 0;
+	padding: 3px;
+}
+
+.emoticon {
+	border: 0px;
+	padding: 0;
+}
+
+.helpbox {
+	border: 0;
+}
+
+#formatlist {
+	float: right;
+	width: 20%;
 }

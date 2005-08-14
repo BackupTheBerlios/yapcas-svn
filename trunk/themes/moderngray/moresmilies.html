@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>&site.title; :: &page.title;</title>
+		<link rel="stylesheet" type="text/css" href="&moderngray.standardcss;" />
+	</head>
+	<body>
+		<div class="box">
+			<h2>
+				&lang.smilies;
+			</h2>
+			<p>
+				&format.allsmilies; <br />
+				<a href="javascript:window.close();">&lang.closewindow</a>
+			</p>
+			</div>
+			<script language="javascript" type="text/javascript">
+			<!--
+			function addSmiley (text) {
+				text = ' ' + text + ' ';
+				if (opener.document.form.message.createTextRange && opener.document.form.message.caretPos) {
+					var caretPos = opener.document.form.message.caretPos;
+					caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ? text + ' ' : text;
+					opener.document.form.message.focus();
+				} else {
+				opener.document.form.message.value  += text;
+				opener.document.form.message.focus();
+				}
+			}
+			//-->
+			</script>
+	</body>
+</html>

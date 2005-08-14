@@ -17,26 +17,31 @@
 			&page.errors; &page.warnings; &page.notes;
 			<div class="box">
 				<h2>
-					%postnews.lang
+					&lang.postnews;
 				</h2>
-				<form class="login" action="&postnews.action;" method="&postnews.method;">
-					<p class="input">
+				<form id="postnews" name="form" class="login" action="&postnews.action;" method="&postnews.method;">
+					<div>
 						&lang.subject;: 
 						<input type="text" size="50" maxlength="255" name="&postnews.subject;" />
-					</p>
-					<p class="input">
-						&lang.message; <br />
-						<textarea name="&postnews.message;" cols="80" rows="20"></textarea>
-					</p>
-					<p class="input">
-						&lang.category;<br />
-						<select name="&postnews.category;">
-							&postnews.availablecategories;
-						</select>
-					</p>
-					<p class="input">
-						<input type="submit" value="$lang.post;" />
-					</p>
+					</div>
+					<div>
+						<div id="formatlist">
+							&format.smilies; <br />
+							&moresmilies.link;
+							&format.bbc; <br />
+							<a href="javascript:bbstyle(-1)" onmouseover="helpline('a')">&lang.closebbc;</a><br />
+							<input name="helpbox" size="45" maxlength="100" class="helpbox" value="&lang.standardbbchelp;" type="text"><br /><br />
+							&lang.category;<br />
+							<select name="&postnews.category;">
+								&postnews.availablecategories;
+							</select><br /><br />
+							<input type="submit" value="$lang.post;" />
+						</div>
+						<div style="width:80%;">
+							&lang.message; <br />
+							<textarea name="&postnews.message;" cols="80" rows="20"></textarea>
+						</div>
+					</div>
 				</form>
 			</div>
 		 	&page.content;
@@ -45,5 +50,11 @@
 			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
 			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
 		</p>
+		<script type="text/javascript">
+		<!--
+			txtarea = document.form.&postnews.message;
+			{include format.js}
+		//-->
+		</script>
 	</body>
 </html>

@@ -281,6 +281,17 @@ switch ($action) {
 			$skin->redirect ($link);
 		}
 		break;
+	case 'moresmilies':
+		try {
+			$skin->loadSkinFile ('moresmilies.html',false);
+			$database->close ();
+		}
+		catch (exceptionlist $e) {
+			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$database->close ();
+			$skin->redirect ($link);
+		}
+		break;
 	default:
 		$database->close ();
 		$skin->redirect ('index.php');

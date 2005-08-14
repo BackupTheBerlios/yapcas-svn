@@ -78,6 +78,7 @@ class CSkin {
 				$this->lang = $lang;
 				$this->user = $user;
 				$this->database = $database;
+				$this->BBCTags = array ('b','u','i','quote');
 				global $theme,$config,$news,$poll,$user,$lang,$database;
 				$config = $this->config;
 				$news = $this->news;
@@ -131,6 +132,38 @@ class CSkin {
 		}
 	}
 
+	function replaceBBCTag ($text,$bbctag,$htmlopen,$htmlclose) {
+		$text = str_replace ('[' . $bbctag . ']',$htmlopen,$text);
+		$text = str_replace ('[/' . $bbctag . ']',$htmlclose,$text);
+		return $text;
+	}
+
+	private function formatMessage ($input,$useEmot = true,$useBBC = true) {
+		$output = strip_tags ($input);
+		$output = nl2br ($output);
+		if ($useEmot) {
+			foreach ($this->getAllEmoticons () as $smiley) {
+				$emot = $this->items['emoticon'];
+				$emot = str_replace ('{emot img}',$this->convertImage ($smiley['image']),$emot);
+				$emot = str_replace ('{emot name}',$smiley['name'],$emot);
+				$output = str_replace ($smiley['deftext'],$emot,$output);
+				foreach ($smiley['alttexts'] as $other) {
+					$altemot = $this->items['emoticon'];
+					$altemot = str_replace ('{emot img}',$this->convertImage ($smiley['image']),$altemot);
+					$altemot = str_replace ('{emot name}',$smiley['name'],$altemot);
+					$output = str_replace ($other,$altemot,$output);
+				}
+			}
+		}
+		if ($useBBC == true) {
+			foreach ($this->BBCTags as $tag) {
+				$output = $this->replaceBBCTag ($output,$tag,
+					$this->BBC[$tag]['open'],$this->BBC[$tag]['close']);
+			}
+		}
+		return $output;
+	}
+
 	public function file ($fileName) {
 			if (is_readable ($fileName)) {
 				return file_get_contents ($fileName);
@@ -141,6 +174,10 @@ class CSkin {
 
 	private function convertFile ($file = NULL) {
 		return 'themes/' . $this->themedir . '/' . $file;
+	} /* private function convertFile ($file) */
+
+	private function convertImage ($file = NULL) {
+		return 'themes/' . $this->themedir . '/images/' . $file;
 	} /* private function convertFile ($file) */
 
 	private function loadGroup ($string) {
@@ -185,7 +222,7 @@ class CSkin {
 					$tmp = showDate ($item[FIELD_NEWS_DATE]);
 					break;
 				case 'message':
-					$tmp = $item[FIELD_NEWS_MESSAGE];
+					$tmp = $this->formatMessage ($item[FIELD_NEWS_MESSAGE]);
 					break;
 				case 'linkreadcomments':
 					$tmp = 'news.php?action=viewcomments&id=' . $item[FIELD_NEWS_ID] . '#readcomments';
@@ -235,7 +272,7 @@ class CSkin {
 					$tmp = showDate ($item[FIELD_NEWS_DATE]);
 					break;
 				case 'message':
-					$tmp = $item[FIELD_NEWS_MESSAGE];
+					$tmp = $this->formatMessage ($item[FIELD_NEWS_MESSAGE]);
 					break;
 				case 'link':
 					$tmp = 'news.php?action=viewcomments&id=' . $item[FIELD_NEWS_ID];
@@ -381,7 +418,7 @@ class CSkin {
 					$replace .= '&amp;' . POST_ID_COMMENT . '=' . $comment[FIELD_COMMENTS_ID];
 					break;
 				case 'message':
-					$replace = $comment[FIELD_COMMENTS_MESSAGE];
+					$replace = $this->formatMessage ($comment[FIELD_COMMENTS_MESSAGE]);
 					break;
 				case 'linkeditcommentform':
 					$replace = 'news.php?action=editcommentform&' . GET_ID . '=' . $comment[FIELD_COMMENTS_ID];
@@ -476,6 +513,110 @@ class CSkin {
 		return $subject;
 	}
 
+	private function showUBBFormat () {
+		$output = NULL;
+		$i = 0;
+		foreach ($this->BBCTags as $tag) {
+			$output .= $this->items['bbc.button'];
+			$output = str_replace ('{bbc tag}',$tag,$output);
+			$output = str_replace ('{bbc code}',$i,$output);
+			$output = str_replace ('{bbc key}',$tag,$output);
+			$i = $i+2;
+		}
+		return $output;
+	}
+
+	/**
+	* Loads the emoticons from the file 'smiley' in the theme dir
+	*
+	* A line in smiley looks like this 'something.gif ;) ;-)'
+	* everything is splitted on a space ' '
+	* the first word is the name of the image relative to  themedir/images
+	* the second is the default chars to create the emoticons
+	* the later ones are alternative ones
+	*
+	* a line can also start with an '!'
+	* this would say that that line is not important (commented out)
+	*
+	* if the line is 'break' only the emoticons defined before this line are showed
+	* if $all == false
+	*
+	* empty lines are igonored
+	*
+	* if the first line is 'VERSION 2' the 2 word is the name of the emoticons
+	* !!case insesitive!!
+	* for example 'sigh'
+	*/
+	private function getAllEmoticons ($all = false) {
+		$items = file ($this->convertFile ('smiley'));
+		$version2 = false;
+		if (strtoupper ($items[0]) == 'VERSION 2') {
+			$version2 = true;
+			// now removes the first line
+			array_shift ($items);
+		}
+		foreach ($items as $item) {
+			// remove some chars at the beginning and end of the line
+			$item = trim ($item);
+			if (empty ($item)) {
+				continue;
+			} else if ($item == 'break') {
+				if (! $all) {
+					return $emot;
+				} else {
+					continue;
+				}
+			}
+			if ($item[0] != '!') {
+				// first creating an empty array, otherwise othertexts will be filled up
+				$em = array ();
+				$item = split (' ',$item);
+				$em['image'] = $item[0];
+				if ($version2) {
+					$em['name'] = $item[1];
+					$em['deftext'] = $item[2];
+					$i = 3;
+				} else {
+					$em['name'] = NULL;
+					$em['deftext'] = $item[1];
+					$i = 2;
+				}
+				$em['alttexts'] = array ();
+				while (array_key_exists ($i,$item)) {
+					$em['alttexts'][] = $item[$i];
+					$i++;
+				}
+				$emot[] = $em;
+			}
+		}
+		return $emot;
+	}
+
+	private function showSmilies ($all = false) {
+		$output = NULL;
+		$i = 0;
+		$emoticons = $this->getAllEmoticons ($all);
+		foreach ($emoticons as $emoticon) {
+			$output .= $this->items['emoticon.button'];
+			$output = str_replace ('{emot text}',$emoticon['deftext'],$output);
+			$output = str_replace ('{emot image}',$this->convertImage ($emoticon['image']),$output);
+			$i++;
+		}
+		return $output;
+	}
+
+	private function showBBCJSArray () {
+		$i = 0;
+		$output = NULL;
+		foreach ($this->BBCTags as $tag) {
+			if ($output != NULL) { $output .= ','; }
+			$output .= '\'[' . $tag . ']\',';
+			$output .= '\'[/' . $tag . ']\'';
+			$i = $i+2;
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -534,6 +675,10 @@ class CSkin {
 		$this->items['editnews.method'] = 'post';
 		$this->items['comments.navigator'] = $this->showCommentNavigator ();
 		$this->items['news.navigator'] = $this->showNewsNavigator ();
+		$this->items['format.bbc'] = $this->showUBBFormat ();
+		$this->items['format.smilies'] = $this->showSmilies ();
+		$this->items['format.allsmilies'] = $this->showSmilies (true);
+		$this->items['bbc.jsarray'] = $this->showBBCJSArray ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {

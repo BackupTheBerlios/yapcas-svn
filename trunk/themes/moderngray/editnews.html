@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>&site.title; :: &page.title;</title>
+		<link rel="stylesheet" type="text/css" href="&moderngray.standardcss;" />
+	</head>
+	<body>
+		<div id="banner">
+			<h1>&site.title; :: &page.title;</h1>
+			<h4>&site.description;</h4>
+			<div id="navigation">{navigation}</div>
+		</div>
+		<div id="sidebar">
+			{sidebar}
+		</div>
+		<div id="content">
+			&page.errors; &page.warnings; &page.notes; 
+			<div class="box">
+				<h2>&lang.editnews;</h2>
+				{include editnewsform.html}
+			</div>
+			&page.content;
+		</div>
+		<p id="copyright">
+			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
+		</p>
+</html>

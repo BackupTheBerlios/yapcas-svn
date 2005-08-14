@@ -107,6 +107,9 @@
 	$this->items['button'] = '<a href="{button action}">{button text}</a>';
 	$this->items['editcomment.button'] = '{button &lang.editcomment; {comment linkeditcommentform} }';
 	$this->items['editnews.button'] = '{button &lang.editnews; {news linkeditnewsform} }';
+	$this->items['bbc.button'] = '<input value="{bbc tag}" accesskey="{bbc key}" name="addbbcode{bbc code}" onclick="bbstyle ({bbc code})" onmouseover="helpline(\'{bbc tag}\')" type="button" />';
+	$this->items['emoticon.button'] = '<a href="javascript:addSmiley (\'{emot text}\')"><img class="emoticon" src="{emot image}"/></a>';
+	$this->items['emoticon'] = '<img class="emoticon" src="{emot img}" name="{emot name}" alt="{emot name}" />';
 	$this->childsOfSideBar = '&theme.shortviewpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
@@ -116,4 +119,14 @@
 	$this->pages['news.php?action=postnewsform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=editcommentform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=editnewsform'] = '&theme.shortviewpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['news.php?action=moresmilies'] = '';
+	$this->BBC['b']['open'] = '<span class="b">';
+	$this->BBC['b']['close'] = '</span>';
+	$this->BBC['u']['open'] = '<span class="u">';
+	$this->BBC['u']['close'] = '</span>';
+	$this->BBC['i']['open'] = '<span class="i">';
+	$this->BBC['i']['close'] = '</span>';
+	$this->BBC['quote']['open'] = '<div class="quote">&lang.quote;<br />';
+	$this->BBC['quote']['close'] = '</div>';
+	$this->items['moresmilies.link'] = '<a href="news.php?action=moresmilies" target="moresmilies" onclick="window.open (\'news.php?action=moresmilies\',\'moresmilies\',\'HEIGHT=300,resizable=yes,scrollbars=yes,WIDTH=250\');return false;">&lang.more_smilies;</a><br />';
 ?>
