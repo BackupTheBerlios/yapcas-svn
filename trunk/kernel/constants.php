@@ -14,7 +14,8 @@ define ('PostgreSQL','postgresql');
 define ('postgresql','postgresql');
 define ('E_NONE',0);
 define ('STANDARD_LANGUAGE','english');
-define ('STANDARD_LANGCODE','en');
+define ('STANDARD_LANGCODE','en'); // remove this
+define ('DEFAULT_CONTENT_LANG','en');
 define ('STANDARD_THEME','moderngray');
 define ('STANDARD_DATABASE_TYPE',MySQL4);
 define ('COPYRIGHT','&copy; 2005 Nathan Samson. YaPCaS is Licensed under the GPL');

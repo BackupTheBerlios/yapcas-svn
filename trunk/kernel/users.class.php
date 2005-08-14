@@ -39,7 +39,8 @@ class user {
 
 	public function updateConfig () {
 		$this->isloggedin = $this->isLoggedIn ();
-		$this->languageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_LANGUAGE);
+		$this->uilanguageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_UILANGUAGE);
+		$this->contentlanguageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE);
 		$this->timezoneconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
 		$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
 		$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
@@ -52,8 +53,11 @@ class user {
 
 	public function getConfig ($what) {
 		switch ($what) {
-			case 'language':
-				return $this->languageconfig;
+			case 'uilanguage':
+				return $this->uilanguageconfig;
+				break;
+			case 'contentlanguage':
+				return $this->contentlanguageconfig;
 				break;
 			case 'timezone':
 				return $this->timezoneconfig;
@@ -483,10 +487,10 @@ class user {
 
 	public function hasSetConfig () {
 		try {
-			if (($this->languageconfig == NULL) or ($this->themeconfig == NULL) 
-			or ($this->timezoneconfig == NULL) or ($this->timeformatconfig == NULL)
-			or ($this->threadedconfig == NULL) or ($this->postsonpageconfig == NULL) 
-			or ($this->headlinesconfig == NULL)) {
+			if (($this->uilanguageconfig == NULL) or ($this->contentlanguageconfig == NULL)
+			or ($this->themeconfig == NULL) or ($this->timezoneconfig == NULL)
+			or ($this->timeformatconfig == NULL) or ($this->threadedconfig == NULL)
+			or ($this->postsonpageconfig == NULL) or ($this->headlinesconfig == NULL)) {
 				return false;
 			} else {
 				return true;

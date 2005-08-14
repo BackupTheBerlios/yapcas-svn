@@ -42,7 +42,11 @@ class CSkin {
 				// Database seems to be OK
 				$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail',0);
 				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
-				$news = new news ($database,$user,$config,$lang);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('contentlanguage',$user,'contentlanguage','site.config.php'),
+					'general/contentlanguage',TYPE_STRING,DEFAULT_CONTENT_LANG);
+				$contentLang = $config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
+				$news = new CNews ($database,$lang,$contentLang);
 				$poll = new polls ($database,$config,$lang);
 				$this->help = new help ($database,$config,$lang);
 				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
@@ -56,9 +60,9 @@ class CSkin {
 					array('timeformat',$user,'timeformat','site.config.php'),
 					'general/timeformat',TYPE_STRING,'');
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('language',$user,'language','site.config.php'),
-					'general/language',TYPE_STRING,STANDARD_LANGUAGE);
-				$lang->updatelang ($config->getConfigByNameType('general/language',TYPE_STRING));
+					array('uilanguage',$user,'uilanguage','site.config.php'),
+					'general/uilanguage',TYPE_STRING,STANDARD_LANGUAGE);
+				$lang->updatelang ($config->getConfigByNameType('general/uilanguage',TYPE_STRING));
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('theme',$user,'theme','site.config.php'),
 					'general/theme',TYPE_STRING,'moderngray');
@@ -66,8 +70,11 @@ class CSkin {
 					array('threaded',$user,'threaded','site.config.php'),
 					'news/threaded',TYPE_BOOL,YES);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
-					array('langcode',$user,'langcode','site.config.php'),
-					'general/langcode',TYPE_STRING);
+					array('headlines',$user,'headlines','site.config.php'),
+					'news/headlines',TYPE_INT,5);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('postsonpage',$user,'postsonpage','site.config.php'),
+					'news/postsonpage',TYPE_INT,10);
 				$config->addConfigByList ('YAPCAS_USER',array($user),'user/email',TYPE_STRING);
 				$config->addConfigByList ('YAPCAS_USER',array($user),'user/name',TYPE_STRING,'anonymous');
 				$this->loadtheme ($config->getConfigByNameType('general/theme',TYPE_STRING));
@@ -245,7 +252,8 @@ class CSkin {
 	}
 
 	private function getNewsItems () {
-		$newsitems = $this->news->getAllNews ($this->get ('offset'),$this->get ('category'));
+		$postsOnPage = $this->config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
+		$newsitems = $this->news->getAllNews ($postsOnPage,$this->get ('offset'),$this->get ('category'));
 		$news = NULL;
 		$output = $this->items['news.index'];
 		foreach ($newsitems as $item) {
@@ -290,7 +298,8 @@ class CSkin {
 		$this->includes ($output);
 		preg_match ('/{headlines}/si',$output,$match);
 		if ($match) {
-			$newsitems = $this->news->getHeadlines ();
+			$maxHeadlines = $this->config->getConfigByNameType ('news/headlines',TYPE_NUMERIC);
+			$newsitems = $this->news->getHeadlines ($maxHeadlines);
 			$outputitems = NULL;
 			foreach ($newsitems as $item) {
 				$outputitems .= $this->showHeadline ($item);
@@ -331,7 +340,7 @@ class CSkin {
 	}
 
 	private function loadNavigation ($usernav = false) {
-		$lang = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
+		$lang = $this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 		$sql = 'SELECT ' . FIELD_PAGES_SHOWN_NAME . ',' . FIELD_PAGES_LINK;
 		$sql .= ' FROM '  . TBL_PAGES;
 		$sql .= ' WHERE ' . FIELD_PAGES_IN_NAVIGATION . '=\'' . YES . '\'';
@@ -352,7 +361,8 @@ class CSkin {
 	}
 
 	private function loadPoll () {
-		$poll = $this->poll->getPollByID ($this->poll->getIDCurrentPollByLanguage ('dutch'));
+		$contentLang = $this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
+		$poll = $this->poll->getPollByID ($this->poll->getIDCurrentPollByLanguage ($contentLang));
 		preg_match_all ('/{poll (.+?)}/is',$this->fileCont,$matches);
 		foreach ($matches[0] as $number => $match) {
 			switch ($matches[1][$number]) {
@@ -450,7 +460,8 @@ class CSkin {
 
 	private function showCommentsFlat ($newsID) {
 		$output = NULL;
-		$comments = $this->news->getAllComments ($newsID,$this->get ('offset'));
+		$postsOnPage = $this->config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
+		$comments = $this->news->getAllComments ($newsID,$postsOnPage,$this->get ('offset'));
 		foreach ($comments as $comment) {
 			$output .= $this->showComment ($comment);
 		}
@@ -477,8 +488,8 @@ class CSkin {
 
 	private function showNewsCategories () {
 		$output = NULL;
-		$language = $this->config->getConfigByNameType ('general/language',TYPE_STRING);
-		$categories = $this->news->getAllCategoriesByLanguage ($language);
+		$contentLang = $this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
+		$categories = $this->news->getAllCategoriesByLanguage ($contentLang);
 		foreach ($categories as $category) {
 			$output .= $this->items['news.categoryoption'];
 			$output = str_replace ('&category.name;',$category[FIELD_CATEGORIES_NAME],$output);
@@ -684,7 +695,7 @@ class CSkin {
 			foreach ($matches[0] as $number => $match) {
 				switch ($matches[1][$number]) {
 					case 'item':
-						$item = $this->news->getNews ($this->get ('id'));
+						$item = $this->news->getNewsByID ($this->get ('id'));
 						$replace = $this->showNewsItem ($item,true);
 						break;
 					case 'comments':
@@ -711,7 +722,7 @@ class CSkin {
 
 		if ($this->getPageID () == 'news.php?action=editcommentform') {
 			preg_match_all ('/{editcomment (.+?)}/is',$this->fileCont,$matches);
-			$comment = $this->news->getComment ($this->get (GET_ID));
+			$comment = $this->news->getCommentByID ($this->get (GET_ID));
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
 				switch ($matches[1][$number]) {
@@ -731,7 +742,7 @@ class CSkin {
 
 		if ($this->getPageID () == 'news.php?action=editnewsform') {
 			preg_match_all ('/{editnews (.+?)}/is',$this->fileCont,$matches);
-			$comment = $this->news->getNews ($this->get (GET_ID));
+			$comment = $this->news->getNewsByID ($this->get (GET_ID));
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
 				switch ($matches[1][$number]) {
@@ -762,7 +773,8 @@ class CSkin {
 
 		$varlist['loggedin'] = $this->user->isLoggedIn ();
 		$varlist['pollvoted'] = $this->poll->userHasVoted ($this->user->getConfig ('name'));
-		$limit = $this->news->getLimitComments ($this->get (GET_ID),$this->get ('offset'));
+		$postsOnPage = $this->config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
+		$limit = $this->news->getLimitComments ($postsOnPage,$this->get (GET_ID),$this->get ('offset'));
 		if ($limit['previous'] < 0) {
 			$varlist['commentsprev'] = false;
 		} else {
@@ -774,8 +786,8 @@ class CSkin {
 		} else {
 			$varlist['commentsnext'] = true;
 		}
-
-		$limit = $this->news->getLimitNews ($this->get ('offset'),$this->get ('category'));
+		$postsOnPage = $this->config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
+		$limit = $this->news->getLimitNews ($postsOnPage,$this->get ('offset'),$this->get ('category'));
 		if ($limit['previous'] < 0) {
 			$varlist['newsprev'] = false;
 		} else {
@@ -856,7 +868,7 @@ class CSkin {
 	public function getPageTitle () {
 		$ID = $this->getPageID ();
 		$language =
-			$this->config->getConfigByNameType ('general/language',TYPE_STRING);
+			$this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 		$sql = 'SELECT * FROM ' . TBL_PAGES;
 		$sql .= ' WHERE name=\'' . $ID . '\'';
 		$sql .= 'AND language=\'' . $language . '\' LIMIT 1';
@@ -873,7 +885,7 @@ class CSkin {
 	private function getPageContent () {
 		$ID = $this->getPageID ();
 		$language =
-			$this->config->getConfigByNameType ('general/language',TYPE_STRING);
+			$this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 		$sql = 'SELECT * FROM ' . TBL_PAGES;
 		$sql .= ' WHERE name=\'' . $ID . '\'';
 		$sql .= 'AND language=\'' . $language . '\' LIMIT 1';

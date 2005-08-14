@@ -75,7 +75,7 @@ class polls {
 			if (isset ($info['voted_on'])) {
 				if ($this->userhasvoted ($username) == false) {
 					$id = $this->getidcurrentpollbylanguage (
-						$this->config->getConfigByNameType('general/language',TYPE_STRING));
+						$this->config->getConfigByNameType('general/contentlanguage',TYPE_STRING));
 					$sql = 'SELECT ' . FIELD_POLL_RESULTS . ' FROM ' . TBL_POLLS . ' WHERE '; 
 					$sql .= FIELD_POLL_ID  . '=\'' . $id . '\' LIMIT 1';
 					$query = $this->database->query ($sql);
@@ -129,7 +129,7 @@ class polls {
 			$ip = false;
 			$user = false;
 			$idcurpoll = $this->getidcurrentpollbylanguage (
-				$this->config->getConfigByNameType('general/language',TYPE_STRING)); 
+				$this->config->getConfigByNameType('general/contentlanguage',TYPE_STRING)); 
 			// check cookie
 			if (isset ($_COOKIE[COOKIE_POLL])) {
 				if ($_COOKIE[COOKIE_POLL] == $idcurpoll) {

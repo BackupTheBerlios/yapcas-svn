@@ -91,7 +91,8 @@ switch ($action) {
 			} else {
 				$idcomment = 0;
 			}
-			$news->postcomment ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$date,
+			$contentLang = $this->config->getConfigByNameType ('general/contenlang',TYPE_STRING);
+			$news->postComment ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],$contentLang,$date,
 				$user->getconfig ('name'),$_POST[POST_ID_NEWS],$idcomment);
 			$id = $_POST[POST_ID_NEWS];
 			$database->close ();

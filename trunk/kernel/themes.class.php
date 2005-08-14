@@ -18,9 +18,9 @@
 // The completely class needs to be rewritten
 // Step-By-Step
 // 1) Rewrite constructor :: DONE
-// 2) better errorcatching
-// 3) better translation
-// 4) better desing possibilities
+// 2) better errorcatching :: DONE
+// 3) better translation :: DONE
+// 4) better desing possibilities :: WIP
 // 5) extensions
 
 class theme {
@@ -54,7 +54,11 @@ class theme {
 				// Database seems to be OK
 				$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail',0);
 				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
-				$news = new news ($database,$user,$config,$lang);
+				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
+					array('contentlang',$user,'contentlang','site.config.php'),
+					'general/contentlang',TYPE_STRING,DEFAULT_CONTENT_LANG);
+				$contentLang = $config->getConfigByNameType ('general/contentlang',TYPE_STRING)
+				$news = new news ($database,$config,$contentLang);
 				$poll = new polls ($database,$config,$lang);
 				$this->help = new help ($database,$config,$lang);
 				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');

@@ -21,7 +21,8 @@ CREATE TABLE %prefix%user_profile (
   timezone int,
   timeformat varchar (25) default NULL,
   headlines int default NULL,
-  language varchar (50) default NULL,
+  uilanguage varchar (50) default NULL,
+  contentlanguage varchar (5) default NULL,
   theme varchar (50) default NULL,
   PRIMARY KEY (name)
 );

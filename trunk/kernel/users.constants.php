@@ -30,7 +30,8 @@
 	define ( 'FIELD_USERS_PROFILE_TIMEZONE','timezone' );
 	define ( 'FIELD_USERS_PROFILE_TIMEFORMAT','timeformat' );
 	define ( 'FIELD_USERS_PROFILE_THREADED','threaded' );
-	define ( 'FIELD_USERS_PROFILE_LANGUAGE','language' );
+	define ( 'FIELD_USERS_PROFILE_UILANGUAGE','uilanguage' );
+	define ('FIELD_USERS_PROFILE_CONTENTLANGUAGE','contentlanguage');
 	define ( 'FIELD_USERS_PROFILE_THEME','theme' );
 	define ( 'FIELD_IPBLOCKS_IP','ip' );
 	define ('FIELD_ACTIVATE_QUEUE_USER','username');
