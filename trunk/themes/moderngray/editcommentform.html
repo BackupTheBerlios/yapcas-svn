@@ -1,11 +1,21 @@
-<form class="login" action="{editcomment action}" method="&editcomment.method;">
-		<p class="input"> 
-			&subject.lang;
-			<input type="text" size="50" maxlength="255" name="&editcomment.subject;" value="{editcomment currentsubject}"/>
-		</p>
-		<p class="input">
-			&message.lang;<br />
+<form name="form" class="login" action="{editcomment action}" method="&editcomment.method;">
+	<div> 
+		&subject.lang;
+		<input type="text" size="50" maxlength="255" name="&editcomment.subject;" value="{editcomment currentsubject}"/>
+	</div>
+	<div>
+		<div id="formatlist">
+			&format.smilies; <br />
+			&moresmilies.link;
+			&format.bbc; <br />
+			<a href="javascript:bbstyle(-1)" onmouseover="helpline('a')">&lang.closebbc;</a><br />
+			<input name="helpbox" size="45" maxlength="100" class="helpbox" value="&lang.standardbbchelp;" type="text"><br /><br />
+			<input type="submit" value="$lang.post;" />
+		</div>
+		<div style="width:80%;">
+			&lang.message; <br />
 			<textarea name="&editcomment.message;" cols="80" rows="20">{editcomment currentmessage}</textarea>
-		</p>
-		<input type="submit" value="&lang.editcomment;" />
+		</div>
+	</div>
+	<input type="submit" value="&lang.editcomment;" />
 </form>

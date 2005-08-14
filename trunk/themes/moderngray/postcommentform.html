@@ -18,20 +18,28 @@
 				<h2>
 					&lang.postnewcomment;
 				</h2>
-				<form class="newcomment" action="&newcomment.action;" method="&newcomment.method;">
-					<p class="input"> 
-						&lang.subject; 
-						<input type="text" size="50" maxlength="255" name="&newcomment.subject;" />
-					</p>
-					<p class="input">
-						&lang.message;<br />
-						<textarea name="&newcomment.message;" cols="80" rows="20"></textarea>
-					</p>
+				<form name="form" class="login" action="&newcomment.action;" method="&newcomment.method;">
 					<input type="hidden" name="&newcomment.on_comment;" value="{newcomment id_on_comment}" />
 					<input type="hidden" name="&newcomment.on_news;" value="{newcomment on_news}" />
-					<p class="input">
-						<input type="submit" value="&lang.post;" />
-					</p>
+					<div> 
+						&subject.lang;
+						<input type="text" size="50" maxlength="255" name="&newcomment.subject;" />
+					</div>
+					<div>
+						<div id="formatlist">
+							&format.smilies; <br />
+							&moresmilies.link;
+							&format.bbc; <br />
+							<a href="javascript:bbstyle(-1)" onmouseover="helpline('a')">&lang.closebbc;</a><br />
+							<input name="helpbox" size="45" maxlength="100" class="helpbox" value="&lang.standardbbchelp;" type="text"><br /><br />
+							<input type="submit" value="$lang.post;" />
+						</div>
+						<div style="width:80%;">
+							&lang.message; <br />
+							<textarea name="&newcomment.message;" cols="80" rows="20"></textarea>
+						</div>
+					</div>
+					<input type="submit" value="&lang.postcomment;" />
 				</form>
 			</div>
 		 	&page.content;
@@ -40,5 +48,11 @@
 			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
 			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
 		</p>
+		<script type="text/javascript">
+		<!--
+			txtarea = document.form.&postcomment.message;
+			{include format.js}
+		//-->
+		</script>
 	</body>
 </html>

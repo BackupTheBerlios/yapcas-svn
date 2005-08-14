@@ -142,7 +142,7 @@ class CSkin {
 		$output = strip_tags ($input);
 		$output = nl2br ($output);
 		if ($useEmot) {
-			foreach ($this->getAllEmoticons () as $smiley) {
+			foreach ($this->getAllEmoticons (true) as $smiley) {
 				$emot = $this->items['emoticon'];
 				$emot = str_replace ('{emot img}',$this->convertImage ($smiley['image']),$emot);
 				$emot = str_replace ('{emot name}',$smiley['name'],$emot);

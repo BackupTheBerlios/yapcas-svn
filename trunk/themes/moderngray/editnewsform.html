@@ -1,11 +1,21 @@
-<form class="login" action="{editnews action}" method="&editnews.method;">
-		<p class="input"> 
+<form name="form" class="login" action="{editnews action}" method="&editnews.method;">
+		<div> 
 			&subject.lang;
 			<input type="text" size="50" maxlength="255" name="&editnews.subject;" value="{editnews currentsubject}"/>
-		</p>
-		<p class="input">
-			&message.lang;<br />
-			<textarea name="&editnews.message;" cols="80" rows="20">{editnews currentmessage}</textarea>
-		</p>
+		</div>
+		<div>
+			<div id="formatlist">
+				&format.smilies; <br />
+				&moresmilies.link;
+				&format.bbc; <br />
+				<a href="javascript:bbstyle(-1)" onmouseover="helpline('a')">&lang.closebbc;</a><br />
+				<input name="helpbox" size="45" maxlength="100" class="helpbox" value="&lang.standardbbchelp;" type="text"><br /><br />
+				<input type="submit" value="$lang.post;" />
+			</div>
+			<div style="width:80%;">
+				&lang.message; <br />
+				<textarea name="&editnews.message;" cols="80" rows="20">{editnews currentmessage}</textarea>
+			</div>
+		</div>
 		<input type="submit" value="&lang.editnews;" />
 </form>
