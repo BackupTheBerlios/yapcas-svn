@@ -30,8 +30,12 @@ class polls {
 			$sql .= ' WHERE ' . FIELD_POLL_LANGUAGE . '=\'' . $language . '\'';
 			$sql .= ' AND ' . FIELD_POLL_ACTIVE . '=\'' . YES . '\' LIMIT 1';
 			$query = $this->database->query ($sql);
-			$poll = $this->database->fetch_array ($query);
-			return $poll[FIELD_POLL_ID];
+			if ($this->database->num_rows ($query) != 1) {
+				return false;
+			} else {
+				$poll = $this->database->fetch_array ($query);
+				return $poll[FIELD_POLL_ID];
+			}
 		}
 		catch (exceptionlist $e) {
 			throw $e;
@@ -128,11 +132,14 @@ class polls {
 			$cookie = false;
 			$ip = false;
 			$user = false;
-			$idcurpoll = $this->getidcurrentpollbylanguage (
+			$IDCurPoll = $this->getIDCurrentPollByLanguage (
 				$this->config->getConfigByNameType('general/contentlanguage',TYPE_STRING)); 
+			if ($IDCurPoll === false) {
+				return false;
+			}
 			// check cookie
 			if (isset ($_COOKIE[COOKIE_POLL])) {
-				if ($_COOKIE[COOKIE_POLL] == $idcurpoll) {
+				if ($_COOKIE[COOKIE_POLL] == $IDCurPoll) {
 					$cookie = true;
 				}
 			} 
@@ -140,7 +147,7 @@ class polls {
 			// check user
 			if ($username != NULL) {
 				$sql = "SELECT " . FIELD_POLL_VOTED_USERS . " FROM " . TBL_POLLS . " WHERE " 
-					. FIELD_POLL_ID . "='" . $idcurpoll . "' LIMIT 1";
+					. FIELD_POLL_ID . "='" . $IDCurPoll . "' LIMIT 1";
 				$query = $this->database->query ($sql);
 				$poll = $this->database->fetch_array ( $query );
 				$curuser = $username;
@@ -155,7 +162,7 @@ class polls {
 
 			// check ip
 			$sql = " SELECT " . FIELD_POLL_VOTED_IPS . " FROM " . TBL_POLLS . " WHERE "
-				. FIELD_POLL_ID . "='" . $idcurpoll . "' LIMIT 1";
+				. FIELD_POLL_ID . "='" . $IDCurPoll . "' LIMIT 1";
 			$query = $this->database->query ( $sql );
 				if ($username != NULL) {
 					// FIXME

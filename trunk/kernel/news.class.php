@@ -379,13 +379,10 @@ class CNews {
 		if (! empty ($category)) {
 			$meta['category'] = $category;
 		}
-		$headlines = $this->getHeadlines (NULL,$category);
+		$headlines = $this->getHeadlines ($meta['maxheadlines'],$category);
 		switch ($method) {
-			case 'RSS2':
-				$output = $this->viewRSS ($meta,$headlines);
-				break;
 			default:
-				$output = $this->viewRSS ($meta,$headlines);
+				$output = $this->generateRSS ($meta,$headlines);
 		}
 		return $output;
 	} /* public function showFeed ($meta,$category = NULL,$method = 'RSS2') */
@@ -413,25 +410,12 @@ class CNews {
 			$output .= '<category>'.$meta['category'].'</category>';
 		}
 
-		$configtimezone =
-			$this->config->getConfigByNameType ('general/servertimezone',TYPE_NUMERIC);
-		if ($configtimezone < 0) {
-			$timezone = '-';
-		} else {
-			$timezone = '+';
-		}
-		if (abs($configtimezone) < 10) {
-			$timezone .= '0';
-		}
-		$timezone .= floor(abs($configtimezone));
-		$minutes = ceil (abs($configtimezone))-abs($configtimezone);
-		$minutes *= 60;
-		if ($minutes < 10) {
-			$timezone .= '0';
-		}
-		$timezone .= $minutes;
-
 		foreach ($headlines as $headline) {
+			$formattedMessage = $headline[FIELD_NEWS_MESSAGE];
+			$formattedMessage = preg_replace ('/\[quote\](.+?)\[\/quote\]/','',$formattedMessage);
+			$formattedMessage = preg_replace ('/\[b\](.+?)\[\/b\]/','',$formattedMessage);
+			$formattedMessage = preg_replace ('/\[u\](.+?)\[\/u\]/','',$formattedMessage);
+			$formattedMessage = preg_replace ('/\[i\](.+?)\[\/i\]/','',$formattedMessage);
 			$output .= '<item>';
 			$output .= '<title>';
 				$output .= $headline[FIELD_NEWS_SUBJECT];
@@ -440,7 +424,7 @@ class CNews {
 				$output .= $meta['link'] . '/index.php#news' . $headline[FIELD_NEWS_ID];
 			$output .= '</link>';
 			$output .= '<description>';
-				$output .= $headline[FIELD_NEWS_MESSAGE];
+				$output .= $formattedMessage;
 			$output .= '</description>';
 			$output .= '<author>';
 				$output .= $headline[FIELD_NEWS_AUTHOR];
@@ -448,8 +432,7 @@ class CNews {
 			$output .= '<category>';
 				$output .= $headline[FIELD_NEWS_CATEGORY];
 			$output .= '</category>';
-			$date = date ('D, d M Y H:i:s '.$timezone,
-				$headline[FIELD_NEWS_DATE]+$configtimezone*3600);
+			$date = date ('r',$headline[FIELD_NEWS_DATE]);
 			// RFC 2822 formatted date "Thu, 21 Dec 2000 16:01:07 +0100"
 			$output .= '<pubDate>';
 				$output .= $date;

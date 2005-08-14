@@ -136,7 +136,7 @@ switch ($action) {
 			if (! empty ($exception)) {
 				throw $exception;
 			}
-			$language = $config->getConfigByNameType ('general/language',TYPE_STRING);
+			$language = $config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 			$error = $news->postnews ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],
 				$_POST[POST_CATEGORY],$date,$language,$user->getconfig ('name'));
 			$skin->redirect ('index.php?note=' . $lang->translate ('Your message is posted'));
@@ -269,12 +269,13 @@ switch ($action) {
 			$meta['description'] = $config->getConfigByNameType ('general/description',TYPE_STRING);
 			$meta['link'] = $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"];
 			$meta['link'] = ereg_replace ('news.php','',$meta['link']);
+			$meta['maxheadlines'] = $config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
 			if (! empty ($_GET[GET_CATEGORY])) {
 				$category = $_GET[GET_CATEGORY];
 			} else {
 				$category = NULL;
 			}
-			echo $news->viewFeed ($meta,$category,'RSS2');
+			echo $news->showFeed ($meta,$category,'RSS2');
 		}
 		catch (exceptionlist $e) {
 			$link = catch_error ($e,'index.php?',$lang->translate ('error running feed'),$errorrep);

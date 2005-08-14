@@ -362,48 +362,54 @@ class CSkin {
 
 	private function loadPoll () {
 		$contentLang = $this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
-		$poll = $this->poll->getPollByID ($this->poll->getIDCurrentPollByLanguage ($contentLang));
-		preg_match_all ('/{poll (.+?)}/is',$this->fileCont,$matches);
+		$pollID = $this->poll->getIDCurrentPollByLanguage ($contentLang);
+		if ($pollID === false) {
+			return NULL;
+		}
+		$poll = $this->poll->getPollByID ($pollID);
+		$output = $this->file ($this->convertFile ('shortviewpoll.html'));
+		preg_match_all ('/{poll (.+?)}/is',$output,$matches);
 		foreach ($matches[0] as $number => $match) {
 			switch ($matches[1][$number]) {
 				case 'question':
-					$this->fileCont = str_replace ($match,$poll[FIELD_POLL_QUESTION],$this->fileCont);
+					$output = str_replace ($match,$poll[FIELD_POLL_QUESTION],$output);
 					break;
 				case 'choices':
 					$choices = explode (';',$poll[FIELD_POLL_CHOICES]);
-					$output = NULL;
+					$html = NULL;
 					foreach ($choices as $number => $choice) {
-						$output .= $this->items['poll.choice'];
-						$output = str_replace ('{choice text}',$choice,$output);
+						$html .= $this->items['poll.choice'];
+						$html = str_replace ('{choice text}',$choice,$html);
 						// stupid thing with integers
-						$output = str_replace ('{choice number}',"$number",$output);
+						$html = str_replace ('{choice number}',"$number",$html);
 					}
-					$this->fileCont = str_replace ($match,$output,$this->fileCont);
+					$output = str_replace ($match,$output,$output);
 					break;
 				case 'voteaction':
-					$this->fileCont = str_replace ($match,
+					$output = str_replace ($match,
 						'polls.php?action=vote&id=' . $poll[FIELD_POLL_ID],
-						$this->fileCont);
+						$output);
 					break;
 				case 'votemethod':
-					$this->fileCont = str_replace ($match,'post',$this->fileCont);
+					$output = str_replace ($match,'post',$output);
 					break;
 				case 'results':
 					$choices = explode (';',$poll[FIELD_POLL_CHOICES]);
 					$results = explode (';',$poll[FIELD_POLL_RESULTS]);
-					$output = NULL;
+					$html = NULL;
 					foreach ($choices as $number => $choice) {
-						$output .= $this->items['poll.result'];
-						$output = str_replace ('{choice text}',$choice,$output);
-						$output = str_replace ('{choice result}',$results[$number],$output);
+						$html .= $this->items['poll.result'];
+						$html = str_replace ('{choice text}',$choice,$html);
+						$html = str_replace ('{choice result}',$results[$number],$html);
 						$totalvotes = array_sum ($results);
 						$procent = round ($results[$number] / $totalvotes * 100);
-						$output = str_replace ('{choice resultprocent}',$procent,$output);
+						$html = str_replace ('{choice resultprocent}',$procent,$html);
 					}
-					$this->fileCont = str_replace ($match,$output,$this->fileCont);
+					$output = str_replace ($match,$html,$output);
 					break;
 			}
 		}
+		return $output;
 	}
 
 	private function showComment ($comment) {
@@ -538,25 +544,25 @@ class CSkin {
 	}
 
 	/**
-	* Loads the emoticons from the file 'smiley' in the theme dir
-	*
-	* A line in smiley looks like this 'something.gif ;) ;-)'
-	* everything is splitted on a space ' '
-	* the first word is the name of the image relative to  themedir/images
-	* the second is the default chars to create the emoticons
-	* the later ones are alternative ones
-	*
-	* a line can also start with an '!'
-	* this would say that that line is not important (commented out)
-	*
-	* if the line is 'break' only the emoticons defined before this line are showed
-	* if $all == false
-	*
-	* empty lines are igonored
-	*
-	* if the first line is 'VERSION 2' the 2 word is the name of the emoticons
-	* !!case insesitive!!
-	* for example 'sigh'
+	 * Loads the emoticons from the file 'smiley' in the theme dir
+	 *
+	 * A line in smiley looks like this 'something.gif ;) ;-)'
+	 * everything is splitted on a space ' '
+	 * the first word is the name of the image relative to  themedir/images
+	 * the second is the default chars to create the emoticons
+	 * the later ones are alternative ones
+	 *
+	 * a line can also start with an '!'
+	 * this would say that that line is not important (commented out)
+	 *
+	 * if the line is 'break' only the emoticons defined before this line are showed
+	 * if $all == false
+	 *
+	 * empty lines are igonored
+	 *
+	 * if the first line is 'VERSION 2' the 2 word is the name of the emoticons
+	 * !!case insesitive!!
+	 * for example 'sigh'
 	*/
 	private function getAllEmoticons ($all = false) {
 		$items = file ($this->convertFile ('smiley'));
@@ -690,6 +696,7 @@ class CSkin {
 		$this->items['format.smilies'] = $this->showSmilies ();
 		$this->items['format.allsmilies'] = $this->showSmilies (true);
 		$this->items['bbc.jsarray'] = $this->showBBCJSArray ();
+		$this->items['poll.viewcurrentpoll'] = $this->loadPoll ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -920,7 +927,6 @@ class CSkin {
 			$this->loadItems ();
 			$this->includes ($this->fileCont);
 			$this->loadItems ();$this->loadItems ();
-			$this->loadPoll ();
 			$this->showButton ($this->fileCont);
 			$this->localize ();
 			echo $this->fileCont;
