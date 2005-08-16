@@ -696,6 +696,12 @@ class CSkin {
 		$this->items['format.allsmilies'] = $this->showSmilies (true);
 		$this->items['bbc.jsarray'] = $this->showBBCJSArray ();
 		$this->items['poll.viewcurrentpoll'] = $this->loadPoll ();
+		$this->items['registerform.action'] = 'users.php?action=register';
+		$this->items['registerform.method'] = 'post';
+		$this->items['registerform.email'] = POST_EMAIL;
+		$this->items['registerform.name'] = POST_NAME;
+		$this->items['registerform.password1'] = POST_PASSWORD1;
+		$this->items['registerform.password2'] = POST_PASSWORD2;
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {

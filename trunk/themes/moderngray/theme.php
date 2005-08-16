@@ -120,6 +120,7 @@
 	$this->pages['news.php?action=editcommentform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=editnewsform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=moresmilies'] = '';
+	$this->pages['users.php?action=registerform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->BBC['b']['open'] = '<span class="b">';
 	$this->BBC['b']['close'] = '</span>';
 	$this->BBC['u']['open'] = '<span class="u">';

@@ -193,7 +193,7 @@ class config {
 										case TYPE_FLOAT:
 											// set it to this stupid value so it will not be converted to <empty>
 											if ($standard == NULL) {
-												$standard = 0.0000000000001;
+												$value = 0.0000000000001;
 											} else {
 												$value = $standard;
 											}
