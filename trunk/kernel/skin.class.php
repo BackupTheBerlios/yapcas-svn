@@ -455,7 +455,7 @@ class CSkin {
 	private function startCommentThread ($parent) {
 		//$parent = $this->news->getComment ($parentID);
 		$output = $this->showComment ($parent);
-		foreach ($this->news->getThreadChildren ($this->get (GET_NEWSID),$parent) as $child) {
+		foreach ($this->news->getThreadChildren ($parent) as $child) {
 			$output .= $this->items['thread.open'];
 			$output .= $this->startCommentThread ($child);
 			$output .= $this->items['thread.close'];

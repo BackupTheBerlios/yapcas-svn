@@ -291,8 +291,7 @@ class CNews {
 	*/
 	public function getThreadChildren ($comment) {
 		$sql = 'SELECT * FROM ' . TBL_COMMENTS;
-		$sql .= ' WHERE id_news=\'' . $IDNews .'\'';
-		$sql .= ' AND ' . FIELD_COMMENTS_ID_ON_COMMENT . '=\'' . $comment[FIELD_COMMENTS_ID] . '\'';
+		$sql .= ' WHERE ' . FIELD_COMMENTS_ID_ON_COMMENT . '=\'' . $comment[FIELD_COMMENTS_ID] . '\'';
 		$sql .= ' AND ' . FIELD_COMMENTS_ID_NEWS . '=\'' . $comment[FIELD_COMMENTS_ID_NEWS] .'\'';
 		$sql .= ' ORDER by ' . FIELD_COMMENTS_DATE . ' asc';
 		$query = $this->database->query ($sql);
