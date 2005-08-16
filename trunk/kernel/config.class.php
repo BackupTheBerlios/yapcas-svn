@@ -32,6 +32,7 @@ define ('TYPE_UKNOWN',-1); // I do not care type
 
 define ('YES','Yes');
 define ('NO','No');
+define ('ZERO','0');
 
 function checkType ($content,$type) {
 	// stupid hack, if an integer value == 0, it is send as a bool
@@ -81,6 +82,8 @@ function convertToStandard (&$content) {
 		settype ($content,'bool');
 		$content = false;
 	} else if ($content == 0.0000000000001) {
+		$content = 0;
+	} else if ($content == ZERO) {
 		$content = 0;
 	}
 	// for people who don't use pass-by-values
@@ -216,7 +219,7 @@ class config {
 								// it is the last one and it we can not retrieve 
 								// it, but it must be set
 								try {
-									$this->addToConfigTree ('',$section,$varname,
+									$this->addToConfigTree ($standard,$section,$varname,
 										$type);
 									return true;
 								}
@@ -252,7 +255,7 @@ class config {
 						break;
 					case 'FILE':
 						try {
-							$this->addConfigByFileName ($vars[$i],$type,$name,0);
+							$this->addConfigByFileName ($vars[$i],$type,$name,$standard);
 							return true;
 						}
 						catch (exceptionlist $e) {

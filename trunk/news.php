@@ -116,7 +116,6 @@ switch ($action) {
 					$exception->setNext ($e);
 				}
 			}
-			$date = getUTCtime ($config);
 			if (empty ($_POST[POST_MESSAGE])) {
 				$e = new exceptionlist ($lang->translate ('You must fill in the message field'));
 				if ($exception == NULL) {
@@ -138,7 +137,7 @@ switch ($action) {
 			}
 			$language = $config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 			$error = $news->postnews ($_POST[POST_MESSAGE],$_POST[POST_SUBJECT],
-				$_POST[POST_CATEGORY],$date,$language,$user->getconfig ('name'));
+				$_POST[POST_CATEGORY],getUTCTime (),$language,$user->getconfig ('name'));
 			$skin->redirect ('index.php?note=' . $lang->translate ('Your message is posted'));
 			$database->close ();
 		}

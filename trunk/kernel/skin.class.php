@@ -49,13 +49,12 @@ class CSkin {
 				$news = new CNews ($database,$lang,$contentLang);
 				$poll = new polls ($database,$config,$lang);
 				$this->help = new help ($database,$config,$lang);
-				$config->addConfigByFileName ('site.config.php',TYPE_FLOAT,'general/servertimezone');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description');
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timezone',$user,'timezone','site.config.php'),
-					'general/timezone',TYPE_FLOAT,1);
+					'general/timezone',TYPE_FLOAT,0);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('timeformat',$user,'timeformat','site.config.php'),
 					'general/timeformat',TYPE_STRING,'');

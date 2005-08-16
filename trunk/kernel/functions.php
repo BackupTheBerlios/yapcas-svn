@@ -216,7 +216,7 @@ function loadall () {
 function setdate ($time) {
 	global $config;
 	$timezone = $config->getConfigByNameType ('general/timezone',TYPE_INT);
-	$timeme = $time + $timezone * 60 * 60;
+	$time = $time + $timezone * 60 * 60;
 	$timeformat = $config->getConfigByNameType ('general/timeformat',TYPE_STRING);
 	return date ($timeformat,$time);
 }
@@ -231,16 +231,10 @@ function formatDate ($time) {
 	return setDate ($time);
 }
 
-function getUTCtime (&$config) {
-	try {
-		$sitetimezone = $config->getConfigByNameType ('general/servertimezone',TYPE_INT);
-		$time = time ();
-		$UTCtime = $time - ($sitetimezone * 60 * 60);
-		return $UTCtime;
-	}
-	catch (exceptionlist $e) {
-		throw $e;
-	}
+function getUTCtime (&$config = NULL) {
+	$time = time ();
+	$UTCtime = $time - (date ('Z'));
+	return $UTCtime;
 }
 
 function catch_error ($exc,$link,$message,$moreinf) {

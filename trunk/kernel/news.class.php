@@ -432,8 +432,8 @@ class CNews {
 			$output .= '<category>';
 				$output .= $headline[FIELD_NEWS_CATEGORY];
 			$output .= '</category>';
-			$date = date ('r',$headline[FIELD_NEWS_DATE]);
-			// RFC 2822 formatted date "Thu, 21 Dec 2000 16:01:07 +0100"
+			$date = date ('D, d M Y H:i:s \G\M\T',$headline[FIELD_NEWS_DATE]);
+			// RFC 2822 formatted date "Thu, 21 Dec 2000 16:01:07 GMT"
 			$output .= '<pubDate>';
 				$output .= $date;
 			$output .= '</pubDate>';
