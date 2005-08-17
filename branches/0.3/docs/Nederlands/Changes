@@ -72,7 +72,7 @@ Eerste release
 + Interne wijziging::gebruikersdatabase
 	* de gebruikersdatabase is gewijzigd, alle profielinfo komt in een aparte db te staan
 
-0.3.1
+0.3.1 Release = 30 Juli
 -----
 + Editcomment button is nu een simpele link
 + bug fixes
@@ -83,7 +83,7 @@ Eerste release
 	* #00018
 	* #00019
 
-0.3.2
+0.3.2 Release = 10 augustus
 -----
 + Bug fixes
 	* #00020
@@ -128,39 +128,48 @@ Dromen zijn bedrog
 ------------------
 TODO
 ----
+Poll systeem
+-------------
++ dezelfde poll, met dezelfde resultaten in verschillende talen
++ zorgen dat er op oude polls gestemd kan worden (momenteel is er een cookie)
++ mogelijkheid tot stemmen op meerdere mogelijkheden
++...
+Layout
+------
 + newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
-+ installscript hrlpdatabase laten invullen
++ layout installscript
++ betere layout van de poll 
+	*met een balk ipv procent
+	*met een lijst
+Gebruikers
+----------
++ avatar toevoegen
++ interne berichten sturen (+ melding geven)
++ groepen en rechten
+Installscript
+-------------
++ installscript helpdatabase laten invullen
 	* foutmeldingen nummers geven
 		ik ga maar een foutmelding een nummer geven om te lanten zien hoe het systeem werkt
+Bugs
+----
 + er zijn een aantal queries teveel
-+ avatar toevoegen
++ Snelheidtests
 + databasecheck
 	* alle tabellen aanwezig
-	* userdb --> controleer of user en user_profile evenveel tabellen hebben
+	* userdb --> controleer of user en user_profile evenveel items hebben
 + zorgen dat activate_queue om de zoveel tijd geleegd wordt
-+ interne berichten sturen (+ melding geven)
++ fix bug #00011
+
+Nieuws
+------
 + optie inbouwen dat er niet dubbelgepost wordt 
 	( 5 seconden na een post wachten voordat er nog eens gepost kan worden )
-+ Snelheidtests
 ?+ slimme quotes
-+ class themes herschrijven
-	* Extensies
-	* Eigen thema 'macros' ( bepaalde %strings laten vervangen door het theme )
-	* Een soort van functies maken die voor alle themas moeten werken ( om een layout te gebruiken
-		die in contentpage kan staan )
-+ fix bug #00011
 + alleen de x aantal eerste woorden van een bericht laten zien - ook in rss -
 + automatisch invullen van onderwerp bij het schrijven van een commenteaar (RE: TODO)
+
 + bettere terugkoppeling (je hebt een commentaar geschreven -> automatisch terechtkomen op je commentaar)
-+ groepen en rechten
-+ beter poll systeem
-	* dezelfde poll, met dezelfde resultaten in verschillende talen
-	* zorgen dat er op oude polls gestemd kan worden (momenteel is er een cookie)
-	* mogelijkheid tot stemmen op meerdere mogelijkheden
-	* betere layout van de poll 
-		-met een balk ipv procent
-		-met een lijst
-	*...
 
 1.0 ( Stable )
 ---
@@ -171,10 +180,9 @@ Databases
 + XML database
 + SQLite db
 + ODBC
-+ MySQLi
++ MySQLi voor MySQL > 4.1
 
 Extensies
 ---------
 + Een reclameplugin
-+ automatisch inloggen
-+ wachtwoord onthouden
++ automatisch inloggen / wachtwoord onthouden

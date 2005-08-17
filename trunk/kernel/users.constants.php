@@ -54,7 +54,8 @@
 	define ( 'POST_THREADED','threaded' );
 	define ( 'POST_TIMEZONE','timezone' );
 	define ( 'POST_TIMEFORMAT','timeformat' );
-	define ( 'POST_LANGUAGE','language' );
+define ('POST_UILANGUAGE','uilanguage');
+define ('POST_CONTENTLANGUAGE','contentlanguage');
 	define ( 'POST_NEW_PASSWORD1','new_password1' );
 	define ( 'POST_NEW_PASSWORD2','new_password12' );
 define ( 'POST_NEW_AIM','newaim' );

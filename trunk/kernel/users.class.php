@@ -381,7 +381,7 @@ class user {
 
 	public function lostpasw ($mail,$username,$cmail,$webmastermail) {
 		try {
-			$password = $this->randompassword ();
+			$password = $this->getRandomPassword ();
 			if (($mail == NULL) and ($username == NULL)) {
 				throw new exceptionlist ($this->lang->translate ('Fill e-mail or username in'));
 			} else if (($mail != NULL) and ($username == NULL)) {
@@ -442,7 +442,7 @@ class user {
 		return $this->getdbconfig (FIELD_USERS_EMAIL,TBL_USERS);
 	} /* private function getEmail () */
 
-	private function getDBConfig ($db_field,$table = TBL_USERS_PROFILE) {
+	public function getDBConfig ($db_field,$table = TBL_USERS_PROFILE) {
 		try {
 			if ($this->isLoggedIn () == true) {
 				$sql = 'SELECT ' . $db_field . ' FROM ' . $table . ' WHERE ' 
@@ -525,14 +525,14 @@ class user {
 	} /* public function activate ($id) */
 
 	private function deActivate ($username,$mail,$cmail,$webmastermail) {
-		$this->setconfig (FIELD_USERS_ACTIVATE,NO);
+		$this->setconfig (FIELD_USERS_ACTIVATE,NO,TBL_USERS);
 		// put it in the queue
 		$sql = 'INSERT INTO ' . TBL_ACTIVATE_QUEUE;
 		$fields = array (FIELD_ACTIVATE_QUEUE_USER,
 			FIELD_ACTIVATE_QUEUE_ID,FIELD_ACTIVATE_QUEUE_START);
 		$strfields = implode (',',$fields);
 		$sql .= ' ( ' . $strfields . ' )';
-		$id = $this->randompassword (ACTIVATE_ID_LENGTH);
+		$id = $this->getRandomPassword (ACTIVATE_ID_LENGTH);
 		$content = array ('\''.$username.'\'','\''.$id.'\'','\''.time ().'\'');
 		$strcontent = implode (',',$content);
 		$sql .= ' VALUES ( ' . $strcontent . ' )';

@@ -137,3 +137,11 @@ Geen ;-)
 	Titel: bug #00017-#00019 maar dan voor als het wel in de root staat
 	Prioriteit: SUPER HOOG (GEEN VEILIGHEID)
 	Versies: 0.3.1
+
+0.4.0
+-----
+#00023
+	Titel: als en gebruiker zijn emailadres wilt wijzigen en hij moet die activeren van
+		de webmaster werkt die niet
+	Prioriteit: Middel
+	Versies: 0.3

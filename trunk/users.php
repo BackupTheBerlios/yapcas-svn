@@ -163,9 +163,12 @@ switch ($action) {
 		break;
 	case 'changeoptions':
 		try {
+			$mailchanged = ($_POST[POST_EMAIL] != $user->getConfig ('email')) ? true : false;
+			$threaded = (! empty ($_POST[POST_THREADED])) ? YES : NO;
 			$user->setconfig (FIELD_USERS_PROFILE_THEME,$_POST[POST_THEME]);
-			$user->setconfig (FIELD_USERS_PROFILE_THREADED,$_POST[POST_THREADED]);
-			$user->setconfig (FIELD_USERS_PROFILE_LANGUAGE,$_POST[POST_LANGUAGE]);
+			$user->setconfig (FIELD_USERS_PROFILE_THREADED,$threaded);
+			$user->setconfig (FIELD_USERS_PROFILE_UILANGUAGE,$_POST[POST_UILANGUAGE]);
+			$user->setconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE,$_POST[POST_CONTENTLANGUAGE]);
 			$mail['webmaster'] = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$mail['cmail']['subject'] = $lang->translate ('You must activate your mail');
 			$mail['cmail']['message'] = $lang->translate ('Hello %n \n. You have changed your
@@ -194,9 +197,15 @@ switch ($action) {
 				$link = 'index.php?note=' . $lang->translate ('Your options are saved: Login again with your new password');
 				$skin->redirect ($link);
 			} else {
-				$database->close ();
-				$link = 'users.php?action=changeoptionsform&note=' . $lang->translate ('Your options are saved');
-				$skin->redirect ($link);
+				if ($mailchanged) {
+					$user->logout ();
+					$link = 'index.php?note=' . $lang->translate ('You need to reactivate your account, check your mail');
+					$skin->redirect ($link);
+				} else {
+					$database->close ();
+					$link = 'users.php?action=changeoptionsform&note=' . $lang->translate ('Your options are saved');
+					$skin->redirect ($link);
+				}
 			}
 		}
 		catch (exceptionlist $e) {

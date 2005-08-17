@@ -121,6 +121,7 @@
 	$this->pages['news.php?action=editnewsform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['news.php?action=moresmilies'] = '';
 	$this->pages['users.php?action=registerform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['users.php?action=changeoptionsform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->BBC['b']['open'] = '<span class="b">';
 	$this->BBC['b']['close'] = '</span>';
 	$this->BBC['u']['open'] = '<span class="u">';
@@ -130,4 +131,50 @@
 	$this->BBC['quote']['open'] = '<div class="quote">&lang.quote;<br />';
 	$this->BBC['quote']['close'] = '</div>';
 	$this->items['moresmilies.link'] = '<a href="news.php?action=moresmilies" target="moresmilies" onclick="window.open (\'news.php?action=moresmilies\',\'moresmilies\',\'HEIGHT=300,resizable=yes,scrollbars=yes,WIDTH=250\');return false;">&lang.more_smilies;</a><br />';
+	$this->options['string']['open'] = '';
+	$this->options['string']['close'] = '';
+	$this->options['string']['option'] = '<input name="{option name}" type="text" value="{option curval}" />';
+
+	$this->options['integer']['open'] = '';
+	$this->options['integer']['close'] = '';
+	$this->options['integer']['option'] = '<input name="{option name}" type="integer" value="{option curval}" />';
+
+	$this->options['textfield']['open'] = '';
+	$this->options['textfield']['close'] = '';
+	$this->options['textfield']['option'] = '<input name="{option name}" type="text" value="{option curval}"/>';
+
+	$this->options['password']['open'] = '';
+	$this->options['password']['close'] = '';
+	$this->options['password']['option'] = '<input name="{option name}" type="password" value="{option curval}"/>';
+
+	$this->options['select']['open'] = '<select name="{option name}">';
+	$this->options['select']['close'] = '</select>';
+	$this->options['select']['option'] = '<option>{option item}</option>';
+	$this->options['select']['selectedoption'] = '<option selected>{option item}</option>';
+
+	$this->options['bool']['open'] = '';
+	$this->options['bool']['close'] = '';
+	$this->options['bool']['yes'] = '<input checked type="checkbox" name="{option name}"/>';
+	$this->options['bool']['no'] = '<input type="checkbox" name="{option name}" />';
+
+	$this->options['email'] = $this->options['string'];
+	$this->options['name'] = $this->options['string'];
+	$this->options['msn'] = $this->options['string'];
+	$this->options['yahoo'] = $this->options['string'];
+	$this->options['jabber'] = $this->options['string'];
+	$this->options['job'] = $this->options['string'];
+	$this->options['adress'] = $this->options['string'];
+	$this->options['website'] = $this->options['string'];
+	$this->options['aim'] = $this->options['string'];
+	$this->options['timeformat'] = $this->options['string'];
+	$this->options['language'] = $this->options['select'];
+	$this->options['theme'] = $this->options['select'];
+	$this->options['timezone'] = $this->options['select'];
+	$this->options['postsonpage'] = $this->options['integer'];
+	$this->options['headlines'] = $this->options['integer'];
+	$this->options['threaded'] = $this->options['bool'];
+	$this->options['password1'] = $this->options['password'];
+	$this->options['password2'] = $this->options['password'];
+	$this->options['icq'] = $this->options['integer'];
+	$this->options['intrests'] = $this->options['textfield'];
 ?>

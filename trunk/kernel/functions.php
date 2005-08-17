@@ -79,11 +79,11 @@ function themesinstalled () {
 	if ( $handle = opendir ( $dir ) ) {
 		while ( false !== ( $file = readdir ( $handle ) ) ) {
 			if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != '.svn' ) ) {
-				array_push ( $themes,$file );
+				$themes[] = $file;
 			}
 		}
 		closedir ( $handle );
-	} 
+	}
 	return $themes;
 }
 

@@ -1,61 +1,54 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>%title</title>
-		<link rel="stylesheet" type="text/css" href="%css" />
+		<title>&site.title; :: &page.title;</title>
+		<link rel="stylesheet" type="text/css" href="&moderngray.standardcss;" />
 	</head>
 	<body>
 		<div id="banner">
-			<h1>%title</h1>
-			<h4>%description%</h4>
-			<div id="navigation">%navigation.html %loginform.html</div>
+			<h1>&site.title; :: &page.title;</h1>
+			<h4>&site.description;</h4>
+			<div id="navigation">{navigation}</div>
 		</div>
 		<div id="sidebar">
-			<div class="box">
-				<h2>%headlines.lang</h2>
-				<p class="headlines">%headlines.html</p>
-			</div>
-			%shortviewcurrentpoll.html
+			{sidebar}
 		</div>
 		<div id="content">
-			%error %warning %note 
+			&page.errors; &page.warnings; &page.notes; 
 			<div class="box">
-				<h2>%changeoptionsform.lang</h2>
-				<object>
-					<form class="login" action="%changeoptionsform.action" method="%changeoptions.method">
-						<p>
-							%username.lang : <input type="text" value="%username.user" DISABLED /><br />
-							%new_password1.lang : <input type="password" name="%new_password1.name" /> <br />
-							%new_password2.lang : <input type="password" name="%new_password2.name" /> <br />
-							%email.lang : <input type="text" value="%email.email" name="%email.name" /><br />
-							%theme.lang : %theme.options <br />
-							%threaded.lang : %threaded.options<br />
-							%postsonpage.lang : <input type="integer" value="%postsonpage.postsonpage" name="%postsonpage.name" /><br />
-							%valueheadlines.lang : <input type="integer" value="%headlines.headlines" name="%headlines.name" /><br />
-							%language.lang : %language.options<br />
-							%timezone.lang : <input type="integer" value="%timezone.timezone" name="%timezone.name" /><br />
-							%timeformat.lang : <input type="text" value="%timeformat.timeformat" name="%timeformat.name" /><br />
-							<input type="submit" value="%changeoptionsform.submit" /><br />
-							%job.lang: <input type="integer" value="%job.job" name="%job.name" /><br />
-							%intrests.lang: <input type="integer" value="%intrests.intrests" name="%intrests.name" /><br />
-							%icq.lang: <input type="text" value="%icq.icq" name="%icq.name" /><br />
-							%aim.lang: <input type="text" value="%aim.aim" name="%aim.name" /><br />
-							%yahoo.lang: <input type="text" value="%yahoo.yahoo" name="%yahoo.name" /><br />
-							%website.lang: <input type="text" value="%website.website" name="%website.name" /><br />
-							%adress.lang: <input type="text" value="%adress.adress" name="%adress.name" /><br />
-							%msn.lang: <input type="text" value="%msn.msn" name="%msn.name" /><br />
-							%jabber.lang: <input type="text" value="%jabber.jabber" name="%jabber.name" /><br />
-							<input type="submit" value="%changeoptionsform.submit" /><br />
-						</p>
-					</form>
-				</object>
+				<h2>&lang.changeoptions;</h2>
+				<form class="login" action="&changeoptions.action;" method="&changeoptions.method;">
+					<p>
+						%new_password1.lang : {option password1}<br />
+						%new_password2.lang : {option password2}<br />
+						%email.lang : {option email}<br />
+						%theme.lang : {option theme}<br />
+						%threaded.lang : {option threaded}<br />
+						%postsonpage.lang : {option postsonpage}<br />
+						%valueheadlines.lang : {option headlines}<br />
+						%language.lang : {option uilanguage}<br />
+						%language.lang : {option contentlanguage}<br />
+						%timezone.lang : {option timezone}<br />
+						%timeformat.lang : {option timeformat}<br />
+						<input type="submit" value="&lang.changeoptions;" /><br />
+						%job.lang: {option job}<br />
+						%intrests.lang: {option intrests}<br />
+						%icq.lang: {option icq}<br />
+						%aim.lang: {option aim}<br />
+						%yahoo.lang: {option yahoo}<br />
+						%website.lang: {option website}<br />
+						%adress.lang: {option adress}<br />
+						%msn.lang: {option msn}<br />
+						%jabber.lang: {option jabber}<br />
+						<input type="submit" value="&lang.changeoptions;" /><br />
+					</p>
+				</form>
 			</div>
-			%contentpage
+			&page.content;
 		</div>
 		<p id="copyright">
-			<a href="%copyright.site.link">%copyright.site.text</a><br />
-			<a href="%copyright.theme.link">%copyright.theme.text</a>
+			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
 		</p>
 	</body>
 </html>

@@ -133,3 +133,10 @@ None ;-)
 	Title: bug #00017-#00019 but if it is installed in the root
 	Priority: SUPER HIGH (NO SEQURITY)
 	Versions: 0.3.1
+
+0.4.0
+-----
+#00023
+	Title: when a user wants to update his email, this doesn't work if emailactivation is enabled
+	Priority: Middle
+	Versions: 0.3

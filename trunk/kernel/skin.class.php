@@ -633,6 +633,53 @@ class CSkin {
 		return $output;
 	}
 
+	/**
+	 * Ths output an html option item
+	 *
+	 * @param array $html an html containing some definition
+	 * @param mixed $curVal the current value
+	 * @param string $name the name of the field
+	 * @param array|'string'|'numeric' $posOpts the possible options, if 'string' than all strings are allowed, if 'numeric' all numerics are possible, if array every item in the array are possible
+	 * @param array|'string'|'numeric' $showOpts
+	*/
+	public function options ($html,$curVal,$name,$posOpts,$showOpts) {
+		if ($posOpts == 'string') {
+			$output = $html['open'];
+			$output .= $html['option'];
+			$output .= $html['close'];
+			$output = str_replace ('{option curval}',$curVal,$output);
+			$output = str_replace ('{option name}',$name,$output);
+		} else if ($posOpts == 'numeric') {
+			$output = $html['open'];
+			$output .= $html['option'];
+			$output .= $html['close'];
+			$output = str_replace ('{option curval}',$curVal,$output);
+			$output = str_replace ('{option name}',$name,$output);
+		} else if ($posOpts == 'bool') {
+			$output = $html['open'];
+			if ($curVal == YES) {
+				$output .= $html['yes'];
+			} else {
+				$output .= $html['no'];
+			}
+			$output .= $html['close'];
+			$output = str_replace ('{option name}',$name,$output);
+		} else {
+			$output = $html['open'];
+			foreach ($posOpts as $option) {
+				if ($option == $curVal) {
+					$output .= $html['selectedoption'];
+				} else {
+					$output .= $html['option'];
+				}
+				$output = str_replace ('{option item}',$option,$output);
+			}
+			$output .= $html['close'];
+			$output = str_replace ('{option name}',$name,$output);
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -702,6 +749,8 @@ class CSkin {
 		$this->items['registerform.name'] = POST_NAME;
 		$this->items['registerform.password1'] = POST_PASSWORD1;
 		$this->items['registerform.password2'] = POST_PASSWORD2;
+		$this->items['changeoptions.action'] = 'users.php?action=changeoptions';
+		$this->items['changeoptions.method'] = 'post';
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -766,6 +815,98 @@ class CSkin {
 						break;
 					case 'currentmessage':
 						$replace = $comment[FIELD_NEWS_MESSAGE];
+						break;
+				}
+				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			}
+		}
+
+		if ($this->getPageID () == $this->getPageID ()) {
+			preg_match_all ('/{option (.+?)}/is',$this->fileCont,$matches);
+			foreach ($matches[0] as $number => $match) {
+				$replace = NULL;
+				switch ($matches[1][$number]) {
+					case 'email':
+						$curVal = $this->user->getConfig ('email');
+						$replace = $this->options ($this->options['email'],$curVal,POST_EMAIL,'string','string');
+						break;
+					case 'job':
+						$curVal = $this->user->getDBConfig ('job');
+						$replace = $this->options ($this->options['job'],$curVal,POST_NEW_JOB,'string','string');
+						break;
+					case 'jabber':
+						$curVal = $this->user->getDBConfig ('jabber');
+						$replace = $this->options ($this->options['jabber'],$curVal,POST_NEW_JABBER,'string','string');
+						break;
+					case 'msn':
+						$curVal = $this->user->getDBConfig ('msn');
+						$replace = $this->options ($this->options['msn'],$curVal,POST_NEW_MSN,'string','string');
+						break;
+					case 'yahoo':
+						$curVal = $this->user->getDBConfig ('yahoo');
+						$replace = $this->options ($this->options['yahoo'],$curVal,POST_NEW_YAHOO,'string','string');
+						break;
+					case 'intrests':
+						$curVal = $this->user->getDBConfig ('intrests');
+						$replace = $this->options ($this->options['intrests'],$curVal,POST_NEW_INTRESTS,'string','string');
+						break;
+					case 'aim':
+						$curVal = $this->user->getDBConfig ('aim');
+						$replace = $this->options ($this->options['aim'],$curVal,POST_NEW_AIM,'string','string');
+						break;
+					case 'website':
+						$curVal = $this->user->getDBConfig ('website');
+						$replace = $this->options ($this->options['website'],$curVal,POST_NEW_WEBSITE,'string','string');
+						break;
+					case 'icq':
+						$curVal = $this->user->getDBConfig ('icq');
+						$replace = $this->options ($this->options['icq'],$curVal,POST_NEW_ICQ,'numeric','numeric');
+						break;
+					case 'adress':
+						$curVal = $this->user->getDBConfig ('adress');
+						$replace = $this->options ($this->options['adress'],$curVal,POST_NEW_ADRESS,'numeric','numeric');
+						break;
+					case 'password1':
+						$curVal = NULL;
+						$replace = $this->options ($this->options['password1'],$curVal,POST_NEW_PASSWORD1,'string','string');
+						break;
+					case 'password2':
+						$curVal = NULL;
+						$replace = $this->options ($this->options['password2'],$curVal,POST_NEW_PASSWORD2,'string','string');
+						break;
+					case 'theme':
+						$curVal = $this->user->getDBConfig ('theme');
+						$replace = $this->options ($this->options['theme'],$curVal,POST_THEME,themesinstalled (),themesinstalled ());
+						break;
+					case 'threaded':
+						$curVal = $this->user->getDBConfig ('threaded');
+						$replace = $this->options ($this->options['threaded'],$curVal,POST_THREADED,'bool','bool');
+						break;
+					case 'postsonpage':
+						$curVal = $this->user->getDBConfig ('postsonpage');
+						$replace = $this->options ($this->options['postsonpage'],$curVal,POST_POSTSONPAGE,'numeric','numeric');
+						break;
+					case 'timezone':
+						$curVal = $this->user->getDBConfig ('timezone');
+						$this->numTimeZones = array (-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12);
+						$this->showTimeZones = array (-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12);
+						$replace = $this->options ($this->options['timezone'],$curVal,POST_TIMEZONE,$this->numTimeZones,$this->showTimeZones);
+						break;
+					case 'headlines':
+						$curVal = $this->user->getDBConfig ('headlines');
+						$replace = $this->options ($this->options['headlines'],$curVal,POST_HEADLINES,'numeric','numeric');
+						break;
+					case 'timeformat':
+						$curVal = $this->user->getDBConfig ('timeformat');
+						$replace = $this->options ($this->options['timeformat'],$curVal,POST_TIMEFORMAT,'string','string');
+						break;
+					case 'uilanguage':
+						$curVal = $this->user->getDBConfig ('uilanguage');
+						$replace = $this->options ($this->options['language'],$curVal,POST_UILANGUAGE,languagesinstalled (),languagesinstalled ());
+						break;
+					case 'contentlanguage':
+						$curVal = $this->user->getDBConfig ('contentlanguage');
+						$replace = $this->options ($this->options['language'],$curVal,POST_CONTENTLANGUAGE,languagesinstalled (),languagesinstalled ());
 						break;
 				}
 				$this->fileCont = str_replace ($match,$replace,$this->fileCont);

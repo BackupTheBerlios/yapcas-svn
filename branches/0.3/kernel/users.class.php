@@ -521,7 +521,7 @@ class user {
 	} /* public function activate ($id) */
 
 	private function deActivate ($username,$mail,$cmail,$webmastermail) {
-		$this->setconfig (FIELD_USERS_ACTIVATE,NO);
+		$this->setconfig (FIELD_USERS_ACTIVATE,NO,TBL_USERS);
 		// put it in the queue
 		$sql = 'INSERT INTO ' . TBL_ACTIVATE_QUEUE;
 		$fields = array (FIELD_ACTIVATE_QUEUE_USER,
