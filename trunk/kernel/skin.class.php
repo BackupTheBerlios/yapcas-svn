@@ -33,8 +33,9 @@ class CSkin {
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
 			error_reporting ($config->getConfigByNameType('general/errorreporting',TYPE_INT));
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/databasetype',0);
-			loaddbclass ($config->getConfigByNameType ('general/databasetype',TYPE_STRING));
-			$database = new database ($config,'site.config.php');
+			$dbType = $config->getConfigByNameType ('general/databasetype',TYPE_STRING);
+			$dbclass = new CDatabase ();
+			$database = $dbclass->load ($dbType,$config,'site.config.php');
 			$database->connect ();
 			// TODO
 			$tables = array ();

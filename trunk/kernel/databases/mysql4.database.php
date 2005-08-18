@@ -15,11 +15,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-if (! defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
+if (function_exists ('mysql_connect')) {
+	$supported['mysql 3'] = 'Database_mysql';
+	$supported['mysql 4'] = 'Database_mysql';
+}
+if (function_exists ('mysqli_connect')) {
+	//$supported['mysqli 4.1'] = 'Database_mysqli';
+	//$supported['mysqli 5'] = 'Database_mysqli';
 }
 
-class database {
+class Database_mysql implements IDatabase {
 	public function __construct (&$config,$configfile) {
 		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/host',0);
 		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/user',0);

@@ -15,11 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-if (! defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
+if (function_exists ('pg_connect')) {
+	$supported['postgresql 7.4'] = 'Database_postgresql';
+	$supported['postgresql 8'] = 'Database_postgresql';
 }
 
-class database {
+class Database_postgresql implements IDatabase {
 	public function __construct (&$config,$file) {
 		$config->addConfigByFileName ($file,TYPE_STRING,'database/host',0);
 		$config->addConfigByFileName ($file,TYPE_STRING,'database/user',0);

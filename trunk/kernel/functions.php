@@ -24,11 +24,6 @@ if (!defined ('EXCEPTION_CLASS')) {
 }
 include ('kernel/constants.php');
 
-function checkDatabase ($database,$tables) {
-	// TODO
-	return true;
-}
-
 class lang {
 	function __construct () {
 		$this->lang = array ();
@@ -87,21 +82,6 @@ function themesinstalled () {
 	return $themes;
 }
 
-function databasesinstalled () {
-	$databases = array ();
-	$dir = "kernel/databases/";
-	if ( $handle = opendir ( $dir ) ) {
-		while ( false !== ( $file = readdir ( $handle ) ) ) {
-			if ( ( $file != '.' ) AND ( $file != '..' ) AND ( $file != '.svn' ) ) {
-				$file = preg_replace ('#(.+?)\.database\.php#','\\1',$file);
-				array_push ( $databases,$file );
-			}
-		}
-		closedir ( $handle );
-	} 
-	return $databases;
-}
-
 function languagesinstalled () {
 	$languages = array ();
 	array_push ($languages,'english');
@@ -117,16 +97,6 @@ function languagesinstalled () {
 	return $languages;
 }
 
-function databasecheck ( $database ) {
-	/*$tables = $database->get_all_tables ();
-	if ( in_array ( 'news',$tables ) AND in_array ( 'users',$tables ) AND in_array ( 'categories',$tables ) AND in_array ( 'ipblocks',$tables ) AND in_array ( 'comments',$tables ) AND in_array ( 'pages',$tables ) ) {
-		return true;
-	} else {
-		return false;
-	}*/
-	return true;
-}
-
 function isinstalled () {
 	if ( file_exists ( 'site.config.php' ) ) {
 		if ( count ( databasesinstalled () ) != 0 ) {
@@ -140,25 +110,6 @@ function isinstalled () {
 		}
 	} else {
 		return false;
-	}
-}
-
-function loaddbclass ($dbtype) {
-	switch ($dbtype) {
-		case MySQL4: 
-			include_once ('kernel/databases/mysql4.database.php');
-			break;
-		case MySQL3:
-			include_once ('kernel/databases/mysql4.database.php');
-			// if I see that there are incompatabilities with MySQL4 <-> MySQL3 i will fix them
-			// on the moment is MySQL3 unsupported because I haven't a MySQL3 server 
-			break;
-		case PostgreSQL:
-			include_once ('kernel/databases/postgresql.database.php');
-			break;
-		default:
-			echo 'SELECT a database type, default is used';
-			include_once ('kernel/databases/mysql4.database.php');
 	}
 }
 
@@ -258,6 +209,7 @@ function catch_error ($exc,$link,$message,$moreinf) {
 function init () {
 	session_start ();
 	global $skin; 
+	include ('kernel/database.class.php');
 	include ('kernel/help.class.php');
 	//include ('kernel/error.class.php'); // This should not be in the release
 	include ('kernel/users.class.php');
