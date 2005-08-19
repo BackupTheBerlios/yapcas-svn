@@ -681,6 +681,16 @@ class CSkin {
 		return $output;
 	}
 
+	private function showAllUsers () {
+		$output = NULL;
+		foreach ($this->user->getAllUsersName () as $userName) {
+			$output .= $this->items['userlist.item'];
+			$output = str_replace ('{item name}',$userName,$output);
+			$output = str_replace ('{item link}','users.php?action=viewuser&name=' . $userName,$output);
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -700,7 +710,7 @@ class CSkin {
 		$this->items['userlogin.username'] = POST_NAME;
 		$this->items['userlogin.password'] = POST_PASSWORD;
 		$this->items['to.registerform'] = './users.php?action=registerform';
-		$this->items['to.lostpasswordform'] = './users.php?action=lostpasswordform';
+		$this->items['to.lostpasswordform'] = './users.php?action=sendpasswordform';
 		$this->items['to.postnewsform'] = 'news.php?action=postnewsform';
 		$this->items['newcomment.action'] = 'news.php?action=postcomment';
 
@@ -752,6 +762,11 @@ class CSkin {
 		$this->items['registerform.password2'] = POST_PASSWORD2;
 		$this->items['changeoptions.action'] = 'users.php?action=changeoptions';
 		$this->items['changeoptions.method'] = 'post';
+		$this->items['sendpassword.action'] = 'users.php?action=sendpassword';
+		$this->items['sendpassword.method'] = 'post';
+		$this->items['sendpassword.name'] = POST_NAME;
+		$this->items['sendpassword.email'] = POST_EMAIL;
+		$this->items['viewusers.list'] = $this->showAllUsers ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -822,7 +837,7 @@ class CSkin {
 			}
 		}
 
-		if ($this->getPageID () == $this->getPageID ()) {
+		if ($this->getPageID () == 'users.php?action=changeoptionsform') {
 			preg_match_all ('/{option (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
@@ -902,12 +917,53 @@ class CSkin {
 						$replace = $this->options ($this->options['timeformat'],$curVal,POST_TIMEFORMAT,'string','string');
 						break;
 					case 'uilanguage':
-						$curVal = $this->user->getDBConfig ('uilanguage');
+						$curVal = code2lang ($this->user->getDBConfig ('uilanguage'));
 						$replace = $this->options ($this->options['language'],$curVal,POST_UILANGUAGE,languagesinstalled (),languagesinstalled ());
 						break;
 					case 'contentlanguage':
-						$curVal = $this->user->getDBConfig ('contentlanguage');
+						$curVal = code2lang ($this->user->getDBConfig ('contentlanguage'));
 						$replace = $this->options ($this->options['language'],$curVal,POST_CONTENTLANGUAGE,languagesinstalled (),languagesinstalled ());
+						break;
+				}
+				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			}
+		}
+
+		if ($this->getPageID () == 'users.php?action=viewuser') {
+			preg_match_all ('/{userprofile (.+?)}/is',$this->fileCont,$matches);
+			$userprofile = $this->user->getOtherProfile ($this->get ('name'));
+			foreach ($matches[0] as $number => $match) {
+				$replace = NULL;
+				switch ($matches[1][$number]) {
+					case 'email':
+						$replace = $userprofile[FIELD_USERS_PROFILE_EMAIL];
+						break;
+					case 'job':
+						$replace = $userprofile[FIELD_USERS_PROFILE_JOB];
+						break;
+					case 'jabber':
+						$replace = $userprofile[FIELD_USERS_PROFILE_JABBER];
+						break;
+					case 'msn':
+						$replace = $userprofile[FIELD_USERS_PROFILE_MSN];
+						break;
+					case 'yahoo':
+						$replace = $userprofile[FIELD_USERS_PROFILE_YAHOO];
+						break;
+					case 'intrests':
+						$replace = $userprofile[FIELD_USERS_PROFILE_INTRESTS];
+						break;
+					case 'aim':
+						$replace = $userprofile[FIELD_USERS_PROFILE_AIM];
+						break;
+					case 'website':
+						$replace = $userprofile[FIELD_USERS_PROFILE_WEBSITE];
+						break;
+					case 'icq':
+						$replace = $userprofile[FIELD_USERS_PROFILE_ICQ];
+						break;
+					case 'adress':
+						$replace = $userprofile[FIELD_USERS_PROFILE_ADRESS];
 						break;
 				}
 				$this->fileCont = str_replace ($match,$replace,$this->fileCont);

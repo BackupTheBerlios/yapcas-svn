@@ -61,6 +61,28 @@ class lang {
 	}
 }
 
+function lang2code ($lang) {
+	switch (strtolower ($lang)) {
+		case 'english':
+			return 'en';
+		case 'dutch':
+			return 'nl';
+		default:
+			return 'en';
+	}
+}
+
+function code2lang ($code) {
+	switch (strtolower ($code)) {
+		case 'en':
+			return 'english';
+		case 'nl':
+			return 'dutch';
+		default:
+			return 'english';
+	}
+}
+
 function loadlang ($language) {
 	$l = new lang ();
 	$l->updatelang ($language);

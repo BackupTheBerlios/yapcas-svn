@@ -110,6 +110,7 @@
 	$this->items['bbc.button'] = '<input value="{bbc tag}" accesskey="{bbc key}" name="addbbcode{bbc code}" onclick="bbstyle ({bbc code})" onmouseover="helpline(\'{bbc tag}\')" type="button" />';
 	$this->items['emoticon.button'] = '<a href="javascript:addSmiley (\'{emot text}\')"><img class="emoticon" src="{emot image}"/></a>';
 	$this->items['emoticon'] = '<img class="emoticon" src="{emot img}" name="{emot name}" alt="{emot name}" />';
+	$this->items['userlist.item'] = '<a href="{item link}">{item name}</a><br />';
 	$this->childsOfSideBar = '&poll.viewcurrentpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
@@ -122,6 +123,9 @@
 	$this->pages['news.php?action=moresmilies'] = '';
 	$this->pages['users.php?action=registerform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['users.php?action=changeoptionsform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['users.php?action=sendpasswordform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['users.php?action=viewuserlist'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['users.php?action=viewuser'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->BBC['b']['open'] = '<span class="b">';
 	$this->BBC['b']['close'] = '</span>';
 	$this->BBC['u']['open'] = '<span class="u">';

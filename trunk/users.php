@@ -128,16 +128,16 @@ switch ($action) {
 		break;
 	case 'sendpassword':
 		try {
-			if (empty ($_POST['email'])) {
+			if (empty ($_POST[POST_EMAIL])) {
 				$mail = NULL;
 			} else {
-				$mail = $_POST['email'];
+				$mail = $_POST[POST_EMAIL];
 			}
-			if (empty ($_POST['name'])) {
+			if (empty ($_POST[POST_NAME])) {
 				$username = NULL;
 			} else {
 				
-				$username = $_POST['name'];
+				$username = $_POST[POST_NAME];
 			}
 			$cmail['subject'] = $lang->translate ('New password');
 			$cmail['message'] = $lang->translate ('Hello %n \n.Your password is changed on %s \n.New password is: %p\n. Username is: %n');
@@ -167,8 +167,10 @@ switch ($action) {
 			$threaded = (! empty ($_POST[POST_THREADED])) ? YES : NO;
 			$user->setconfig (FIELD_USERS_PROFILE_THEME,$_POST[POST_THEME]);
 			$user->setconfig (FIELD_USERS_PROFILE_THREADED,$threaded);
-			$user->setconfig (FIELD_USERS_PROFILE_UILANGUAGE,$_POST[POST_UILANGUAGE]);
-			$user->setconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE,$_POST[POST_CONTENTLANGUAGE]);
+			$UILang = lang2code ($_POST[POST_UILANGUAGE]);
+			$user->setconfig (FIELD_USERS_PROFILE_UILANGUAGE,$UILang);
+			$contentLang = lang2code ($_POST[POST_CONTENTLANGUAGE]);
+			$user->setconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE,$contentLang);
 			$mail['webmaster'] = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$mail['cmail']['subject'] = $lang->translate ('You must activate your mail');
 			$mail['cmail']['message'] = $lang->translate ('Hello %n \n. You have changed your

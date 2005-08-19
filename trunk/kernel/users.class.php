@@ -23,7 +23,23 @@ if (!defined ('EXCEPTION_CLASS')) {
 	include ('kernel/exception.class.php');
 }
 define ('ACTIVATE_ID_LENGTH',32);
-class user { 
+/**
+* File that take care of the user SubSystem
+*
+* @package user
+*/
+/**
+* Class that take care off the user SubSystem
+*
+* @version 0.4cvs
+*/
+class user {
+	/**
+	 * constructor, configures the userclass
+	 * @param object $database the dbClass
+	 * @param bool $mustactivate if the user needs to activate his account when changing email
+	 * @param object $lang the UI lang
+	*/
 	public function __construct ($database,$mustactivate,$lang) {
 		include_once ('kernel/users.constants.php');
 		$this->database = $database;
@@ -37,20 +53,12 @@ class user {
 		}
 	} /* public function __construct ($database,$mustactivate,$lang) */
 
-	public function updateConfig () {
-		$this->isloggedin = $this->isLoggedIn ();
-		$this->uilanguageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_UILANGUAGE);
-		$this->contentlanguageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE);
-		$this->timezoneconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
-		$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
-		$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
-		$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
-		$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
-		$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
-		$this->email = $this->getEmail ();
-		$this->name = $this->getName ();
-	}
-
+	/**
+	 * get a Config value of the user
+	 *
+	 * @param string $what the name of the config value
+	 * @return mixed
+	*/
 	public function getConfig ($what) {
 		switch ($what) {
 			case 'uilanguage':
@@ -91,27 +99,12 @@ class user {
 		}
 	} /* public getConfig ($what) */
 
-	private function isValidLogin () {
-		try {
-			// this check of a hacker did not change the sessions on the server
-			// to get another username or a type
-			$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS;
-			$sql .= " WHERE " . FIELD_USERS_NAME . "='" . $_SESSION[SESSION_NAME]; 
-			$sql .= "' AND " . FIELD_USERS_PASSWORD . "='" .$_SESSION[SESSION_PASSWORD];
-			$sql .= "' AND " . FIELD_USERS_TYPE . "='" . $_SESSION[SESSION_TYPE] . "'";
-			$query = $this->database->query ($sql);
-			if ($this->database->num_rows ($query) == 0) {
-				session_unset ();
-				return false;
-			} else {
-				return true;
-			}
-		}
-		catch (exceptionlist $e) {
-			throw $e;
-		}
-	} /* private function isValidLogin () */
-
+	/**
+	 * get data from another profile
+	 *
+	 * @param string $username the name of the user you wants info from
+	 * @return array
+	*/
 	public function getOtherProfile ($username) {
 		try {
 			$sql = "SELECT * FROM " . TBL_USERS . " WHERE " 
@@ -156,6 +149,11 @@ class user {
 		}
 	}
 
+	/**
+	 * get the IP's from the current logged in user
+	 *
+	 * @return array
+	*/
 	public function getIPs () {
 		try {
 			$sql = 'SELECT ' . FIELD_USERS_IP . ' FROM ' . TBL_USERS;
@@ -171,6 +169,11 @@ class user {
 		}
 	} /* public function getIPs () */
 
+	/**
+	 * checks if the current user is loggedin
+	 *
+	 * @return bool
+	*/
 	public function isLoggedIn () {
 		if (! isset ($this->isloggedin)) {
 			if (!empty ($_SESSION[SESSION_NAME])) {
@@ -191,6 +194,13 @@ class user {
 		}
 	} /* public function isLoggedIn () */
 
+	/**
+	 * login a user
+	 *
+	 * @param string $name the username of the user who wants to login
+	 * @param string $password the password of the user
+	 * @return bool
+	*/
 	public function login ($name,$password) {
 		try {
 			$exception = NULL;
@@ -251,6 +261,9 @@ class user {
 		}
 	} /* public function login ($name,$password) */
 
+	/**
+	 * logs the current user out
+	*/
 	public function logout () {
 		try {
 			if (! $this->isLoggedIn ()) {
@@ -268,6 +281,16 @@ class user {
 		}
 	} /* public function logout () */
 
+	/**
+	 * regsiter a user in the database
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @param string $controlpass check for $password
+	 * @param string $mail
+	 * @param array $cmail content of the mail send to the user
+	 * @param string $webmastermail the mail of the webmaster
+	*/
 	public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) {
 			try {
 				if ($password != $controlpass) {
@@ -349,7 +372,15 @@ class user {
 		}
 	} /* public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) */
 
-	// TODO implement on check current password
+	/**
+	 * sets a new password
+	 *
+	 * @param string $username
+	 * @param string $password1
+	 * @param string $password2 check for $password1
+	 * @param string $curpassword check for the currentpassword
+	 * @todo implement $curpassword
+	*/
 	public function setNewPassword ($username,$password1,$password2,$curpassword = NULL) {
 		try {
 			$exception = NULL;
@@ -366,19 +397,14 @@ class user {
 		}
 	} /* public function setNewPassword ($username,$password1,$password2,$curpassword = NULL) */
 
-	private function getRandomPassword ($length = PASSWORD_LENGTH) {
-		mt_srand ((double) microtime () * 1000000);
-		$password = NULL;
-
-		while (strlen ($password) < $length) {
-			$i = chr (mt_rand(0,255)); 
-			if (eregi("^[a-z0-9A-Z]$",$i)) { // only add it if it is a-z,A-Z or 0-9
-				$password .= $i; 
-			}
-		}
-		return $password;
-	} /* private function getRandomPassword ($length = PASSWORD_LENGTH) */
-
+	/**
+	* this creates a new password and sends a mail to the user with his new pasw
+	 *
+	 * @param string $mail
+	 * @param string $username
+	 * @param array $cmail some mail data
+	 * @param string $webmastermail the mail of the webmaster
+	*/
 	public function lostpasw ($mail,$username,$cmail,$webmastermail) {
 		try {
 			$password = $this->getRandomPassword ();
@@ -428,20 +454,13 @@ class user {
 			throw $e;
 		}
 	} /* public function lostpasw ($mail,$username,$cmail,$webmastermail) */
- 
-	private function getName () {
-		if (!$this->isLoggedIn ()) {
-			return NULL;
-		} else {
-			return $_SESSION[SESSION_NAME];
-		}
-	} /* private function getName () */
 
-	// why is this a seperate function?
-	private function getEmail () {
-		return $this->getdbconfig (FIELD_USERS_EMAIL,TBL_USERS);
-	} /* private function getEmail () */
-
+	/**
+	 * get a config out of the database
+	 *
+	 * @param string $db_field
+	 * @param string $table
+	*/
 	public function getDBConfig ($db_field,$table = TBL_USERS_PROFILE) {
 		try {
 			if ($this->isLoggedIn () == true) {
@@ -464,6 +483,15 @@ class user {
 		}
 	} /* private function getDBConfig ($db_field) */
 
+	/**
+	 * set a config in the database
+	 *
+	 * @param string $db_what
+	 * @param mixed $value the new value
+	 * @param string $tbl
+	 * @param array $mail mail data for if user his changing his mail
+	 * @return bool
+	*/
 	public function setConfig ($db_what,$value,$tbl = TBL_USERS_PROFILE,$mail = NULL) {
 		try {
 			if (($this->mustactivate == true) and ($db_what == FIELD_USERS_EMAIL)){
@@ -485,6 +513,9 @@ class user {
 		}
 	} /* public function setConfig ($db_what,$value,$mail = NULL) */
 
+	/**
+	 * checks if the user has configured his account already
+	*/
 	public function hasSetConfig () {
 		try {
 			if (($this->uilanguageconfig == NULL) or ($this->contentlanguageconfig == NULL)
@@ -501,6 +532,12 @@ class user {
 		}
 	} /* puclic function hasSetConfig () */
 
+	/**
+	 * activates an account
+	 *
+	 * @param string $id the registrating id
+	 * @todo ads param $user foor extra check
+	*/
 	public function activate ($id) {
 		try {
 			$sql = 'SELECT * FROM ' . TBL_ACTIVATE_QUEUE;
@@ -523,6 +560,68 @@ class user {
 			throw $e;
 		}
 	} /* public function activate ($id) */
+
+	/**
+	 * get all usernames from all user who have a public account
+	*/
+	public function getAllUsersName () {
+		$sql = 'SELECT ' . FIELD_USERS_NAME  . ' FROM ' . TBL_USERS . ' WHERE ' . FIELD_USERS_PUBLIC_USER . '=\'' . YES . '\'';
+		$query = $this->database->query ($sql);
+		$users = array ();
+		while ($user = $this->database->fetch_array ($query)) {
+			$users[] = $user[FIELD_USERS_NAME];
+		}
+		return $users;
+	}
+
+	private function updateConfig () {
+		$this->isloggedin = $this->isLoggedIn ();
+		$this->uilanguageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_UILANGUAGE);
+		$this->contentlanguageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE);
+		$this->timezoneconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEZONE);
+		$this->timeformatconfig = $this->getdbconfig (FIELD_USERS_PROFILE_TIMEFORMAT);
+		$this->threadedconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THREADED);
+		$this->postsonpageconfig = $this->getdbconfig (FIELD_USERS_PROFILE_POSTSONPAGE);
+		$this->headlinesconfig = $this->getdbconfig (FIELD_USERS_PROFILE_HEADLINES);
+		$this->themeconfig = $this->getdbconfig (FIELD_USERS_PROFILE_THEME);
+		$this->email = $this->getEmail ();
+		$this->name = $this->getName ();
+	}
+
+	private function isValidLogin () {
+		try {
+			// this check of a hacker did not change the sessions on the server
+			// to get another username or a type
+			$sql = "SELECT " . FIELD_USERS_NAME . " FROM " . TBL_USERS;
+			$sql .= " WHERE " . FIELD_USERS_NAME . "='" . $_SESSION[SESSION_NAME]; 
+			$sql .= "' AND " . FIELD_USERS_PASSWORD . "='" .$_SESSION[SESSION_PASSWORD];
+			$sql .= "' AND " . FIELD_USERS_TYPE . "='" . $_SESSION[SESSION_TYPE] . "'";
+			$query = $this->database->query ($sql);
+			if ($this->database->num_rows ($query) == 0) {
+				session_unset ();
+				return false;
+			} else {
+				return true;
+			}
+		}
+		catch (exceptionlist $e) {
+			throw $e;
+		}
+	} /* private function isValidLogin () */
+
+	private function getRandomPassword ($length = PASSWORD_LENGTH) {
+		mt_srand ((double) microtime () * 1000000);
+		$password = NULL;
+
+		while (strlen ($password) < $length) {
+			$i = chr (mt_rand(0,255)); 
+			if (eregi("^[a-z0-9A-Z]$",$i)) { // only add it if it is a-z,A-Z or 0-9
+				$password .= $i; 
+			}
+		}
+		return $password;
+	} /* private function getRandomPassword ($length = PASSWORD_LENGTH) */
+
 
 	private function deActivate ($username,$mail,$cmail,$webmastermail) {
 		$this->setconfig (FIELD_USERS_ACTIVATE,NO,TBL_USERS);
@@ -549,5 +648,18 @@ class user {
 		$headers = 'Reply-to: ' .$webmastermail;
 		mail ($mail,$cmail['subject'],$cmail['message'],$headers);
 	} /* private function deActive ($username,$mail,$cmail,$webmastermail) */
+
+	private function getName () {
+		if (!$this->isLoggedIn ()) {
+			return NULL;
+		} else {
+			return $_SESSION[SESSION_NAME];
+		}
+	} /* private function getName () */
+
+	// why is this a seperate function?
+	private function getEmail () {
+		return $this->getdbconfig (FIELD_USERS_EMAIL,TBL_USERS);
+	} /* private function getEmail () */
 } // clas user
 ?>

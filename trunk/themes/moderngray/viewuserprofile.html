@@ -1,28 +1,44 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>%title</title>
-		<link rel="stylesheet" type="text/css" href="%css" />
+		<title>&site.title; :: &page.title;</title>
+		<link rel="stylesheet" type="text/css" href="&moderngray.standardcss;" />
 	</head>
 	<body>
 		<div id="banner">
-			<h1>%title</h1>
-			<h4>%description%</h4>
-			<div id="navigation">%navigation.html %loginform.html</div>
+			<h1>&site.title; :: &page.title;</h1>
+			<h4>&site.description;</h4>
+			<div id="navigation">{navigation}</div>
 		</div>
 		<div id="sidebar">
-			<div class="box">
-				<h2>%headlines.lang</h2>
-				<p class="headlines">%headlines.html</p>
-			</div>
-			%shortviewcurrentpoll.html</div>
+			{sidebar}
+		</div>
 		<div id="content">
-			%error %db_error %warning %db_warning %note %profile.html %contentpage
+			&page.errors; &page.warnings; &page.notes;
+			<div class="box">
+				<h2>
+					&lang.userprofile; :: {userprofile name}
+				</h2>
+				<p>
+					&lang.contact; <br />
+					{img images/msn} {userprofile msn} <br />
+					{img images/yahoo} {userprofile yahoo} <br />
+					{img images/jabber} {userprofile jabber} <br />
+					{img images/email} {userprofile email} <br />
+					{img images/icq} {userprofile icq} <br />
+					{img images/aim} {userprofile aim} <br />
+					{img images/email} {userprofile email} <br />
+					&lang.info; <br />
+					&job.lang; {userprofile job} <br />
+					&intrests.lang; {userprofile intrests} <br />
+					&lang.website;: <a href="{userprofile website}">{userprofile website}</a>
+				</p>
+			</div>
+			&page.content;
 		</div>
 		<p id="copyright">
-			<a href="%copyright.site.link">%copyright.site.text</a><br />
-			<a href="%copyright.theme.link">%copyright.theme.text</a>
+			<!--<a href="%copyright.site.link">%copyright.site.text</a><br />
+			<a href="%copyright.theme.link">%copyright.theme.text</a>-->
 		</p>
 	</body>
 </html>
