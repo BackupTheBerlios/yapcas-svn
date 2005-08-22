@@ -188,7 +188,15 @@ class CSkin {
 	} /* private function convertFile ($file) */
 
 	private function loadGroup ($string) {
-		return explode (',',$string);
+		$array = explode (',',$string);
+		foreach ($array as $key => $item) {
+			// if it is defined as group, replace it
+			if (array_key_exists ($item,$this->groups)) {
+				$array[$key] = $this->groups[$item];
+				$array = $this->loadGroup (implode (',',$array));
+			}
+		}
+		return $array;
 	}
 
 	private function loadSideBar () {
@@ -544,7 +552,7 @@ class CSkin {
 	}
 
 	/**
-	 * Loads the emoticons from the file 'smiley' in the theme dir
+	 * Loads the emoticon set from the file 'smiley' in the theme dir
 	 *
 	 * A line in smiley looks like this 'something.gif ;) ;-)'
 	 * everything is splitted on a space ' '
@@ -560,9 +568,9 @@ class CSkin {
 	 *
 	 * empty lines are igonored
 	 *
-	 * if the first line is 'VERSION 2' the 2 word is the name of the emoticons
-	 * !!case insesitive!!
-	 * for example 'sigh'
+	 * if the first line is 'VERSION 2' (case-inseitive) the 2 word is the name
+	 * of the emoticons
+	 * whole line looks than 'images/sigh.gif sigh :sigh: ::sigh::'
 	*/
 	private function getAllEmoticons ($all = false) {
 		$items = file ($this->convertFile ('smiley'));
@@ -691,6 +699,28 @@ class CSkin {
 		return $output;
 	}
 
+	private function showAllPolls () {
+		$output = NULL;
+		$contLang = $this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
+		foreach ($this->poll->getAllPollsByLanguage ($contLang) as $poll) {
+			$output .= $this->includes ($this->items['viewpoll.item']);
+			$output = str_replace ('{poll question}',$poll[FIELD_POLL_QUESTION],$output);
+			$choices = explode (';',$poll[FIELD_POLL_CHOICES]);
+			$results = explode (';',$poll[FIELD_POLL_RESULTS]);
+			$html = NULL;
+			foreach ($choices as $number => $choice) {
+				$html .= $this->items['poll.result'];
+				$html = str_replace ('{choice text}',$choice,$html);
+				$html = str_replace ('{choice result}',$results[$number],$html);
+				$totalvotes = array_sum ($results);
+				$procent = round ($results[$number] / $totalvotes * 100);
+				$html = str_replace ('{choice resultprocent}',$procent,$html);
+			}
+			$output = str_replace ('{poll results}',$html,$output);
+		}
+		return $output;
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -767,6 +797,8 @@ class CSkin {
 		$this->items['sendpassword.name'] = POST_NAME;
 		$this->items['sendpassword.email'] = POST_EMAIL;
 		$this->items['viewusers.list'] = $this->showAllUsers ();
+		$this->items['to.pollslist'] = 'polls.php?action=allpolls';
+		$this->items['viewpolls.list'] = $this->showAllPolls ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
@@ -1049,6 +1081,7 @@ class CSkin {
 			$fileC = $this->file ($fileName);
 			$string = ereg_replace ($match,$fileC,$string);
 		}
+		return $string;
 	}
 
 	private function localize () {
@@ -1119,24 +1152,19 @@ class CSkin {
 	}
 
 	public function loadSkinFile ($skinFile,$loginReq = false) {
-		try {
-			if (($loginReq == true) and ($this->user->isLoggedIn () == false)) {
-				$this->redirect ('index.php?error=' .
-					$this->lang->translate ('You need to be logged in to access this page'));
-			}
-			$this->fileCont = $this->file ($this->convertFile ($skinFile));
-			$this->loadSideBar ();
-			$this->loadNavigationBar ();
-			$this->loadItems ();
-			$this->includes ($this->fileCont);
-			$this->loadItems ();$this->loadItems ();
-			$this->showButton ($this->fileCont);
-			$this->localize ();
-			echo $this->fileCont;
+		if (($loginReq == true) and ($this->user->isLoggedIn () == false)) {
+			$this->redirect ('index.php?error=' .
+				$this->lang->translate ('You need to be logged in to access this page'));
 		}
-		catch (exceptionlist $e) {
-			echo $e->getMessage ();
-		}
+		$this->fileCont = $this->file ($this->convertFile ($skinFile));
+		$this->loadSideBar ();
+		$this->loadNavigationBar ();
+		$this->loadItems ();
+		$this->includes ($this->fileCont);
+		$this->loadItems ();$this->loadItems ();
+		$this->showButton ($this->fileCont);
+		$this->localize ();
+		echo $this->fileCont;
 	} /* public function loadSkinFile ($skinFile,$loginReq = true) */
 } /* CSkin */
 ?>

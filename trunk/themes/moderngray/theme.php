@@ -111,6 +111,7 @@
 	$this->items['emoticon.button'] = '<a href="javascript:addSmiley (\'{emot text}\')"><img class="emoticon" src="{emot image}"/></a>';
 	$this->items['emoticon'] = '<img class="emoticon" src="{emot img}" name="{emot name}" alt="{emot name}" />';
 	$this->items['userlist.item'] = '<a href="{item link}">{item name}</a><br />';
+	$this->items['viewpoll.item'] = '{include viewpollresults.html}';
 	$this->childsOfSideBar = '&poll.viewcurrentpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
@@ -126,6 +127,8 @@
 	$this->pages['users.php?action=sendpasswordform'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['users.php?action=viewuserlist'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['users.php?action=viewuser'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
+	$this->pages['polls.php?action=allpolls'] = 'ALL';
+	$this->groups['ALL'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->BBC['b']['open'] = '<span class="b">';
 	$this->BBC['b']['close'] = '</span>';
 	$this->BBC['u']['open'] = '<span class="u">';

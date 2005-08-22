@@ -33,7 +33,7 @@ catch (exceptionlist $e) {
 	$database->close ();
 	$skin->redirect ($link);
 }
-switch ( $action ) {
+switch ($action) {
 	case 'vote':
 		try {
 			$return = $poll->vote ($_POST,$user->getconfig ('name'));
@@ -45,7 +45,12 @@ switch ( $action ) {
 			$skin->redirect (catch_error ($e,'index.php?',$lang->translate ('Your vote is not saved'),$errorrep));
 		}
 	case 'allpolls':
-		$skin->loadSkinFile ('viewpolls.html');
+		try {
+			$skin->loadSkinFile ('viewpolls.html');
+		}
+		catch (exceptionlist $e) {
+			$skin->redirect (catch_error ($e,'index.php?',$lang->translate ('Your action is not accepted'),$errorrep));
+		}
 		break;
 	default: 
 		$skin->redirect ('index.php');
