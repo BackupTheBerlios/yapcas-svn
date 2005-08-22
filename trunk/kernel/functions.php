@@ -136,45 +136,45 @@ function isinstalled () {
 }
 
 function error_handling ( $errors,$baselinksucceed,$baselinkfailed ) {
-		foreach ( $errors as $error ) {
+	foreach ( $errors as $error ) {
+		if ( $error->succeed == true ) {
+			array_unshift ( $errors,$error ); // be sure that succeed messafe is at begin
+			break;
+		}
+	}
+	unset ($link); // be sure $link is not set
+	foreach ( $errors as $error ) {
+		if ( isset ( $link ) ) {
 			if ( $error->succeed == true ) {
-				array_unshift ( $errors,$error ); // be sure that succeed messafe is at begin
-				break;
-			}
-		}
-		unset ($link); // be sure $link is not set
-		foreach ( $errors as $error ) {
-			if ( isset ( $link ) ) {
-				if ( $error->succeed == true ) {
-					$link .= '&note=' . $error->message;
-				} else {
-					if ( $error->fatal == false ) {
-						$link .= '&warning=' . $error->error;
-					} else {
-						$link .= '&error=' . $error->error;
-					}
-				}
+				$link .= '&note=' . $error->message;
 			} else {
-				if ( $error->succeed == true ) {
-					$link = $baselinksucceed;
-					$link .= '&note=' . $error->message;
+				if ( $error->fatal == false ) {
+					$link .= '&warning=' . $error->error;
 				} else {
-					if ( $error->fatal == false ) {
-						// should never happen since there is a succeed message, 
-						// $link will be set
-						//FIXME: give errors to log
-						$link = $baselinksucceed;
-						$link .= '&warning=' . $error->error;
-					} else {
-						$link = $baselinkfailed;
-						$link .= '&error=' . $error->error;
-					}
+					$link .= '&error=' . $error->error;
 				}
 			}
-			$link = $link . '&errorid=' . $error->number;
+		} else {
+			if ( $error->succeed == true ) {
+				$link = $baselinksucceed;
+				$link .= '&note=' . $error->message;
+			} else {
+				if ( $error->fatal == false ) {
+					// should never happen since there is a succeed message, 
+					// $link will be set
+					//FIXME: give errors to log
+					$link = $baselinksucceed;
+					$link .= '&warning=' . $error->error;
+				} else {
+					$link = $baselinkfailed;
+					$link .= '&error=' . $error->error;
+				}
+			}
 		}
-		header ( 'Location: ' . $link );
-		return $link;
+		$link = $link . '&errorid=' . $error->number;
+	}
+	header ( 'Location: ' . $link );
+	return $link;
 }
 
 function loadall () {

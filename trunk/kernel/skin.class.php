@@ -42,13 +42,13 @@ class CSkin {
 			if (checkDatabase ($database,$tables)) {
 				// Database seems to be OK
 				$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail',0);
-				$user = new user ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
+				$user = new CUser ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('contentlanguage',$user,'contentlanguage','site.config.php'),
 					'general/contentlanguage',TYPE_STRING,DEFAULT_CONTENT_LANG);
 				$contentLang = $config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 				$news = new CNews ($database,$lang,$contentLang);
-				$poll = new polls ($database,$config,$lang);
+				$poll = new CPoll ($database,$config,$lang);
 				$this->help = new help ($database,$config,$lang);
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');

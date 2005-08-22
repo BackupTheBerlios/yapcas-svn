@@ -97,13 +97,12 @@ Eerste release
 + scheiding van de interface taal en de inhoudstaal
 + Bug fixes
 	* #00023
++ Interne wijziging::database
+	* het maken van een database-component is nu anders, geavanceerder
 TODO
 ----
 + Herwerken van themes systeem
-+ database implmenteren met een interface en factory
 + Extensies mogelijk maken
-+ contentlocale en uilocale maken
-+ Verwijderen van nodeloze try / catch blokken in de core
 ?+ Rechten/Groepen systeem schrijven? mogelijk in 0.4
 ?+ configsysteem wijzigen? mogelijk in een latere versie
 
@@ -142,7 +141,7 @@ Poll systeem
 +...
 Layout
 ------
-+ newsberichten / reacties posten ( eeerdere reacties laten zien, smileys, ... )
++ newsberichten / reacties posten ( eeerdere reacties laten zien )
 + layout installscript
 + betere layout van de poll 
 	*met een balk ipv procent

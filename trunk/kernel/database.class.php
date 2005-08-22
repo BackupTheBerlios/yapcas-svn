@@ -23,7 +23,13 @@ function checkDatabase ($database,$tables) {
 
 
 interface IDatabase {
+	public function __construct (&$config,$file);
 	public function connect ();
+	public function close ();
+	public function query ($sql,$fatal = false);
+	public function fetch_array ($result);
+	public function num_rows ($result);
+	public function get_all_tables ();
 }
 
 class CDatabase {

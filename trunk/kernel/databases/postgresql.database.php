@@ -68,14 +68,9 @@ class Database_postgresql implements IDatabase {
 	} /* public function query ($sql,$fatal = true) */
 
 	public function list_tables () {
-		try {
-			$sql = 'SELECT relname FROM pg_stat_user_tables ORDER by relname';
-			$result = $this->query ($sql);
-			return $result;
-		}
-		catch (exceptionlist $e) {
-			throw $e;
-		}
+		$sql = 'SELECT relname FROM pg_stat_user_tables ORDER by relname';
+		$result = $this->query ($sql);
+		return $result;
 	} /* public function list_tables */
 
 	public function get_all_tables () {
