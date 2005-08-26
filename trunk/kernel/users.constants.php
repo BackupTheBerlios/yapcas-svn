@@ -1,5 +1,4 @@
 <?php
-
 	define ( 'TBL_USERS',TBL_PREFIX . 'users' );
 	define ( 'TBL_USERS_PROFILE',TBL_PREFIX . 'user_profile' );
 	define ( 'TBL_IPBLOCKS',TBL_PREFIX .'ipblocks' );

@@ -112,6 +112,8 @@
 	$this->items['emoticon'] = '<img class="emoticon" src="{emot img}" name="{emot name}" alt="{emot name}" />';
 	$this->items['userlist.item'] = '<a href="{item link}">{item name}</a><br />';
 	$this->items['viewpoll.item'] = '{include viewpollresults.html}';
+	$this->items['help.indexitem'] = '<div id="{helpindex id}" style="border: solid 1px; margin-left:10px">{helpindex name}<br />{helpindex categories}<br />{helpindex questions}</div>';
+	$this->items['help.indexquestion'] = '<a href="{indexquestion id}">{indexquestion question}</a>';
 	$this->childsOfSideBar = '&poll.viewcurrentpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();
@@ -128,6 +130,7 @@
 	$this->pages['users.php?action=viewuserlist'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['users.php?action=viewuser'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->pages['polls.php?action=allpolls'] = 'ALL';
+	$this->pages['help.php'] = 'ALL';
 	$this->groups['ALL'] = '&poll.viewcurrentpoll;,&news.headlines;,&site.navigation;,&user.userform;';
 	$this->BBC['b']['open'] = '<span class="b">';
 	$this->BBC['b']['close'] = '</span>';

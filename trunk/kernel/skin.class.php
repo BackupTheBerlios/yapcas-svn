@@ -391,7 +391,7 @@ class CSkin {
 						// stupid thing with integers
 						$html = str_replace ('{choice number}',"$number",$html);
 					}
-					$output = str_replace ($match,$output,$output);
+					$output = str_replace ($match,$html,$output);
 					break;
 				case 'voteaction':
 					$output = str_replace ($match,
@@ -570,7 +570,7 @@ class CSkin {
 	 *
 	 * if the first line is 'VERSION 2' (case-inseitive) the 2 word is the name
 	 * of the emoticons
-	 * whole line looks than 'images/sigh.gif sigh :sigh: ::sigh::'
+	 * whole line looks than 'sigh.gif sigh :sigh: ::sigh::'
 	*/
 	private function getAllEmoticons ($all = false) {
 		$items = file ($this->convertFile ('smiley'));
@@ -721,6 +721,36 @@ class CSkin {
 		return $output;
 	}
 
+	private function showHelpIndexItem ($index) {
+		$output = NULL;
+		foreach ($index as $child) {
+			$tmp = $this->items['help.indexitem'];
+			$categories = $this->showHelpIndexItem ($child['childs']);
+			$tmp = str_replace ('{helpindex name}',$child['name'],$tmp);
+			$tmp = str_replace ('{helpindex categories}',$categories,$tmp);
+			$tmp = str_replace ('{helpindex id}','cat'.$child['id'],$tmp);
+			$questions = NULL;
+			foreach ($child['questions'] as $q) {
+				$tmpq = $this->items['help.indexquestion'];
+				$tmpq = str_replace ('{indexquestion id}','ques'.$q[FIELD_HELP_QUESTION_ID],$tmpq);
+				$tmpq = str_replace ('{indexquestion question}',$q[FIELD_HELP_QUESTION_QUESTION],$tmpq);
+				$questions .= $tmpq;
+			}
+			$tmp = str_replace ('{helpindex questions}',$questions,$tmp);
+			$output .= $tmp;
+		}
+		return $output;
+	}
+
+	private function showHelpIndex () {
+		$contentLanguage = 'nl';
+		$index = $this->help->getIndexByLanguage ($contentLanguage);
+		return $this->showHelpIndexItem ($index);
+	}
+
+	private function showFAQ () {
+	}
+
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -799,6 +829,8 @@ class CSkin {
 		$this->items['viewusers.list'] = $this->showAllUsers ();
 		$this->items['to.pollslist'] = 'polls.php?action=allpolls';
 		$this->items['viewpolls.list'] = $this->showAllPolls ();
+		$this->items['help.index'] = $this->showHelpIndex ();
+		$this->items['help.faq'] = $this->showFAQ ();
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
 			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
 			foreach ($matches[0] as $number => $match) {
