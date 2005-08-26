@@ -732,6 +732,7 @@ class CSkin {
 			$questions = NULL;
 			foreach ($child['questions'] as $q) {
 				$tmpq = $this->items['help.indexquestion'];
+				$tmpq = str_replace ('{indexquestion link}','#ques'.$q[FIELD_HELP_QUESTION_ID],$tmpq);
 				$tmpq = str_replace ('{indexquestion id}','ques'.$q[FIELD_HELP_QUESTION_ID],$tmpq);
 				$tmpq = str_replace ('{indexquestion question}',$q[FIELD_HELP_QUESTION_QUESTION],$tmpq);
 				$questions .= $tmpq;
@@ -748,7 +749,33 @@ class CSkin {
 		return $this->showHelpIndexItem ($index);
 	}
 
+	private function showFAQItem ($index) {
+		$output = NULL;
+		foreach ($index as $child) {
+			$tmp = $this->items['help.faqcategory'];
+			$categories = $this->showFAQItem ($child['childs']);
+			$tmp = str_replace ('{helpindex name}',$child['name'],$tmp);
+			$tmp = str_replace ('{helpindex categories}',$categories,$tmp);
+			$tmp = str_replace ('{helpindex id}','cat'.$child['id'],$tmp);
+			$questions = NULL;
+			foreach ($child['questions'] as $q) {
+				$tmpq = $this->items['help.faqquestion'];
+				$tmpq = str_replace ('{indexquestion link}','#ques'.$q[FIELD_HELP_QUESTION_ID],$tmpq);
+				$tmpq = str_replace ('{indexquestion id}','ques'.$q[FIELD_HELP_QUESTION_ID],$tmpq);
+				$tmpq = str_replace ('{indexquestion question}',$q[FIELD_HELP_QUESTION_QUESTION],$tmpq);
+				$tmpq = str_replace ('{indexquestion answer}',$q[FIELD_HELP_QUESTION_ANSWER],$tmpq);
+				$questions .= $tmpq;
+			}
+			$tmp = str_replace ('{helpindex questions}',$questions,$tmp);
+			$output .= $tmp;
+		}
+		return $output;
+	}
+
 	private function showFAQ () {
+		$contentLanguage = 'nl';
+		$index = $this->help->getIndexByLanguage ($contentLanguage);
+		return $this->showFAQItem ($index);
 	}
 
 	private function loadItems () {

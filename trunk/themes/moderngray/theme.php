@@ -112,8 +112,10 @@
 	$this->items['emoticon'] = '<img class="emoticon" src="{emot img}" name="{emot name}" alt="{emot name}" />';
 	$this->items['userlist.item'] = '<a href="{item link}">{item name}</a><br />';
 	$this->items['viewpoll.item'] = '{include viewpollresults.html}';
-	$this->items['help.indexitem'] = '<div id="{helpindex id}" style="border: solid 1px; margin-left:10px">{helpindex name}<br />{helpindex categories}<br />{helpindex questions}</div>';
-	$this->items['help.indexquestion'] = '<a href="{indexquestion id}">{indexquestion question}</a>';
+	$this->items['help.indexitem'] = '<div id="{helpindex id}">{helpindex name}<br />{helpindex questions}<br />{helpindex categories}</div>';
+	$this->items['help.indexquestion'] = '<a href="{indexquestion link}">{indexquestion question}</a>';
+	$this->items['help.faqcategory'] = '<div id="{helpindex id}">{helpindex name}<br />{helpindex questions}<br />{helpindex categories}</div>';
+	$this->items['help.faqquestion'] = '<div id="{indexquestion id}"><b>&lang.question;: </b>{indexquestion question}<br /><b>&lang.anwser;:</b> {indexquestion answer}</div>';
 	$this->childsOfSideBar = '&poll.viewcurrentpoll;,&news.headlines;';
 	$this->childsOfNavigation = '&site.navigation;,&user.userform;';
 	$this->pages = array ();

@@ -12,5 +12,6 @@
 
 	define ('FIELD_HELP_QUESTION_CATEGORY','category');
 	define ('FIELD_HELP_QUESTION_QUESTION','question');
+	define ('FIELD_HELP_QUESTION_ANSWER','answer');
 	define ('FIELD_HELP_QUESTION_ID','id');
 ?>
