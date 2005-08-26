@@ -15,15 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-// check for PHP version
-if (! PHP_VERSION >= 5) {
-	die ('PHP Version 5 or higher is required');
-}
-if (!defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
-}
-include ('kernel/constants.php');
-
 class lang {
 	function __construct () {
 		$this->lang = array ();
@@ -135,73 +126,12 @@ function isinstalled () {
 	}
 }
 
-function error_handling ( $errors,$baselinksucceed,$baselinkfailed ) {
-	foreach ( $errors as $error ) {
-		if ( $error->succeed == true ) {
-			array_unshift ( $errors,$error ); // be sure that succeed messafe is at begin
-			break;
-		}
-	}
-	unset ($link); // be sure $link is not set
-	foreach ( $errors as $error ) {
-		if ( isset ( $link ) ) {
-			if ( $error->succeed == true ) {
-				$link .= '&note=' . $error->message;
-			} else {
-				if ( $error->fatal == false ) {
-					$link .= '&warning=' . $error->error;
-				} else {
-					$link .= '&error=' . $error->error;
-				}
-			}
-		} else {
-			if ( $error->succeed == true ) {
-				$link = $baselinksucceed;
-				$link .= '&note=' . $error->message;
-			} else {
-				if ( $error->fatal == false ) {
-					// should never happen since there is a succeed message, 
-					// $link will be set
-					//FIXME: give errors to log
-					$link = $baselinksucceed;
-					$link .= '&warning=' . $error->error;
-				} else {
-					$link = $baselinkfailed;
-					$link .= '&error=' . $error->error;
-				}
-			}
-		}
-		$link = $link . '&errorid=' . $error->number;
-	}
-	header ( 'Location: ' . $link );
-	return $link;
-}
-
-function loadall () {
-	session_start ();
-	include_once ( 'kernel/themes.class.php' );
-	include ( 'kernel/constants.php' );
-	global $theme; 
-	$theme = new theme ();
-}
-
-// deprecated
-function setdate ($time) {
+function formatDate ($time) {
 	global $config;
 	$timezone = $config->getConfigByNameType ('general/timezone',TYPE_INT);
 	$time = $time + $timezone * 60 * 60;
 	$timeformat = $config->getConfigByNameType ('general/timeformat',TYPE_STRING);
 	return date ($timeformat,$time);
-}
-
-// deprecated
-function showDate ($time) {
-	return setDate ($time);
-}
-
-// This is the one that is preferred
-function formatDate ($time) {
-	return setDate ($time);
 }
 
 function getUTCtime (&$config = NULL) {
@@ -230,10 +160,16 @@ function catch_error ($exc,$link,$message,$moreinf) {
 
 function init () {
 	session_start ();
+	// check for PHP version
+	$req = '5.0.0';
+	if (version_compare ($req,phpversion(),'>=')) {
+		die ('PHP Version ' . $req .' or higher is required');
+	}
+	include_once ('kernel/exception.class.php');
+	include ('kernel/constants.php');
 	global $skin; 
 	include ('kernel/database.class.php');
 	include ('kernel/skin.class.php');
 	$skin = new CSkin ();
-	//include ('kernel/constants.php');
 }
 ?>

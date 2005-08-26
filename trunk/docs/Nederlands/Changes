@@ -103,14 +103,14 @@ TODO
 ----
 + Herwerken van themes systeem
 + Extensies mogelijk maken
-?+ Rechten/Groepen systeem schrijven? mogelijk in 0.4
++ verwijderen van configClass in de databases
++ Rechten/Groepen systeem schrijven
 ?+ configsysteem wijzigen? mogelijk in een latere versie
 
 0.5
 ----
 TODO
 ----
-?+ geavanceerd rechtensysteem schrijven. mogelijk in 0.3.5
 + admin schrijven
 	* blokkeren van gebruikers / ips
 	* admin van berichten ( geintegreerd in newssysteem )

@@ -15,13 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-if (defined ('USE_YAPCASCONFIG')) {
-	define ('USE_YAPCASCONFIG',true);
-}
-
-if (! defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
-}
+include_once ('kernel/exception.class.php');
 
 define ('TYPE_STRING',1);
 define ('TYPE_BOOL',2);

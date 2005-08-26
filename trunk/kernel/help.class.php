@@ -40,7 +40,7 @@ define ('FIELD_HELP_QUESTION_ID','id');
 *
 * @version 0.4cvs
 */
-class help {
+class CHelp {
 	function __construct ($database,&$config,$lang) {
 		$this->database = $database;
 		$this->config = $config;
@@ -100,6 +100,5 @@ class help {
 	function addQuestion ($category,$langcode,$question,$anwswser) {
 		// TODO
 	} /* function addQuestion ($category,$langcode,$question,$anwswser) */
-} /*class help*/
-
+} /*class CHelp*/
 ?>

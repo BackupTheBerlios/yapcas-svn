@@ -20,6 +20,7 @@
 *
 * @package poll
 */
+include_once ('kernel/exception.class.php');
 define ('TBL_POLLS',TBL_PREFIX . 'polls');
 define ('FIELD_POLL_ID','id');
 define ('FIELD_POLL_ACTIVE','active');

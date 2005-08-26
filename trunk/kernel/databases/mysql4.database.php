@@ -26,6 +26,7 @@ if (function_exists ('mysqli_connect')) {
 
 class Database_mysql implements IDatabase {
 	public function __construct (&$config,$configfile) {
+		include_once ('kernel/exception.class.php');
 		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/host',0);
 		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/user',0);
 		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/password',0);

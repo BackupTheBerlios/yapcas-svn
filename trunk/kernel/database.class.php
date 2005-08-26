@@ -30,7 +30,6 @@ function checkDatabase ($database,$tables) {
 	return true;
 }
 
-
 interface IDatabase {
 	public function __construct (&$config,$file);
 	public function connect ();

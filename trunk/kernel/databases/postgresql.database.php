@@ -22,6 +22,7 @@ if (function_exists ('pg_connect')) {
 
 class Database_postgresql implements IDatabase {
 	public function __construct (&$config,$file) {
+		include_once ('kernel/exception.class.php');
 		$config->addConfigByFileName ($file,TYPE_STRING,'database/host',0);
 		$config->addConfigByFileName ($file,TYPE_STRING,'database/user',0);
 		$config->addConfigByFileName ($file,TYPE_STRING,'database/password',0);

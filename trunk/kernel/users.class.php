@@ -15,19 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-if (!defined ('USE_YAPCASUSER')) {
-	define ('USE_YAPCASUSER',true);
-}
-
-if (!defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
-}
-define ('ACTIVATE_ID_LENGTH',32);
 /**
 * File that take care of the user SubSystem
 *
 * @package user
 */
+include_once ('kernel/exception.class.php');
+define ('ACTIVATE_ID_LENGTH',32);
 define ('TBL_USERS',TBL_PREFIX . 'users');
 define ('TBL_USERS_PROFILE',TBL_PREFIX . 'user_profile');
 define ('TBL_IPBLOCKS',TBL_PREFIX .'ipblocks');

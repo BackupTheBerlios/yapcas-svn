@@ -1,8 +1,4 @@
 <?php 
-if (!defined ('EXCEPTION_CLASS')) {
-	define ('EXCEPTION_CLASS',true);
-}
-
 function apperror ($str,$config = '') {
 	if ($config == '') {
 		echo $str;

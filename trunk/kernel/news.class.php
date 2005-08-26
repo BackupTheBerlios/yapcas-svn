@@ -20,6 +20,7 @@
 *
 * @package news
 */
+include_once ('kernel/exception.class.php');
 define ('TBL_NEWS',TBL_PREFIX . 'news');
 define ('TBL_COMMENTS',TBL_PREFIX . 'comments');
 define ('TBL_CATEGORIES',TBL_PREFIX . 'categories');

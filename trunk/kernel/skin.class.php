@@ -19,19 +19,20 @@
 class CSkin {
 	function __construct () {
 		error_reporting (E_ALL);
+		include_once ('kernel/constants.php');
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
 		if (! file_exists ('.install.php')) {
-			include ('kernel/config.class.php');
+			include_once ('kernel/config.class.php');
 			$config = new config ();
 			$lang = new lang ();
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
-			include ('kernel/help.class.php');
-			include ('kernel/users.class.php');
-			include ('kernel/news.class.php');
-			include ('kernel/polls.class.php');
+			include_once ('kernel/help.class.php');
+			include_once ('kernel/users.class.php');
+			include_once ('kernel/news.class.php');
+			include_once ('kernel/polls.class.php');
 			define ('TBL_PAGES',TBL_PREFIX . 'pages');
 			$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
@@ -53,7 +54,7 @@ class CSkin {
 				$contentLang = $config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
 				$news = new CNews ($database,$lang,$contentLang);
 				$poll = new CPoll ($database,$config,$lang);
-				$this->help = new help ($database,$config,$lang);
+				$this->help = new CHelp ($database,$config,$lang);
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/httplink');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/sitename');
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/description');
@@ -238,7 +239,7 @@ class CSkin {
 					$tmp = $item[FIELD_NEWS_AUTHOR];
 					break;
 				case 'date':
-					$tmp = showDate ($item[FIELD_NEWS_DATE]);
+					$tmp = formatDate ($item[FIELD_NEWS_DATE]);
 					break;
 				case 'message':
 					$tmp = $this->formatMessage ($item[FIELD_NEWS_MESSAGE]);
@@ -289,7 +290,7 @@ class CSkin {
 					$tmp = $item[FIELD_NEWS_AUTHOR];
 					break;
 				case 'date':
-					$tmp = showDate ($item[FIELD_NEWS_DATE]);
+					$tmp = formatDate ($item[FIELD_NEWS_DATE]);
 					break;
 				case 'message':
 					$tmp = $this->formatMessage ($item[FIELD_NEWS_MESSAGE]);
