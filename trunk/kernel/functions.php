@@ -232,11 +232,6 @@ function init () {
 	session_start ();
 	global $skin; 
 	include ('kernel/database.class.php');
-	include ('kernel/help.class.php');
-	//include ('kernel/error.class.php'); // This should not be in the release
-	include ('kernel/users.class.php');
-	include ('kernel/news.class.php');
-	include ('kernel/polls.class.php');
 	include ('kernel/skin.class.php');
 	$skin = new CSkin ();
 	//include ('kernel/constants.php');

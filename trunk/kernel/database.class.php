@@ -15,7 +15,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-
+/**
+* File that take care of the database SubSystem
+*
+* @package news
+*/
+/**
+* Class that take care off the database SubSystem
+*
+* @version 0.4cvs
+*/
 function checkDatabase ($database,$tables) {
 	// TODO
 	return true;

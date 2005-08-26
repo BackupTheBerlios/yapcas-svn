@@ -28,6 +28,48 @@ define ('ACTIVATE_ID_LENGTH',32);
 *
 * @package user
 */
+define ('TBL_USERS',TBL_PREFIX . 'users');
+define ('TBL_USERS_PROFILE',TBL_PREFIX . 'user_profile');
+define ('TBL_IPBLOCKS',TBL_PREFIX .'ipblocks');
+define ('TBL_ACTIVATE_QUEUE',TBL_PREFIX.'activate_queue');
+define ('FIELD_USERS_NAME','name');
+define ('FIELD_USERS_PASSWORD','password');
+define ('FIELD_USERS_TYPE','type');
+define ('FIELD_USERS_EMAIL','email');
+define ('FIELD_USERS_ACTIVATE','activated');
+define ('FIELD_USERS_BLOCKED','blocked');
+define ('FIELD_USERS_IP','ip');
+define ('FIELD_USERS_PUBLIC_USER','public_user');
+define ('FIELD_USERS_PUBLIC_PROFILE','public_profile');
+define ('FIELD_USERS_PUBLIC_CONTACT_INFO','public_contact_info');
+define ('FIELD_USERS_PROFILE_POSTSONPAGE','postsonpage');
+define ('FIELD_USERS_PROFILE_HEADLINES','headlines');
+define ('FIELD_USERS_PROFILE_NAME','name');
+define ('FIELD_USERS_PROFILE_JOB','job');
+define ('FIELD_USERS_PROFILE_AIM','aim');
+define ('FIELD_USERS_PROFILE_ICQ','icq');
+define ('FIELD_USERS_PROFILE_MSN','msn');
+define ('FIELD_USERS_PROFILE_YAHOO','yahoo');
+define ('FIELD_USERS_PROFILE_JABBER','jabber');
+define ('FIELD_USERS_PROFILE_INTRESTS','intrests');
+define ('FIELD_USERS_PROFILE_WEBSITE','website');
+define ('FIELD_USERS_PROFILE_ADRESS','adress');
+define ('FIELD_USERS_PROFILE_EMAIL','email');
+define ('FIELD_USERS_PROFILE_TIMEZONE','timezone');
+define ('FIELD_USERS_PROFILE_TIMEFORMAT','timeformat');
+define ('FIELD_USERS_PROFILE_THREADED','threaded');
+define ('FIELD_USERS_PROFILE_UILANGUAGE','uilanguage');
+define ('FIELD_USERS_PROFILE_CONTENTLANGUAGE','contentlanguage');
+define ('FIELD_USERS_PROFILE_THEME','theme');
+define ('FIELD_IPBLOCKS_IP','ip');
+define ('FIELD_ACTIVATE_QUEUE_USER','username');
+define ('FIELD_ACTIVATE_QUEUE_ID','id');
+define ('FIELD_ACTIVATE_QUEUE_START','start');
+define ('PASSWORD_LENGTH',8);
+define ('IP_USER',$_SERVER['REMOTE_ADDR']);
+define ('SESSION_NAME','name');
+define ('SESSION_PASSWORD','password');
+define ('SESSION_TYPE','type');
 /**
 * Class that take care off the user SubSystem
 *
@@ -41,7 +83,6 @@ class CUser {
 	 * @param object $lang the UI lang
 	*/
 	public function __construct ($database,$mustactivate,$lang) {
-		include_once ('kernel/users.constants.php');
 		$this->database = $database;
 		$this->mustactivate = $mustactivate;
 		$this->lang = $lang;

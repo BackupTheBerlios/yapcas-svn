@@ -28,6 +28,10 @@ class CSkin {
 			$lang = new lang ();
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
+			include ('kernel/help.class.php');
+			include ('kernel/users.class.php');
+			include ('kernel/news.class.php');
+			include ('kernel/polls.class.php');
 			define ('TBL_PAGES',TBL_PREFIX . 'pages');
 			$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);

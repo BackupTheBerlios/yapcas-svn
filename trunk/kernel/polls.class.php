@@ -20,6 +20,15 @@
 *
 * @package poll
 */
+define ('TBL_POLLS',TBL_PREFIX . 'polls');
+define ('FIELD_POLL_ID','id');
+define ('FIELD_POLL_ACTIVE','active');
+define ('FIELD_POLL_LANGUAGE','language');
+define ('FIELD_POLL_QUESTION','question');
+define ('FIELD_POLL_CHOICES','answers');
+define ('FIELD_POLL_RESULTS','votes');
+define ('FIELD_POLL_VOTED_IPS','votedips');
+define ('FIELD_POLL_VOTED_USERS','votedusers');
 /**
 * Class that take care off the poll SubSystem
 *
@@ -34,7 +43,6 @@ class CPoll {
 	 * @param object $lang
 	*/
 	function __construct ($database,&$config,$lang) {
-		include ('kernel/polls.constants.php');
 		$this->database = $database;
 		$this->config = $config;
 		$this->lang = $lang;

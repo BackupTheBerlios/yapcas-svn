@@ -15,10 +15,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+/**
+* File that take care of the help SubSystem
+*
+* @package news
+*/
+define ('TBL_HELP_CATEGORY',TBL_PREFIX . 'helpcategory');
+define ('TBL_HELP_TRANSCATEGORY',TBL_PREFIX . 'transcategory');
+define ('TBL_HELP_QUESTIONS',TBL_PREFIX . 'helpquestions');
 
+define ('FIELD_HELP_CATEGORY_ID','id');
+define ('FIELD_HELP_CATEGORY_PARENT','parent');
+
+define ('FIELD_HELP_TRANSCATEGORY_ID','id');
+define ('FIELD_HELP_TRANSCATEGORY_LANG','langcode');
+define ('FIELD_HELP_TRANSCATEGORY_NAME','name');
+
+define ('FIELD_HELP_QUESTION_CATEGORY','category');
+define ('FIELD_HELP_QUESTION_QUESTION','question');
+define ('FIELD_HELP_QUESTION_ANSWER','answer');
+define ('FIELD_HELP_QUESTION_ID','id');
+/**
+* Class that take care off the help SubSystem
+*
+* @version 0.4cvs
+*/
 class help {
 	function __construct ($database,&$config,$lang) {
-		include_once ('kernel/help.constants.php');
 		$this->database = $database;
 		$this->config = $config;
 		$this->lang = $lang;
