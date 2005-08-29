@@ -19,6 +19,8 @@
 * File that take care of the user SubSystem
 *
 * @package user
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 include_once ('kernel/exception.class.php');
 define ('ACTIVATE_ID_LENGTH',32);
@@ -68,6 +70,8 @@ define ('SESSION_TYPE','type');
 * Class that take care off the user SubSystem
 *
 * @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 class CUser {
 	/**

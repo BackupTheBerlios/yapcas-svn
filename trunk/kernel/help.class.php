@@ -18,7 +18,9 @@
 /**
 * File that take care of the help SubSystem
 *
-* @package news
+* @package help
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 define ('TBL_HELP_CATEGORY',TBL_PREFIX . 'helpcategory');
 define ('TBL_HELP_TRANSCATEGORY',TBL_PREFIX . 'transcategory');
@@ -39,6 +41,8 @@ define ('FIELD_HELP_QUESTION_ID','id');
 * Class that take care off the help SubSystem
 *
 * @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 class CHelp {
 	function __construct ($database,&$config,$lang) {

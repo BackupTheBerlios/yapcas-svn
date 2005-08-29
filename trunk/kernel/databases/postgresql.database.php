@@ -15,11 +15,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+/**
+* File that take care of the database (PostgreSQL) SubSystem
+*
+* @package database
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 if (function_exists ('pg_connect')) {
 	$supported['postgresql 7.4'] = 'Database_postgresql';
 	$supported['postgresql 8'] = 'Database_postgresql';
 }
 
+/**
+* class that take care of the database (PostgreSQL) SubSystem
+*
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 class Database_postgresql implements IDatabase {
 	public function __construct (&$config,$file) {
 		include_once ('kernel/exception.class.php');

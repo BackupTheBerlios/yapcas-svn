@@ -1,4 +1,11 @@
 <?php
+/**
+* File that take care of the skin SubSystem constants
+*
+* @package skin
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 // some version constants
 define ('majorversion',0);
 define ('minorversion',4);

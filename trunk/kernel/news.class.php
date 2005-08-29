@@ -19,6 +19,8 @@
 * File that take care of the News SubSystem
 *
 * @package news
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 include_once ('kernel/exception.class.php');
 define ('TBL_NEWS',TBL_PREFIX . 'news');
@@ -49,6 +51,8 @@ define ('FIELD_CATEGORIES_LANGUAGE','language');
 * Class that take care off the news SubSystem
 *
 * @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 class CNews {
 	/**

@@ -15,7 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-
+/**
+* File that take care of the skin SubSystem
+*
+* @package skin
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+/**
+* class that take care of the skin SubSystem
+*
+* @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 class CSkin {
 	function __construct () {
 		error_reporting (E_ALL);
@@ -25,7 +38,7 @@ class CSkin {
 		// FIXME
 		if (! file_exists ('.install.php')) {
 			include_once ('kernel/config.class.php');
-			$config = new config ();
+			$config = new CConfig ();
 			$lang = new lang ();
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));

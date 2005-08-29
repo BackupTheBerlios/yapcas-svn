@@ -15,6 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+/**
+* File that take care of the config SubSystem
+*
+* @package config
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 include_once ('kernel/exception.class.php');
 
 define ('TYPE_STRING',1);
@@ -94,7 +101,14 @@ function convertToDatabase (&$content) {
 	return $content;
 } /* function convertToDatabase (&$content) */
 
-class config {
+/**
+* class that take care of the config SubSystem
+*
+* @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+class CConfig {
 	public function __construct () {
 		$this->configtree = array ();
 	} /* function config () */

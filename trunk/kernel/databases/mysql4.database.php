@@ -15,6 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+/**
+* File that take care of the database (MySQL) SubSystem
+*
+* @package database
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 if (function_exists ('mysql_connect')) {
 	$supported['mysql 3'] = 'Database_mysql';
 	$supported['mysql 4'] = 'Database_mysql';
@@ -24,6 +31,12 @@ if (function_exists ('mysqli_connect')) {
 	//$supported['mysqli 5'] = 'Database_mysqli';
 }
 
+/**
+* class that take care of the database (MySQL) SubSystem
+*
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 class Database_mysql implements IDatabase {
 	public function __construct (&$config,$configfile) {
 		include_once ('kernel/exception.class.php');

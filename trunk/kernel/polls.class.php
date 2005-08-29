@@ -19,6 +19,8 @@
 * File that take care of the poll SubSystem
 *
 * @package poll
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 include_once ('kernel/exception.class.php');
 define ('TBL_POLLS',TBL_PREFIX . 'polls');
@@ -34,6 +36,8 @@ define ('FIELD_POLL_VOTED_USERS','votedusers');
 * Class that take care off the poll SubSystem
 *
 * @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 class CPoll {
 	/**

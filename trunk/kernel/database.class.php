@@ -18,18 +18,22 @@
 /**
 * File that take care of the database SubSystem
 *
-* @package news
-*/
-/**
-* Class that take care off the database SubSystem
-*
-* @version 0.4cvs
+* @package database
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 function checkDatabase ($database,$tables) {
 	// TODO
 	return true;
 }
 
+/**
+* interface that take care off the generic database SubSystem
+*
+* @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 interface IDatabase {
 	public function __construct (&$config,$file);
 	public function connect ();
@@ -40,6 +44,13 @@ interface IDatabase {
 	public function get_all_tables ();
 }
 
+/**
+* Class that take care off the database SubSystem
+*
+* @version 0.4cvs
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
 class CDatabase {
 	private $loadedDatabase = NULL;
 	private $supported;

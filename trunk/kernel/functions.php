@@ -15,6 +15,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
+/**
+* File that take care of the skin SubSystem
+*
+* @package skin
+* @author Nathan Samson
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @todo remove this file and copy everything to dkin.class.php
+*/
+
+/**
+* class that take care of the lang SubSystem
+*
+* @package skin
+* @author Nathan Samson
+*/
 class lang {
 	function __construct () {
 		$this->lang = array ();
