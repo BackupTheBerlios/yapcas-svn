@@ -222,6 +222,9 @@ class CSkin {
 			if (array_key_exists ($item,$this->groups)) {
 				$array[$key] = $this->groups[$item];
 				$array = $this->loadGroup (implode (',',$array));
+			} else {
+				$this->parse ($item);
+				$array[$key] = $item;
 			}
 		}
 		return $array;
@@ -232,7 +235,7 @@ class CSkin {
 		$onThisPage = $this->loadGroup ($this->pages[$this->getPageID ()]);
 		// implode char is empty because between the parts must be nothing
 		$intersect = implode ('',array_intersect ($childsOfSideBar,$onThisPage));
-		$this->fileCont = preg_replace ('#{sidebar}#',$intersect,$this->fileCont);
+		$this->fileCont = preg_replace ('/{sidebar}/',$intersect,$this->fileCont);
 	}
 
 	private function loadNavigationBar () {
@@ -240,7 +243,7 @@ class CSkin {
 		$onThisPage = $this->loadGroup ($this->pages[$this->getPageID ()]);
 		// implode char is empty because between the parts must be nothing
 		$intersect = implode ('',array_intersect ($childsOfNavigation,$onThisPage));
-		$this->fileCont = preg_replace ('#{navigation}#',$intersect,$this->fileCont);
+		$this->fileCont = preg_replace ('/{navigation}/',$intersect,$this->fileCont);
 	}
 
 	private function showNewsItem ($item,$full = false) {
@@ -806,12 +809,7 @@ class CSkin {
 		return $this->showFAQItem ($index);
 	}
 
-	/**
-	 *
-	 *
-	 * @todo change installedLanguages in contentlanguage in $this->availableLanguages ()
-	*/
-	private function loadItems () {
+	private function initItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
 		$this->items['site.description'] =
@@ -891,8 +889,146 @@ class CSkin {
 		$this->items['viewpolls.list'] = $this->showAllPolls ();
 		$this->items['help.index'] = $this->showHelpIndex ();
 		$this->items['help.faq'] = $this->showFAQ ();
+	}
+
+	private function includes (&$string) {
+		preg_match_all ('#{include (.+?)}#',$string,$matches);
+		foreach ($matches[0] as $number => $match) {
+			$fileName = $this->convertFile ($matches[1][$number]);
+			$fileC = $this->file ($fileName);
+			$this->parse ($fileC);
+			$string = ereg_replace ($match,$fileC,$string);
+		}
+		return $string;
+	}
+
+	private function localize () {
+		// TODO
+	}
+
+	private function getPageID () {
+		$pagename = $_SERVER['PHP_SELF'];
+		// removes everything before and '/' sign itself
+		// example /dir/yapcas/index.php --> index.php
+		$ID = preg_replace ('/(.+?)*\/(.+?)/','\\2',$pagename);
+		// add the action if needed
+		if ($this->get ('action') !== false) {
+			$ID .= '?action=' . $this->get ('action');
+		}
+		return $ID;
+	}
+
+	public function get ($string) {
+		if (! empty ($_GET[$string])) {
+			return $_GET[$string];
+		} else {
+			return false;
+		}
+	}
+
+	public function getPageTitle () {
+		$ID = $this->getPageID ();
+		$language =
+			$this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
+		$sql = 'SELECT * FROM ' . TBL_PAGES;
+		$sql .= ' WHERE name=\'' . $ID . '\'';
+		$sql .= 'AND language=\'' . $language . '\' LIMIT 1';
+		$query = $this->database->query ($sql);
+		if ($this->database->num_rows ($query) == 0) {
+			$pagetitle = $this->lang->translate ('Untitled');
+		} else {
+			$pagetitle = $this->database->fetch_array ($query);
+			$pagetitle = $pagetitle['shown_name'];
+		}
+		return $pagetitle;
+	}
+
+	private function getPageContent () {
+		$ID = $this->getPageID ();
+		$language =
+			$this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
+		$sql = 'SELECT * FROM ' . TBL_PAGES;
+		$sql .= ' WHERE name=\'' . $ID . '\'';
+		$sql .= 'AND language=\'' . $language . '\' LIMIT 1';
+		$query = $this->database->query ($sql);
+		if ($this->database->num_rows ($query) == 0) {
+			$content = NULL;
+		} else {
+			$content = $this->database->fetch_array ($query);
+			$content = $content['content'];
+		}
+		return $content;
+	}
+
+	public function redirect ($link) {
+		error_reporting (E_NONE);
+		header ('Location: ' . $link);
+		$output = $this->getfile ('themes/' . $this->themedir . '/redirect.html');
+		$output = ereg_replace ('%redirect.content',$link,$output);
+		echo $output;
+		exit ();
+	}
+
+	public function loadSkinFile ($skinFile,$loginReq = false) {
+		if (($loginReq == true) and ($this->user->isLoggedIn () == false)) {
+			$this->redirect ('index.php?error=' .
+				$this->lang->translate ('You need to be logged in to access this page'));
+		}
+		$this->fileCont = $this->file ($this->convertFile ($skinFile));
+		$this->initItems ();
+		$this->parse ($this->fileCont);
+		$this->loadSideBar ();
+		$this->loadNavigationBar ();
+		$this->localize ();
+		echo $this->fileCont;
+	} /* public function loadSkinFile ($skinFile,$loginReq = true) */
+
+	public function installedSkins () {
+		$files = scandir ('themes');
+		$installed = array ();
+		foreach ($files as $file) {
+			if ((is_dir ('themes/' . $file)) and
+				(file_exists ('themes/' . $file . '/theme.php'))) {
+				$installed[] = $file;
+			}
+		}
+		return $installed;
+	}
+
+	public function formatDate ($time) {
+		$timezone = $this->config->getConfigByNameType ('general/timezone',TYPE_INT);
+		$time = $time + $timezone * 60 * 60;
+		$timeformat = $this->config->getConfigByNameType ('general/timeformat',TYPE_STRING);
+		return date ($timeformat,$time);
+	}
+
+	public function getUTCtime () {
+		$time = time ();
+		$UTCtime = $time - (date ('Z'));
+		return $UTCtime;
+	}
+
+	public function catchError ($exc,$link,$message,$moreinf) {
+		if ($exc->fatal) {
+			$link .= 'error=' . $message;
+			$link .= '<ul>';
+			while ($exc != NULL) {
+				$link .= '<li>' . $exc->getMessage () . '</li>';
+				$exc = $exc->getNext ();
+			}
+			$link .= '</ul>';
+		} else {
+			$link .= 'warning=' . 'Your action can be not completed: ' . $exc->getMessage ();
+		}
+		if (($moreinf == true) and (isset ($exc->debuginfo))) {
+			$link .= ': ' . $exc->debuginfo;
+		}
+		return $link;
+	}
+
+	private function replaceViewComments (&$text) {
 		if ($this->getPageID () == 'news.php?action=viewcomments') {
-			preg_match_all ('/{news (.+?)}/is',$this->fileCont,$matches);
+			preg_match_all ('/{news (.+?)}/is',$text,$matches);
 			foreach ($matches[0] as $number => $match) {
 				switch ($matches[1][$number]) {
 					case 'item':
@@ -903,11 +1039,14 @@ class CSkin {
 						$replace = $this->showComments ($this->get ('id'));
 						break;
 				}
-				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+				$text = str_replace ($match,$replace,$text);
 			}
 		}
+	}
+
+	private function replacePostCommentsForm (&$text) {
 		if ($this->getPageID () == 'news.php?action=postcommentform') {
-			preg_match_all ('/{newcomment (.+?)}/is',$this->fileCont,$matches);
+			preg_match_all ('/{newcomment (.+?)}/is',$text,$matches);
 			foreach ($matches[0] as $number => $match) {
 				switch ($matches[1][$number]) {
 					case 'id_on_comment':
@@ -917,12 +1056,14 @@ class CSkin {
 						$replace = $this->get (POST_ID_NEWS);
 						break;
 				}
-				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+				$text = str_replace ($match,$replace,$text);
 			}
 		}
+	}
 
+	private function replaceEditCommentForm (&$text) {
 		if ($this->getPageID () == 'news.php?action=editcommentform') {
-			preg_match_all ('/{editcomment (.+?)}/is',$this->fileCont,$matches);
+			preg_match_all ('/{editcomment (.+?)}/is',$text,$matches);
 			$comment = $this->news->getCommentByID ($this->get (GET_ID));
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
@@ -937,12 +1078,14 @@ class CSkin {
 						$replace = $comment[FIELD_COMMENTS_MESSAGE];
 						break;
 				}
-				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+				$text = str_replace ($match,$replace,$text);
 			}
 		}
+	}
 
+	private function replaceEditNewsForm (&$text) {
 		if ($this->getPageID () == 'news.php?action=editnewsform') {
-			preg_match_all ('/{editnews (.+?)}/is',$this->fileCont,$matches);
+			preg_match_all ('/{editnews (.+?)}/is',$text,$matches);
 			$comment = $this->news->getNewsByID ($this->get (GET_ID));
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
@@ -957,12 +1100,19 @@ class CSkin {
 						$replace = $comment[FIELD_NEWS_MESSAGE];
 						break;
 				}
-				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+				$text = str_replace ($match,$replace,$text);
 			}
 		}
+	}
 
+	/**
+	 *
+	 *
+	 * @todo change installedLanguages in contentlanguage in $this->availableLanguages ()
+	*/
+	private function replaceChangeOptionsForm (&$text) {
 		if ($this->getPageID () == 'users.php?action=changeoptionsform') {
-			preg_match_all ('/{option (.+?)}/is',$this->fileCont,$matches);
+			preg_match_all ('/{option (.+?)}/is',$text,$matches);
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
 				switch ($matches[1][$number]) {
@@ -1049,12 +1199,14 @@ class CSkin {
 						$replace = $this->options ($this->options['language'],$curVal,POST_CONTENTLANGUAGE,$this->lang->installed (),$this->lang->installed ());
 						break;
 				}
-				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+				$text = str_replace ($match,$replace,$text);
 			}
 		}
+	}
 
+	private function replaceViewUser (&$text) {
 		if ($this->getPageID () == 'users.php?action=viewuser') {
-			preg_match_all ('/{userprofile (.+?)}/is',$this->fileCont,$matches);
+			preg_match_all ('/{userprofile (.+?)}/is',$text,$matches);
 			$userprofile = $this->user->getOtherProfile ($this->get ('name'));
 			foreach ($matches[0] as $number => $match) {
 				$replace = NULL;
@@ -1090,21 +1242,12 @@ class CSkin {
 						$replace = $userprofile[FIELD_USERS_PROFILE_ADRESS];
 						break;
 				}
-				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+				$text = str_replace ($match,$replace,$text);
 			}
 		}
+	}
 
-		preg_match_all ('#&(.+?);#',$this->fileCont,$matches);
-		foreach ($matches[0] as $number => $match) {
-			if (key_exists ($matches[1][$number],$this->items)) {
-				$item = $this->items[$matches[1][$number]];
-				$this->fileCont = ereg_replace ($match,$item,$this->fileCont);
-			}
-		}
-
-		// the 'i' is appendend to be not case sesitive
-		// the 's' is appendend to inlcude the newline char in DOT
-
+	private function parseIf (&$text) {
 		$varlist['loggedin'] = $this->user->isLoggedIn ();
 		$varlist['pollvoted'] = $this->poll->userHasVoted ($this->user->getConfig ('name'));
 		$postsOnPage = $this->config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
@@ -1134,7 +1277,7 @@ class CSkin {
 			$varlist['newsnext'] = true;
 		}
 
-		preg_match_all ('/\{if (.+?)\}(.+?)\{endif\}/is',$this->fileCont,$matches);
+		preg_match_all ('/\{if (.+?)\}(.+?)\{endif\}/is',$text,$matches);
 		foreach ($matches[0] as $number => $match) {
 			$replace = NULL;
 			trim ($matches[1][$number]);
@@ -1162,144 +1305,27 @@ class CSkin {
 			// I'm using str_replace and not ereg_replace because
 			// ereg causes problems with a '?'
 			// and str_replace is faster
-			$this->fileCont = str_replace ($match,$replace,$this->fileCont);
+			$text = str_replace ($match,$replace,$text);
 		}
 	}
 
-	private function includes (&$string) {
-		preg_match_all ('#{include (.+?)}#',$string,$matches);
+	private function parse (&$text) {
+		preg_match_all ('/&(.*);/',$text,$matches);
 		foreach ($matches[0] as $number => $match) {
-			$fileName = $this->convertFile ($matches[1][$number]);
-			$fileC = $this->file ($fileName);
-			$string = ereg_replace ($match,$fileC,$string);
-		}
-		return $string;
-	}
-
-	private function localize () {
-		// TODO
-	}
-
-	private function getPageID () {
-		$pagename = $_SERVER['PHP_SELF'];
-		// removes everything before and '/' sign itself
-		// example /dir/yapcas/index.php --> index.php
-		$ID = preg_replace ('/(.+?)*\/(.+?)/','\\2',$pagename);
-		// add the action if needed
-		if ($this->get ('action') !== false) {
-			$ID .= '?action=' . $this->get ('action');
-		}
-		return $ID;
-	}
-
-	public function get ($string) {
-		if (! empty ($_GET[$string])) {
-			return $_GET[$string];
-		} else {
-			return false;
-		}
-	}
-
-	public function getPageTitle () {
-		$ID = $this->getPageID ();
-		$language =
-			$this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
-		$sql = 'SELECT * FROM ' . TBL_PAGES;
-		$sql .= ' WHERE name=\'' . $ID . '\'';
-		$sql .= 'AND language=\'' . $language . '\' LIMIT 1';
-		$query = $this->database->query ($sql);
-		if ($this->database->num_rows ($query) == 0) {
-			$pagetitle = $this->lang->translate ('Untitled');
-		} else {
-			$pagetitle = $this->database->fetch_array ($query);
-			$pagetitle = $pagetitle['shown_name'];
-		}
-		return $pagetitle;
-	}
-
-	private function getPageContent () {
-		$ID = $this->getPageID ();
-		$language =
-			$this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
-		$sql = 'SELECT * FROM ' . TBL_PAGES;
-		$sql .= ' WHERE name=\'' . $ID . '\'';
-		$sql .= 'AND language=\'' . $language . '\' LIMIT 1';
-		$query = $this->database->query ($sql);
-		if ($this->database->num_rows ($query) == 0) {
-			$content = NULL;
-		} else {
-			$content = $this->database->fetch_array ($query);
-			$content = $content['content'];
-		}
-		return $content;
-	}
-
-	public function redirect ($link) {
-		error_reporting (E_NONE);
-		header ('Location: ' . $link);
-		$output = $this->getfile ('themes/' . $this->themedir . '/redirect.html');
-		$output = ereg_replace ('%redirect.content',$link,$output);
-		echo $output;
-		exit ();
-	}
-
-	public function loadSkinFile ($skinFile,$loginReq = false) {
-		if (($loginReq == true) and ($this->user->isLoggedIn () == false)) {
-			$this->redirect ('index.php?error=' .
-				$this->lang->translate ('You need to be logged in to access this page'));
-		}
-		$this->fileCont = $this->file ($this->convertFile ($skinFile));
-		$this->loadSideBar ();
-		$this->loadNavigationBar ();
-		$this->loadItems ();
-		$this->includes ($this->fileCont);
-		$this->loadItems ();$this->loadItems ();
-		$this->showButton ($this->fileCont);
-		$this->localize ();
-		echo $this->fileCont;
-	} /* public function loadSkinFile ($skinFile,$loginReq = true) */
-
-	public function installedSkins () {
-		$files = scandir ('themes');
-		$installed = array ();
-		foreach ($files as $file) {
-			if ((is_dir ('themes/' . $file)) and
-				(file_exists ('themes/' . $file . '/theme.php'))) {
-				$installed[] = $file;
+			if (key_exists ($matches[1][$number],$this->items)) {
+				$item = $this->items[$matches[1][$number]];
+				$this->parse ($item);
+				$text = str_replace ($match,$item,$text);
 			}
 		}
-		return $installed;
-	}
-
-	function formatDate ($time) {
-		$timezone = $this->config->getConfigByNameType ('general/timezone',TYPE_INT);
-		$time = $time + $timezone * 60 * 60;
-		$timeformat = $this->config->getConfigByNameType ('general/timeformat',TYPE_STRING);
-		return date ($timeformat,$time);
-	}
-
-	function getUTCtime () {
-		$time = time ();
-		$UTCtime = $time - (date ('Z'));
-		return $UTCtime;
-	}
-
-	function catchError ($exc,$link,$message,$moreinf) {
-		if ($exc->fatal) {
-			$link .= 'error=' . $message;
-			$link .= '<ul>';
-			while ($exc != NULL) {
-				$link .= '<li>' . $exc->getMessage () . '</li>';
-				$exc = $exc->getNext ();
-			}
-			$link .= '</ul>';
-		} else {
-			$link .= 'warning=' . 'Your action can be not completed: ' . $exc->getMessage ();
-		}
-		if (($moreinf == true) and (isset ($exc->debuginfo))) {
-			$link .= ': ' . $exc->debuginfo;
-		}
-		return $link;
+		$this->parseIf ($text);
+		$this->includes ($text);
+		$this->replaceViewComments ($text);
+		$this->replacePostCommentsForm ($text);
+		$this->replaceEditCommentForm ($text);
+		$this->replaceEditNewsForm ($text);
+		$this->replaceChangeOptionsForm ($text);
+		$this->replaceViewUser ($text);
 	}
 } /* CSkin */
 ?>
