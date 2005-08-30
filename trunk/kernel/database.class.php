@@ -55,22 +55,20 @@ class CDatabase {
 	private $loadedDatabase = NULL;
 	private $supported;
 
-	public function getAllSupportedDatabases () {
-		$d = dir ('kernel/databases/');
-		$supported = array ();
-		$entry = $d->read ();
-		while ($entry !== false) {
-			if (preg_match('/(.+?).database.php/i',$entry) == 1) {
-				include_once ('kernel/databases/' . $entry);
-			}
-			$entry = $d->read ();
-		}
-		$d->close ();
-		$this->supported = $supported;
-	}
-
 	public function __construct () {
 		$this->getAllSupportedDatabases ();
+	}
+
+	public function getAllSupportedDatabases () {
+		$files = scandir ('kernel/databases/');
+		$supported = array ();
+		foreach ($files as $file) {
+			if ((preg_match ('/^\w.*\.database\.php$/i',$file) == 1) and
+				(is_file ('kernel/databases/' . $file))) {
+				include_once ('kernel/databases/' . $file);
+			}
+		}
+		$this->supported = $supported;
 	}
 
 	public function load ($type,&$config,$file) {

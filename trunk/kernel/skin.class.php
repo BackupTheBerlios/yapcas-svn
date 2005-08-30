@@ -28,24 +28,33 @@
 * @version 0.4cvs
 * @author Nathan Samson
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @todo cleanup the code
 */
 class CSkin {
 	function __construct () {
 		error_reporting (E_ALL);
-		include_once ('kernel/constants.php');
+		session_start ();
+		// check for PHP version
+		$req = '5.0.0';
+		if (version_compare ($req,phpversion(),'>=')) {
+			die ('PHP Version ' . $req .' or higher is required');
+		}
 		// as it crashes between this and load of the config
 		// we need to have all debug info
 		// FIXME
 		if (! file_exists ('.install.php')) {
 			include_once ('kernel/config.class.php');
+			include_once ('kernel/language.class.php');
 			$config = new CConfig ();
-			$lang = new lang ();
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 			define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
 			include_once ('kernel/help.class.php');
 			include_once ('kernel/users.class.php');
 			include_once ('kernel/news.class.php');
 			include_once ('kernel/polls.class.php');
+			include_once ('kernel/exception.class.php');
+			include_once ('kernel/database.class.php');
+			include_once ('kernel/constants.php');
 			define ('TBL_PAGES',TBL_PREFIX . 'pages');
 			$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);
@@ -60,6 +69,7 @@ class CSkin {
 			if (checkDatabase ($database,$tables)) {
 				// Database seems to be OK
 				$config->addConfigByFileName ('site.config.php',TYPE_BOOL,'user/activatemail',0);
+				$lang = new CLang ();
 				$user = new CUser ($database,$config->getConfigByNameType ('user/activatemail',TYPE_BOOL),$lang);
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('contentlanguage',$user,'contentlanguage','site.config.php'),
@@ -80,7 +90,7 @@ class CSkin {
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('uilanguage',$user,'uilanguage','site.config.php'),
 					'general/uilanguage',TYPE_STRING,STANDARD_LANGUAGE);
-				$lang->updatelang ($config->getConfigByNameType('general/uilanguage',TYPE_STRING));
+				$lang->update ($config->getConfigByNameType('general/uilanguage',TYPE_STRING));
 				$config->addConfigByList ('GET;YAPCAS_USER;COOKIE;FILE',
 					array('theme',$user,'theme','site.config.php'),
 					'general/theme',TYPE_STRING,'moderngray');
@@ -116,7 +126,7 @@ class CSkin {
 			}
 		} else {
 			if (file_exists ('site.config.php')) {
-				include ('kernel/config.class.php');
+				include_once ('kernel/config.class.php');
 				$config = new config ();
 				$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/tblprefix',0);
 				define ('TBL_PREFIX',$config->getConfigByNameType ('database/tblprefix',TYPE_STRING));
@@ -252,7 +262,7 @@ class CSkin {
 					$tmp = $item[FIELD_NEWS_AUTHOR];
 					break;
 				case 'date':
-					$tmp = formatDate ($item[FIELD_NEWS_DATE]);
+					$tmp = $this->formatDate ($item[FIELD_NEWS_DATE]);
 					break;
 				case 'message':
 					$tmp = $this->formatMessage ($item[FIELD_NEWS_MESSAGE]);
@@ -303,7 +313,7 @@ class CSkin {
 					$tmp = $item[FIELD_NEWS_AUTHOR];
 					break;
 				case 'date':
-					$tmp = formatDate ($item[FIELD_NEWS_DATE]);
+					$tmp = $this->formatDate ($item[FIELD_NEWS_DATE]);
 					break;
 				case 'message':
 					$tmp = $this->formatMessage ($item[FIELD_NEWS_MESSAGE]);
@@ -452,7 +462,7 @@ class CSkin {
 					$replace = $comment[FIELD_COMMENTS_AUTHOR];
 					break;
 				case 'date':
-					$replace = formatDate ($comment[FIELD_COMMENTS_DATE]);
+					$replace = $this->formatDate ($comment[FIELD_COMMENTS_DATE]);
 					break;
 				case 'newcommentlink':
 					$replace = 'news.php?action=postcommentform';
@@ -796,6 +806,11 @@ class CSkin {
 		return $this->showFAQItem ($index);
 	}
 
+	/**
+	 *
+	 *
+	 * @todo change installedLanguages in contentlanguage in $this->availableLanguages ()
+	*/
 	private function loadItems () {
 		$this->items['site.title'] =
 			$this->config->getConfigByNameType ('general/sitename',TYPE_STRING);
@@ -1001,7 +1016,7 @@ class CSkin {
 						break;
 					case 'theme':
 						$curVal = $this->user->getDBConfig ('theme');
-						$replace = $this->options ($this->options['theme'],$curVal,POST_THEME,themesinstalled (),themesinstalled ());
+						$replace = $this->options ($this->options['theme'],$curVal,POST_THEME,$this->installedSkins (),$this->installedSkins ());
 						break;
 					case 'threaded':
 						$curVal = $this->user->getDBConfig ('threaded');
@@ -1026,12 +1041,12 @@ class CSkin {
 						$replace = $this->options ($this->options['timeformat'],$curVal,POST_TIMEFORMAT,'string','string');
 						break;
 					case 'uilanguage':
-						$curVal = code2lang ($this->user->getDBConfig ('uilanguage'));
-						$replace = $this->options ($this->options['language'],$curVal,POST_UILANGUAGE,languagesinstalled (),languagesinstalled ());
+						$curVal = $this->lang->code2lang ($this->user->getDBConfig ('uilanguage'));
+						$replace = $this->options ($this->options['language'],$curVal,POST_UILANGUAGE,$this->lang->installed (),$this->lang->installed ());
 						break;
 					case 'contentlanguage':
-						$curVal = code2lang ($this->user->getDBConfig ('contentlanguage'));
-						$replace = $this->options ($this->options['language'],$curVal,POST_CONTENTLANGUAGE,languagesinstalled (),languagesinstalled ());
+						$curVal = $this->lang->code2lang ($this->user->getDBConfig ('contentlanguage'));
+						$replace = $this->options ($this->options['language'],$curVal,POST_CONTENTLANGUAGE,$this->lang->installed (),$this->lang->installed ());
 						break;
 				}
 				$this->fileCont = str_replace ($match,$replace,$this->fileCont);
@@ -1243,5 +1258,48 @@ class CSkin {
 		$this->localize ();
 		echo $this->fileCont;
 	} /* public function loadSkinFile ($skinFile,$loginReq = true) */
+
+	public function installedSkins () {
+		$files = scandir ('themes');
+		$installed = array ();
+		foreach ($files as $file) {
+			if ((is_dir ('themes/' . $file)) and
+				(file_exists ('themes/' . $file . '/theme.php'))) {
+				$installed[] = $file;
+			}
+		}
+		return $installed;
+	}
+
+	function formatDate ($time) {
+		$timezone = $this->config->getConfigByNameType ('general/timezone',TYPE_INT);
+		$time = $time + $timezone * 60 * 60;
+		$timeformat = $this->config->getConfigByNameType ('general/timeformat',TYPE_STRING);
+		return date ($timeformat,$time);
+	}
+
+	function getUTCtime () {
+		$time = time ();
+		$UTCtime = $time - (date ('Z'));
+		return $UTCtime;
+	}
+
+	function catchError ($exc,$link,$message,$moreinf) {
+		if ($exc->fatal) {
+			$link .= 'error=' . $message;
+			$link .= '<ul>';
+			while ($exc != NULL) {
+				$link .= '<li>' . $exc->getMessage () . '</li>';
+				$exc = $exc->getNext ();
+			}
+			$link .= '</ul>';
+		} else {
+			$link .= 'warning=' . 'Your action can be not completed: ' . $exc->getMessage ();
+		}
+		if (($moreinf == true) and (isset ($exc->debuginfo))) {
+			$link .= ': ' . $exc->debuginfo;
+		}
+		return $link;
+	}
 } /* CSkin */
 ?>

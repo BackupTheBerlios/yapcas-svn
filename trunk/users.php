@@ -15,11 +15,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-if (!defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
-}
-include ('kernel/functions.php');
-init ();
+include ('kernel/skin.class.php');
+$skin = new CSkin ();
 
 if (!empty ($_GET['action'])) {
 	$action = $_GET['action'];
@@ -31,7 +28,7 @@ try {
 }
 catch (exceptionlist $e) {
 	// this is a big errror so $errorep = true
-	$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t view this page'),true);
+	$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t view this page'),true);
 	$database->close ();
 	$skin->redirect ($link);
 }
@@ -72,7 +69,7 @@ switch ($action) {
 			$database->close ();
 			// FIXME
 			// save some loginthings like username in a cookie and retrieve them later??
-			$link = catch_error ($e,'index.php?',$lang->translate ('You are not logged in'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You are not logged in'),$errorrep);
 			$skin->redirect ($link);
 		}
 		break;
@@ -84,7 +81,7 @@ switch ($action) {
 		}
 		catch (exceptionlist $e) {
 			$database->close ();
-			$link = catch_error ($e,'index.php?',$lang->translate ('You are not logged out'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You are not logged out'),$errorrep);
 			$skin->redirect ($link);
 		}
 		break;
@@ -94,7 +91,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$skin->redirect ($link);
 		}
 		break;
@@ -121,7 +118,7 @@ switch ($action) {
 			$skin->redirect ($link); 
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'users.php?action=registerform&',
+			$link = $skin->catchError ($e,'users.php?action=registerform&',
 				$lang->translate ('You are not registerd'),$errorrep);
 			$skin->redirect ($link); 
 		}
@@ -148,7 +145,7 @@ switch ($action) {
 			$skin->redirect ($link);
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',
+			$link = $skin->catchError ($e,'index.php?',
 				$lang->translate ('Your password isn\'t send'),$errorrep);
 			$skin->redirect ($link); 
 		}
@@ -167,9 +164,9 @@ switch ($action) {
 			$threaded = (! empty ($_POST[POST_THREADED])) ? YES : NO;
 			$user->setconfig (FIELD_USERS_PROFILE_THEME,$_POST[POST_THEME]);
 			$user->setconfig (FIELD_USERS_PROFILE_THREADED,$threaded);
-			$UILang = lang2code ($_POST[POST_UILANGUAGE]);
+			$UILang = $lang->lang2code ($_POST[POST_UILANGUAGE]);
 			$user->setconfig (FIELD_USERS_PROFILE_UILANGUAGE,$UILang);
-			$contentLang = lang2code ($_POST[POST_CONTENTLANGUAGE]);
+			$contentLang = $lang->lang2code ($_POST[POST_CONTENTLANGUAGE]);
 			$user->setconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE,$contentLang);
 			$mail['webmaster'] = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$mail['cmail']['subject'] = $lang->translate ('You must activate your mail');
@@ -211,7 +208,7 @@ switch ($action) {
 			}
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'users.php?action=changeoptionsform&',
+			$link = $skin->catchError ($e,'users.php?action=changeoptionsform&',
 				$lang->translate ('Options are not saved or saved partionelly'),$errorrep);
 			$skin->redirect ($link);
 		}
@@ -234,7 +231,7 @@ switch ($action) {
 			$skin->redirect ($link);
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php&',
+			$link = $skin->catchError ($e,'index.php&',
 				$lang->translate ('Your account is not activated'),$errorrep);
 			$skin->redirect ($link);
 		}

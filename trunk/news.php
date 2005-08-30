@@ -15,8 +15,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-include ('kernel/functions.php');
-init ();
+include ('kernel/skin.class.php');
+$skin = new CSkin ();
 
 if (! empty ($_GET['action'])) {
 	$action = $_GET['action'];
@@ -28,7 +28,7 @@ try {
 }
 catch (exceptionlist $e) {
 	// this is a big errror so $errorep = true
-	$link = catch_error ($e,'index.php?','error in subsystem',true);
+	$link = $skin->catchError ($e,'index.php?','error in subsystem',true);
 	$database->close ();
 	$theme->redirect ($link);
 }
@@ -39,7 +39,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('Your action has no effect'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('Your action has no effect'),$errorrep);
 			$database->close ();
 			$skin>redirect ($link);
 		}
@@ -50,7 +50,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -100,7 +100,7 @@ switch ($action) {
 				'&note=' . $lang->translate ('Your comment is posted'));
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('Your comment is not posted'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('Your comment is not posted'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -142,7 +142,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('Your message is not posted'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('Your message is not posted'),$errorrep);
 			$database->close ();
 			$link = $skin->redirect ($link);
 		}
@@ -153,7 +153,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -194,7 +194,7 @@ switch ($action) {
 			$skin->redirect ('index.php?note=' . $lang->translate ('Your message is edited'));
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('Your message is not edited'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('Your message is not edited'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -205,7 +205,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -246,7 +246,7 @@ switch ($action) {
 			$skin->redirect ('index.php?note=' . $lang->translate ('Your newsitem is edited'));
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('Your newsitel is not edited'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('Your newsitel is not edited'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -257,7 +257,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -277,7 +277,7 @@ switch ($action) {
 			echo $news->showFeed ($meta,$category,'RSS2');
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('error running feed'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('error running feed'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
@@ -288,7 +288,7 @@ switch ($action) {
 			$database->close ();
 		}
 		catch (exceptionlist $e) {
-			$link = catch_error ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
+			$link = $skin->catchError ($e,'index.php?',$lang->translate ('You can\'t open this page'),$errorrep);
 			$database->close ();
 			$skin->redirect ($link);
 		}
