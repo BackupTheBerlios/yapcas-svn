@@ -396,20 +396,22 @@ class CNews {
 	 * shows the feed
 	 *
 	 * @param array $meta some metatags
+	 * @param string $cleanFunction the name of the function to clean messages (remove formmating)
 	 * @param string $category the categoy of the headlines you want, if not all categories will be searched
 	 * @todo multiple categories you want to search in
 	 * @param string $method the method you want to view it
 	 * @todo add an Atom 1.0 feed
+	 * @todo add the author his emailadress (in RSS2)
 	 * @return string
 	*/
-	public function showFeed ($meta,$category = NULL,$method = 'RSS2') {
+	public function showFeed ($meta,$cleanFunction,$category = NULL,$method = 'RSS2') {
 		if (! empty ($category)) {
 			$meta['category'] = $category;
 		}
 		$headlines = $this->getHeadlines ($meta['maxheadlines'],$category);
 		switch ($method) {
 			default:
-				$output = $this->generateRSS ($meta,$headlines);
+				$output = $this->generateRSS ($meta,$headlines,$cleanFunction);
 		}
 		return $output;
 	} /* public function showFeed ($meta,$category = NULL,$method = 'RSS2') */
@@ -421,9 +423,10 @@ class CNews {
 	 *
 	 * @param array $meta some meta vars
 	 * @param array $headlines the headlines in the feed
+	 * @param string $cleanFunction the name of the function to clean messages (remove formmating)
 	 * @return string
 	*/
-	private function generateRSS ($meta,$headlines) {
+	private function generateRSS ($meta,$headlines,$cleanFunction) {
 		header ('Content-type: application/xml');
 		$output = '<?xml version="1.0"?>';
 		$output .= '<rss version="2.0">';
@@ -439,10 +442,7 @@ class CNews {
 
 		foreach ($headlines as $headline) {
 			$formattedMessage = $headline[FIELD_NEWS_MESSAGE];
-			$formattedMessage = preg_replace ('/\[quote\](.+?)\[\/quote\]/','',$formattedMessage);
-			$formattedMessage = preg_replace ('/\[b\](.+?)\[\/b\]/','',$formattedMessage);
-			$formattedMessage = preg_replace ('/\[u\](.+?)\[\/u\]/','',$formattedMessage);
-			$formattedMessage = preg_replace ('/\[i\](.+?)\[\/i\]/','',$formattedMessage);
+			$formattedMessage = call_user_func ($cleanFunction,$formattedMessage);
 			$output .= '<item>';
 			$output .= '<title>';
 				$output .= $headline[FIELD_NEWS_SUBJECT];
@@ -453,9 +453,9 @@ class CNews {
 			$output .= '<description>';
 				$output .= $formattedMessage;
 			$output .= '</description>';
-			$output .= '<author>';
+			/*$output .= '<author>';
 				$output .= $headline[FIELD_NEWS_AUTHOR];
-			$output .= '</author>';
+			$output .= '</author>';*/
 			$output .= '<category>';
 				$output .= $headline[FIELD_NEWS_CATEGORY];
 			$output .= '</category>';

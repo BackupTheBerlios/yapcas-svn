@@ -28,7 +28,7 @@
 * @version 0.4cvs
 * @author Nathan Samson
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
-* @todo cleanup the code
+* @todo rewrite navigation system, with groups of links
 */
 class CSkin {
 	function __construct () {
@@ -156,7 +156,8 @@ class CSkin {
 		$this->themedir = $themedir;
 		if (file_exists ('themes/' . $this->themedir . '/theme.php')) {
 			include_once ('themes/' . $this->themedir . '/theme.php');
-			if ($this->version_cms != version) {
+			if ((version_compare ($this->minVersion,version,'<=')) and
+				(version_compare ($this->maxVersion,version,'>='))) {
 				//$this->config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/theme',0);
 				$this->themedir = 'moderngray';//$this->config->getConfigByNameType ('general/theme',TYPE_STRING);
 				include_once ('themes/' . $this->themedir . '/theme.php');
@@ -1310,7 +1311,8 @@ class CSkin {
 	}
 
 	private function parse (&$text) {
-		preg_match_all ('/&(.*);/',$text,$matches);
+		// it may include a dot
+		preg_match_all ('/&(\w{1,}(\.){0,1}\w{0,});/',$text,$matches);
 		foreach ($matches[0] as $number => $match) {
 			if (key_exists ($matches[1][$number],$this->items)) {
 				$item = $this->items[$matches[1][$number]];

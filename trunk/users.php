@@ -101,10 +101,10 @@ switch ($action) {
 				TYPE_BOOL);
 			if ($activatemail == true) {
 				$mail['subject'] = $lang->translate ('You must activate your email');
-				$mail['message'] = $lang->translate ('Hello %n \n. Thanks for registering on %s \n. Click on the following link to activate your mail %d \n.');
+				$mail['message'] = $lang->translate ('Hello %n. '.NL.'Thanks for registering on %s. '.NL.'Click on the following link to activate your mail %d .'.NL);
 			} else {
 				$mail['subject'] = $lang->translate ('Thanks for registering');
-				$mail['message'] = $lang->translate ('Hello %n \n.Thanks for registering on %s \n. We hope to see you soon on our website');
+				$mail['message'] = $lang->translate ('Hello %n. '.NL.'Thanks for registering on %s. '.NL.' We hope to see you soon on our website');
 			}
 			$webmastermail = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$user->register ($_POST[POST_NAME],$_POST[POST_PASSWORD1],
@@ -137,7 +137,7 @@ switch ($action) {
 				$username = $_POST[POST_NAME];
 			}
 			$cmail['subject'] = $lang->translate ('New password');
-			$cmail['message'] = $lang->translate ('Hello %n \n.Your password is changed on %s \n.New password is: %p\n. Username is: %n');
+			$cmail['message'] = $lang->translate ('Hello %n. '.NL.'Your password is changed on %s. '.NL.'New password is: %p.'.NL.'Username is: %n');
 			$webmastermail = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$user->lostpasw ($mail,$username,$cmail,$webmastermail); 
 			$database->close ();
@@ -170,9 +170,9 @@ switch ($action) {
 			$user->setconfig (FIELD_USERS_PROFILE_CONTENTLANGUAGE,$contentLang);
 			$mail['webmaster'] = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$mail['cmail']['subject'] = $lang->translate ('You must activate your mail');
-			$mail['cmail']['message'] = $lang->translate ('Hello %n \n. You have changed your
-				email-adress %s \n. Click on the following link to activate
-				your mail %d \n.');
+			$mail['cmail']['message'] = $lang->translate ('Hello %n .'.NL.' You have changed your
+				email-adress %s '.NL.' Click on the following link to activate
+				your mail %d .');
 			$user->setconfig (FIELD_USERS_PROFILE_EMAIL,$_POST[POST_EMAIL],TBL_USERS,$mail);
 			$user->setconfig (FIELD_USERS_PROFILE_TIMEZONE,$_POST[POST_TIMEZONE]);
 			$user->setconfig (FIELD_USERS_PROFILE_TIMEFORMAT,$_POST[POST_TIMEFORMAT]);
@@ -226,7 +226,10 @@ switch ($action) {
 			if (empty ($_GET['id'])) {
 				throw new exceptionlist ($lang->translate ('ID must be set'));
 			}
-			$user->activate ($_GET['id']);
+			if (empty ($_GET['name'])) {
+				throw new exceptionlist ($lang->translate ('name must be set'));
+			}
+			$user->activate ($_GET['id'],$_GET['name']);
 			$link = 'index.php?note=' . $lang->translate ('Your account is activated, you can login now');
 			$skin->redirect ($link);
 		}

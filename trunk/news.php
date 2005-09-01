@@ -23,6 +23,17 @@ if (! empty ($_GET['action'])) {
 } else {
 	$skin->redirect ('index.php');
 }
+
+function clean ($text) {
+	preg_match_all ('/\[(.*)\](.*)\[\/(.*)\]/si',$text,$matches);
+	foreach ($matches[0] as $key => $match) {
+		if ($matches[1][$key] == $matches[3][$key]) {
+			$text = str_replace ($match,$matches[2][$key],$text);
+		}
+	}
+	return $text;
+}
+
 try {
 	$errorrep = $config->getConfigByNameType ('general/errorreporting',TYPE_INT);
 }
@@ -266,15 +277,14 @@ switch ($action) {
 		try {
 			$meta['title'] = $config->getConfigByNameType ('general/sitename',TYPE_STRING);
 			$meta['description'] = $config->getConfigByNameType ('general/description',TYPE_STRING);
-			$meta['link'] = $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"];
-			$meta['link'] = ereg_replace ('news.php','',$meta['link']);
+			$meta['link'] = 'http://'.$_SERVER["HTTP_HOST"];
 			$meta['maxheadlines'] = $config->getConfigByNameType ('news/postsonpage',TYPE_NUMERIC);
 			if (! empty ($_GET[GET_CATEGORY])) {
 				$category = $_GET[GET_CATEGORY];
 			} else {
 				$category = NULL;
 			}
-			echo $news->showFeed ($meta,$category,'RSS2');
+			echo $news->showFeed ($meta,'clean',$category,'RSS2');
 		}
 		catch (exceptionlist $e) {
 			$link = $skin->catchError ($e,'index.php?',$lang->translate ('error running feed'),$errorrep);

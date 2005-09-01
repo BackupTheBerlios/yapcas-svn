@@ -97,11 +97,12 @@ Eerste release
 + scheiding van de interface taal en de inhoudstaal
 + Bug fixes
 	* #00023
+	* BBCode wordt niet meer getoond in RSS feed
+	* newlines zijn geen \n meer in mails
 + Interne wijziging::database
 	* het maken van een database-component is nu anders, geavanceerder
 TODO
 ----
-+ Herwerken van themes systeem
 + Extensies mogelijk maken
 + verwijderen van configClass in de databases
 + Rechten/Groepen systeem schrijven

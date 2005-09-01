@@ -362,7 +362,7 @@ class CUser {
 			$this->database->query ($sql);
 			// FIXME link
 			$cmail['message'] = ereg_replace ('%d',
-				'http://yapcas.localhost/users.php?action=activate&id='.$id,
+				'http://yapcas.localhost/users.php?action=activate&id='.$id.'&name='.$username,
 				$cmail['message']);
 		} else {
 			// $cmail;
@@ -382,13 +382,16 @@ class CUser {
 	 * @param string $username
 	 * @param string $password1
 	 * @param string $password2 check for $password1
-	 * @param string $curpassword check for the currentpassword
-	 * @todo implement $curpassword
+	 * @param string $curPassword check for the currentpassword
 	*/
-	public function setNewPassword ($username,$password1,$password2,$curpassword = NULL) {
-		$exception = NULL;
+	public function setNewPassword ($username,$password1,$password2,$curPassword = NULL) {
 		if ($password1 != $password2) {
 			throw new exceptionlist ($this->lang->translate ('Password not changed, 2 paswwords are not equal'));
+		}
+		if ($curPassword != NULL) {
+			if ($curPassword != $_SESSION[SESSION_PASSWORD]) {
+				throw new exceptionlist ($this->lang->translate ('Password not changed, old password is not correct'));
+			}
 		}
 		$sql = 'UPDATE ' . TBL_USERS . ' SET ' . FIELD_USERS_PASSWORD;
 		$sql .= '=\'' . md5($password1) . '\'';
@@ -515,25 +518,26 @@ class CUser {
 	 * activates an account
 	 *
 	 * @param string $id the registrating id
-	 * @todo ads param $user foor extra check
+	 * @param string $user the username of the person who wants to activate his account
 	*/
-	public function activate ($id) {
+	public function activate ($id,$user) {
 		$sql = 'SELECT * FROM ' . TBL_ACTIVATE_QUEUE;
 		$sql .= ' WHERE ' . FIELD_ACTIVATE_QUEUE_ID . '=\'' . $id . '\'';
+		$sql .= ' AND ' . FIELD_ACTIVATE_QUEUE_NAME . '=\'' . $user . '\'';
 		$query = $this->database->query ($sql);
 		if ($this->database->num_rows ($query) == 0) {
-			throw new exceptionlist ($this->lang->translate ('ID not found'));
+			throw new exceptionlist ($this->lang->translate ('ID and/or username not found'));
 		}
-		$activate = $this->database->fetch_array ($query);
 		$sql = 'UPDATE ' . TBL_USERS;
 		$sql .= ' SET ' . FIELD_USERS_ACTIVATE . '=\'' . YES . '\'' ;
 		$sql .= ' WHERE ' . FIELD_USERS_NAME . '=\'' .
-			$activate[FIELD_ACTIVATE_QUEUE_USER] . '\'';
+			$user . '\'';
 		$this->database->query ($sql);
 		$sql = 'DELETE FROM ' . TBL_ACTIVATE_QUEUE;
 		$sql .= ' WHERE ' . FIELD_ACTIVATE_QUEUE_ID . '=\'' . $id . '\'';
+		$sql .= ' AND ' . FIELD_ACTIVATE_QUEUE_NAME . '=\'' . $user . '\'';
 		$this->database->query ($sql);
-	} /* public function activate ($id) */
+	}
 
 	/**
 	 * get all usernames from all user who have a public account
@@ -607,7 +611,7 @@ class CUser {
 		$this->database->query ($sql);
 		// FIXME link
 		$cmail['message'] = ereg_replace ('%d',
-			'http://yapcas.localhost/users.php?action=activate&id='.$id,
+			'http://yapcas.localhost/users.php?action=activate&id='.$id.'&name='.$username,
 			$cmail['message']);
 		// FIXME sitenmae
 		$this->sitename = 'YaPCaS';
