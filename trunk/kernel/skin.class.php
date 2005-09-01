@@ -63,7 +63,15 @@ class CSkin {
 			$dbType = $config->getConfigByNameType ('general/databasetype',TYPE_STRING);
 			$dbclass = new CDatabase ();
 			$database = $dbclass->load ($dbType,$config,'site.config.php');
-			$database->connect ();
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/host','localhost');
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/user',0);
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/password',0);
+			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'database/name',0);
+			$host = $config->getConfigByNameType ('database/host',TYPE_STRING);
+			$user = $config->getConfigByNameType ('database/user',TYPE_STRING);
+			$password = $config->getConfigByNameType ('database/password',TYPE_STRING);
+			$dbname = $config->getConfigByNameType ('database/name',TYPE_STRING);
+			$database->connect ($host,$user,$password,$dbname);
 			// TODO
 			$tables = array ();
 			if (checkDatabase ($database,$tables)) {

@@ -35,8 +35,8 @@ function checkDatabase ($database,$tables) {
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 interface IDatabase {
-	public function __construct (&$config,$file);
-	public function connect ();
+	public function __construct ();
+	public function connect ($host,$user,$password,$database);
 	public function close ();
 	public function query ($sql,$fatal = false);
 	public function fetch_array ($result);

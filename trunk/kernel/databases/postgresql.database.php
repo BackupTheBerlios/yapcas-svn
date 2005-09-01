@@ -27,6 +27,7 @@ if (function_exists ('pg_connect')) {
 	$supported['postgresql 8'] = 'Database_postgresql';
 }
 
+if (array_search ('Database_postgresql',$supported,true)) {
 /**
 * class that take care of the database (PostgreSQL) SubSystem
 *
@@ -34,15 +35,9 @@ if (function_exists ('pg_connect')) {
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 class Database_postgresql implements IDatabase {
-	public function __construct (&$config,$file) {
+	public function __construct () {
 		include_once ('kernel/exception.class.php');
-		$config->addConfigByFileName ($file,TYPE_STRING,'database/host',0);
-		$config->addConfigByFileName ($file,TYPE_STRING,'database/user',0);
-		$config->addConfigByFileName ($file,TYPE_STRING,'database/password',0);
-		$config->addConfigByFileName ($file,TYPE_STRING,'database/name',0);
-
-		$this->config = $config;
-	} /* public function __construct (&$config,$file) */
+	}
 
 	private function error () {
 		//if ($this->config->getConfigByNameType ('general/errorreporting',TYPE_INT) == E_ALL) {
@@ -50,11 +45,11 @@ class Database_postgresql implements IDatabase {
 		//}
 	} /* private function error () */
 
-	public function connect () {
-		$link = 'user='.$this->config->getConfigByNameType ('database/user',TYPE_STRING);
-		$link .=' password='.$this->config->getConfigByNameType ('database/password',TYPE_STRING);
-		$link .= ' dbname='.$this->config->getConfigByNameType ('database/name',TYPE_STRING);
-		$link .= ' host=localhost';
+	public function connect ($host,$user,$password,$database) {
+		$link = 'user='.$user;
+		$link .=' password='.$password;
+		$link .= ' dbname='.$database;
+		$link .= ' host='.$host;
 		$this->connection = pg_connect ($link);
 		if ($this->connection == false) {
 			throw new exceptionlist ('No db connection established',$this->error (),1);
@@ -103,5 +98,6 @@ class Database_postgresql implements IDatabase {
 	public function num_rows ($result) {
 		return pg_num_rows ($result);
 	} /* public function num_rows */
-} // class database
+} // class Database_postgresql
+}
 ?>

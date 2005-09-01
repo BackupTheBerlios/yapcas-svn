@@ -31,6 +31,7 @@ if (function_exists ('mysqli_connect')) {
 	//$supported['mysqli 5'] = 'Database_mysqli';
 }
 
+if (array_search ('Database_mysql',$supported,true)) {
 /**
 * class that take care of the database (MySQL) SubSystem
 *
@@ -38,15 +39,9 @@ if (function_exists ('mysqli_connect')) {
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 class Database_mysql implements IDatabase {
-	public function __construct (&$config,$configfile) {
+	public function __construct () {
 		include_once ('kernel/exception.class.php');
-		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/host',0);
-		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/user',0);
-		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/password',0);
-		$config->addConfigByFileName ($configfile,TYPE_STRING,'database/name',0);
-
-		$this->config = $config;
-	} /* function database (&$config,$configfile) */
+	}
 
 	private function error () {
 		//if ($this->config->getConfigByNameType ('general/errorreporting',TYPE_INT) == E_ALL) {
@@ -54,19 +49,14 @@ class Database_mysql implements IDatabase {
 		//}
 	} /* function error () */
 
-	public function connect () {
-		$this->connection = mysql_connect (
-			$this->config->getConfigByNameType ('database/host',TYPE_STRING),
-			$this->config->getConfigByNameType ('database/user',TYPE_STRING),
-			$this->config->getConfigByNameType ('database/password',TYPE_STRING));
+	public function connect ($host,$user,$password,$database) {
+		mysql_connect ($host,$user,$password,$database);
 		if ($this->connection == false) {
 			throw new exceptionlist ("No database connection established", 
 				': '.$this->error ().': '.__FILE__.': '.__FUNCTION__.': '.
 				__LINE__,1,true,true);
 		} else {
-			$succeed = mysql_select_db (
-				$this->config->getConfigByNameType('database/name',TYPE_STRING),
-				$this->connection );
+			$succeed = mysql_select_db ($database,$this->connection);
 			if ($succeed == true) {
 				return true;
 			} else {
@@ -75,7 +65,7 @@ class Database_mysql implements IDatabase {
 					__LINE__,2,true,true);
 			}
 		}
-	} /* function connect () */
+	}
 
 	public function close () {
 		mysql_close ($this->connection);
@@ -132,5 +122,6 @@ class Database_mysql implements IDatabase {
 	public function num_rows ($result) {
 		return mysql_num_rows ($result);
 	} /* function num_rows ($result) */
-} /* class database */
+} /* class Database_mysql */
+}
 ?>
