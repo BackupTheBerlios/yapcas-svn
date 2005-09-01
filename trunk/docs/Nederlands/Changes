@@ -97,6 +97,7 @@ Eerste release
 + scheiding van de interface taal en de inhoudstaal
 + Bug fixes
 	* #00023
+	* #00015
 	* BBCode wordt niet meer getoond in RSS feed
 	* newlines zijn geen \n meer in mails
 	* author moet een emailadress zijn in RSS2 maar de nieuwscode kan niet aan het emailadres geraken, dus deze tag is verwijderd

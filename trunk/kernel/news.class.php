@@ -167,7 +167,8 @@ class CNews {
 		$limit = $this->getLimitNews ($postsOnPage,$offset,$category);
 		$sql = 'SELECT * FROM ' . TBL_NEWS . ' INNER JOIN ' . TBL_CATEGORIES;
 		$sql .= ' ON (' . TBL_NEWS . '.' . FIELD_NEWS_CATEGORY . '=';
-		$sql .= TBL_CATEGORIES . '.' . FIELD_CATEGORIES_NAME . ')';
+		$sql .= TBL_CATEGORIES . '.' . FIELD_CATEGORIES_NAME;
+		$sql .= ' AND ' .TBL_NEWS .'.' .FIELD_NEWS_LANGUAGE.'='.TBL_CATEGORIES.'.'.FIELD_CATEGORIES_LANGUAGE .')';
 		$sql .= 'WHERE ' . TBL_NEWS . '.' . FIELD_NEWS_LANGUAGE . '=\'' . $this->contentLang . '\'';
 		if (! empty ($category)) {
 			$sql .= ' AND ' . FIELD_NEWS_CATEGORY . '=\'' . $category . '\' ';
