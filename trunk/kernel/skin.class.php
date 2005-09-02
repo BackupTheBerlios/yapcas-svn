@@ -29,6 +29,7 @@
 * @author Nathan Samson
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 * @todo rewrite navigation system, with groups of links
+* @todo change the installscript so that the admin user is created
 */
 class CSkin {
 	function __construct () {

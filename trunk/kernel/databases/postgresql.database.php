@@ -23,8 +23,9 @@
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 if (function_exists ('pg_connect')) {
-	$supported['postgresql 7.4'] = 'Database_postgresql';
-	$supported['postgresql 8'] = 'Database_postgresql';
+	$supported['PostgreSQL 6.5'] = 'Database_postgresql';
+	$supported['PostgreSQL 7.x'] = 'Database_postgresql';
+	$supported['PostgreSQL 8.x'] = 'Database_postgresql';
 }
 
 if (array_search ('Database_postgresql',$supported,true)) {

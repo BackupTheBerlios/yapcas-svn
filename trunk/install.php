@@ -15,20 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 */
-include ('kernel/functions.php');
-include ('kernel/config.class.php');
-if (! defined ('EXCEPTION_CLASS')) {
-	include ('kernel/exception.class.php');
-}
-
+include_once ('kernel/database.class.php');
+include_once ('kernel/exception.class.php');
+include_once ('kernel/language.class.php');
+include_once ('kernel/config.class.php');
+$database = new CDatabase ();
 function replacedbtypes ($databases) {
 	$option['open'] = '<select name="databasetype">';
 	$option['close'] = '</select>';
 	$option['option']  = '<option>%option</option>';
 	$output = $option['open'];
-	foreach ($databases as $db) {
+	foreach ($databases as $name => $db) {
 		$output .= $option['option'];
-		$output = ereg_replace ('%option',$db,$output);
+		$output = ereg_replace ('%option',$name,$output);
 	}
 	$output .= $option['close'];
 	return $output;
@@ -46,7 +45,7 @@ if (empty ($_POST['submit'])) {
 	$output = file_get_contents ('install.html');
 	$output = preg_replace ('#%(.+?)\.lang#','\\1',$output);
 	$output = preg_replace ('#%(.+?)\.name#','\\1',$output);
-	$output = ereg_replace ('%database.options',replacedbtypes (databasesinstalled ()),$output);
+	$output = ereg_replace ('%database.options',replacedbtypes ($database->getAllSupportedDatabases ()),$output);
 	echo $output;
 } else if ($_POST['submit'] == 'install') {
 	if (empty ($POST['activatemail'])) {
@@ -93,28 +92,29 @@ if (empty ($_POST['submit'])) {
 	fclose ($handle);
 	// do dbstuff
 	try {
-		$config = new config ();
-		loaddbclass ($_POST['databasetype']);
-		$database = new database ($config,'site.config.php');
-		$database->connect ();
+		$config = new CConfig ();
+		$d = $database->load ($_POST['databasetype']);
+		$d->connect ($_POST['databasehost'],$_POST['databaseuser'],$_POST['databasepassword'],$_POST['databasename']);
+		define ('TBL_PREFIX',$_POST['databaseprefix']);
 		$queries = file_get_contents ('kernel/sql/users.sql');
 		$queries .= file_get_contents ('kernel/sql/news.sql');
 		$queries .= file_get_contents ('kernel/sql/polls.sql');
 		$queries .= file_get_contents ('kernel/sql/basic.sql');
 		$queries .= file_get_contents ('kernel/sql/help.sql');
 		// TODO
-		$languages = languagesinstalled ();
-		foreach ($languages as $language) {
+		include_once ('kernel/language.class.php');
+		$languages = new CLang ();
+		foreach ($languages->installed () as $language) {
 			echo $language;
-			$lang = loadlang ($language);
+			$languages->update ($language);
 			$tmpquery = file_get_contents ('kernel/sql/basicpages.sql');
 			$tmpquery = ereg_replace ('%language%',$language,$tmpquery);
-			$tmpquery = ereg_replace ('%shown_logout%',$lang->translate ('logout'),$tmpquery);
-			$tmpquery = ereg_replace ('%shown_index%',$lang->translate ('Home'),$tmpquery);
-			$tmpquery = ereg_replace ('%shown_registerform%',$lang->translate ('Register'),$tmpquery);
-			$tmpquery = ereg_replace ('%shown_sendpasswordform%',$lang->translate ('Lost Password'),$tmpquery);
-			$tmpquery = ereg_replace ('%shown_changeoptionsform%',$lang->translate ('Edit Settings'),$tmpquery);
-			$tmpquery = ereg_replace ('%shown_viewuserlist%',$lang->translate ('Userlist'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_logout%',$languages->translate ('logout'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_index%',$languages->translate ('Home'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_registerform%',$languages->translate ('Register'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_sendpasswordform%',$languages->translate ('Lost Password'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_changeoptionsform%',$languages->translate ('Edit Settings'),$tmpquery);
+			$tmpquery = ereg_replace ('%shown_viewuserlist%',$languages->translate ('Userlist'),$tmpquery);
 			$queries .= $tmpquery;
 		}
 		$queries = ereg_replace ('%show_logout_in_nav%',Yes,$queries);
@@ -142,13 +142,16 @@ if (empty ($_POST['submit'])) {
 			$query = trim ($query);
 			if (! empty ($query)) {
 				echo $query . '<br />';
-				$database->query ($query);
+				$d->query ($query);
 			}
 		}
-		$database->close ();
+		include_once ('kernel/users.class.php');
+		$user = new CUser ($d,false,$lang);
+		//$user->register ();
+		$d->close ();
 	}
 	catch (exceptionlist $e) {
-		//echo $e->getMessage ();
+		echo $e->getMessage ();
 		echo $e->debuginfo;
 	}
 	echo '<b>delete install.php now</b>';

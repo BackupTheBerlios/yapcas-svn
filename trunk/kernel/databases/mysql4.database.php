@@ -23,12 +23,12 @@
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 if (function_exists ('mysql_connect')) {
-	$supported['mysql 3'] = 'Database_mysql';
-	$supported['mysql 4'] = 'Database_mysql';
+	$supported['MySQL 3.x'] = 'Database_mysql';
+	$supported['MySQL 4.x'] = 'Database_mysql';
 }
 if (function_exists ('mysqli_connect')) {
-	//$supported['mysqli 4.1'] = 'Database_mysqli';
-	//$supported['mysqli 5'] = 'Database_mysqli';
+	//$supported['MySQLi 4.1'] = 'Database_mysqli';
+	//$supported['MySQLi 5.x'] = 'Database_mysqli';
 }
 
 if (array_search ('Database_mysql',$supported,true)) {

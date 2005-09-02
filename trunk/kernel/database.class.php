@@ -60,21 +60,24 @@ class CDatabase {
 	}
 
 	public function getAllSupportedDatabases () {
-		$files = scandir ('kernel/databases/');
-		$supported = array ();
-		foreach ($files as $file) {
-			if ((preg_match ('/^\w.*\.database\.php$/i',$file) == 1) and
-				(is_file ('kernel/databases/' . $file))) {
-				include_once ('kernel/databases/' . $file);
+		if ($this->supported == NULL) {
+			$files = scandir ('kernel/databases/');
+			$supported = array ();
+			foreach ($files as $file) {
+				if ((preg_match ('/^\w.*\.database\.php$/i',$file) == 1) and
+					(is_file ('kernel/databases/' . $file))) {
+					include_once ('kernel/databases/' . $file);
+				}
 			}
+			$this->supported = $supported;
 		}
-		$this->supported = $supported;
+		return $this->supported;
 	}
 
-	public function load ($type,&$config,$file) {
+	public function load ($type) {
 		if (array_key_exists ($type,$this->supported)) {
 			$classname = $this->supported[$type];
-			$this->loadedDatabase = new $classname ($config,$file);
+			$this->loadedDatabase = new $classname ();
 			return $this->loadedDatabase;
 		} else {
 			throw new Exception ('Database not supported');
