@@ -1,6 +1,28 @@
 #!/bin/bash
 # $Id: makedoc.sh,v 1.9.2.1 2003/06/02 21:43:25 CelloG Exp $ 
 
+#/** 
+#  * name of a directory(s) to parse directory1,directory2
+#  * $PWD is the directory where makedoc.sh 
+#  *
+#  * @var               string PATH_PROJECT
+#  */
+PATH_PROJECT=/home/nathan/sites/yapcas/trunk/kernel
+
+#/**
+#  * path of PHPDoc executable
+#  *
+#  * @var               string PATH_PHPDOC
+#  */
+PATH_PHPDOC=~/sites/phpdocu/phpdoc
+
+#/**
+#  * where documentation will be put
+#  *
+#  * @var               string PATH_DOCS
+#  */
+PATH_DOCS=~/public_html/docu
+
 #/**
 #  * makedoc - PHPDocumentor script to save your settings
 #  * 
@@ -35,28 +57,6 @@ TITLE="YaPCaS Documentation"
 #  * @var               string PACKAGES
 #  */
 PACKAGES="YaPCaS"
-
-#/** 
-#  * name of a directory(s) to parse directory1,directory2
-#  * $PWD is the directory where makedoc.sh 
-#  *
-#  * @var               string PATH_PROJECT
-#  */
-PATH_PROJECT=/home/nathan/sites/yapcas/trunk/kernel
-
-#/**
-#  * path of PHPDoc executable
-#  *
-#  * @var               string PATH_PHPDOC
-#  */
-PATH_PHPDOC=~/sites/phpdocu/phpdoc
-
-#/**
-#  * where documentation will be put
-#  *
-#  * @var               string PATH_DOCS
-#  */
-PATH_DOCS=~/public_html/
 
 #/**
 #  * what outputformat to use (html/pdf)
