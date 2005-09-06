@@ -44,6 +44,7 @@ class CSkin {
 		// we need to have all debug info
 		// FIXME
 		if (! file_exists ('.install.php')) {
+			include_once ('kernel/constants.php');
 			include_once ('kernel/config.class.php');
 			include_once ('kernel/language.class.php');
 			$config = new CConfig ();
@@ -55,7 +56,6 @@ class CSkin {
 			include_once ('kernel/polls.class.php');
 			include_once ('kernel/exception.class.php');
 			include_once ('kernel/database.class.php');
-			include_once ('kernel/constants.php');
 			define ('TBL_PAGES',TBL_PREFIX . 'pages');
 			$config->addConfigByFileName ('site.config.php',TYPE_INT,'general/errorreporting',0);
 			$config->addConfigByFileName ('site.config.php',TYPE_STRING,'general/webmastermail',0);

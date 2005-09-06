@@ -19,6 +19,8 @@ include_once ('kernel/database.class.php');
 include_once ('kernel/exception.class.php');
 include_once ('kernel/language.class.php');
 include_once ('kernel/config.class.php');
+define ('NL',chr (10));
+define ('TAB',chr (9));
 $database = new CDatabase ();
 function replacedbtypes ($databases) {
 	$option['open'] = '<select name="databasetype">';
@@ -62,8 +64,8 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['general']['language'] = '$_POST[language]';" . NL . TAB;
 	$config .= "\$config['general']['langcode'] = 'en';" . NL . TAB;
 	$config .= "\$config['general']['theme'] = 'moderngray';" . NL . TAB;
-	$config .= "\$config['general']['databasetype'] = $_POST[databasetype];" . NL . TAB;
-	$config .= "\$config['general']['webmastermail'] = '$_POST[webmastermail]';" . NL . TAB;
+	$config .= "\$config['general']['databasetype'] = '$_POST[databasetype]';" . NL . TAB;
+	$config .= "\$config['general']['webmastermail'] = '$_POST[rootermail]';" . NL . TAB;
 	$config .= "\$config['general']['errorreporting'] = E_NONE;" . NL . TAB;
 	//$config .= '// database';
 	$config .= "\$config['database']['host'] = '$_POST[databasehost]';" . NL . TAB;
@@ -76,7 +78,7 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['news']['postsonpage'] = 5;" . NL . TAB;
 	$config .= "\$config['news']['threaded'] = true;" . NL . TAB;
 	//$config .= "// user" . NL . TAB;
-	$activatemail = $_POST['activatemail'] . NL . TAB;
+	$activatemail = $_POST['activatemail'];
 	if ($activatemail == YES) {
 		$activatemail = 'true' . NL . TAB;
 	} elseif ($activatemail == NO) {
@@ -146,8 +148,8 @@ if (empty ($_POST['submit'])) {
 			}
 		}
 		include_once ('kernel/users.class.php');
-		$user = new CUser ($d,false,$lang);
-		//$user->register ();
+		$user = new CUser ($d,false,$languages);
+		$user->register ($_POST['rootuser'],$_POST['rootpassword'],$_POST['rootpassword2'],$_POST['rootemail'],false,$_POST['rootemail']);
 		$d->close ();
 	}
 	catch (exceptionlist $e) {

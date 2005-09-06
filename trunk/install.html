@@ -10,7 +10,7 @@
 		<div class="box">
 			<p>
 				<object>
-					<form method="POST" action="install.php">
+					<form method="post" action="install.php">
 						%databasetype.lang: %database.options<br />
 						%databasehost.lang: <input type="text" name="%databasehost.name"/><br />
 						%databaseuser.lang: <input type="text" name="%databaseuser.name"/><br />
@@ -18,11 +18,14 @@
 						%databasename.lang: <input type="text" name="%databasename.name"/><br />
 						%databaseprefix.lang: <input type="text" name="%databaseprefix.name"/><br />
 						<!--<input type="submit" value="%testdbconn.lang" name="submit"/>-->
-						%webmastermail.lang: <input type="int" name="%webmastermail.name"/><br />
 						%servertimezone.lang: <input type="int" name="%servertimezone.name"/><br />
 						%sitename.lang: <input type="text" name="%sitename.name"/><br />
 						%description.lang: <input type="text" name="%description.name"/><br />
-						%activatemail.lang: %Yes.lang <input type="radio" value="Yes" name="activatemail"/>%No.lang <input type="radio" value="No" name="activatemail"/>
+						%activatemail.lang: %Yes.lang <input type="radio" value="Yes" name="activatemail"/>%No.lang <input type="radio" value="No" name="activatemail"/><br />
+						&lang.rootusername;: <input type="text" name="rootname"/><br />
+						&lang.rootpassword;: <input type="password" name="rootpassword"/><br />
+						&lang.rootpasswordrepeat;: <input type="password" name="rootpassword2"/><br />
+						&lang.rootemail;: <input type="text" name="rootemail"/><br />
 						<input type="hidden" name="%language.name" value="dutch"/>
 						<input type="submit" value="%install.lang" name="submit"/>
 					</form>

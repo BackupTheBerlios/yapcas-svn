@@ -296,8 +296,8 @@ class CUser {
 	 * @param string $username
 	 * @param string $password
 	 * @param string $controlpass check for $password
-	 * @param string $mail
-	 * @param array $cmail content of the mail send to the user
+	 * @param string $email the mail adress of the user
+	 * @param array|bool $cmail content of the mail send to the user if false, no mail is send
 	 * @param string $webmastermail the mail of the webmaster
 	*/
 	public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) {
@@ -348,7 +348,7 @@ class CUser {
 		$sql .= ' ('. FIELD_USERS_PROFILE_NAME .')';
 		$sql .= ' VALUES (\'' .$name. '\')';
 		$this->database->query ($sql);
-		if ($this->mustactivate == true ) {
+		if ($this->mustactivate == true) {
 			// put it in the queue
 			$sql = 'INSERT INTO ' . TBL_ACTIVATE_QUEUE;
 			$fields = array (FIELD_ACTIVATE_QUEUE_USER,
@@ -367,13 +367,15 @@ class CUser {
 		} else {
 			// $cmail;
 		}
-		// FIXME sitenmae
-		$this->sitename = 'YaPCaS';
-		$cmail['message'] = ereg_replace ('%s',$this->sitename,$cmail['message']);
-		$cmail['message'] = ereg_replace ('%n',$name,$cmail['message']);
-		$headers = 'From: ' .$webmastermail;//.'\r\n';
-		$headers = 'Reply-to: ' .$webmastermail;
-		mail ($email,$cmail['subject'],$cmail['message'],$headers);
+		if ($cmail !== false) {
+			// FIXME sitenmae
+			$this->sitename = $cmail['sitename'];
+			$cmail['message'] = ereg_replace ('%s',$this->sitename,$cmail['message']);
+			$cmail['message'] = ereg_replace ('%n',$name,$cmail['message']);
+			$headers = 'From: ' .$webmastermail . "\r\n";
+			$headers = 'Reply-to: ' .$webmastermail;
+			mail ($email,$cmail['subject'],$cmail['message'],$headers);
+		}
 	} /* public function register ($username,$password,$controlpass,$email,$cmail,$webmastermail) */
 
 	/**
