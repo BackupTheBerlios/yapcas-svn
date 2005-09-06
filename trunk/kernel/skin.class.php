@@ -393,6 +393,7 @@ class CSkin {
 		$sql = 'SELECT ' . FIELD_PAGES_SHOWN_NAME . ',' . FIELD_PAGES_LINK;
 		$sql .= ' FROM '  . TBL_PAGES;
 		$sql .= ' WHERE ' . FIELD_PAGES_IN_NAVIGATION . '=\'' . YES . '\'';
+		$sql .= ' AND ' . FIELD_PAGES_PARENT . '=\'__PARENT__\'';
 		if ($usernav != true) {
 			$sql .= ' AND ' . FIELD_PAGES_IN_USER_NAVIGATION . '=\'' . NO . '\'';
 		} else {

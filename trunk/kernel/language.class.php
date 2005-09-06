@@ -27,6 +27,7 @@
 *
 * @package lang
 * @author Nathan Samson
+* @todo fix loading of other languages
 */
 class CLang {
 	function __construct ($lang = 'english') {
@@ -41,6 +42,7 @@ class CLang {
 		} else {
 			/**/
 		}
+		$this->prefLang = $l;
 	}
 
 	function translate ($string) {
@@ -83,6 +85,14 @@ class CLang {
 			}
 		}
 		return $installed;
+	}
+
+	public function getPrefLang () {
+		return $this->prefLang ();
+	}
+
+	public function getPrefLangCode () {
+		return $this->lang2code ($this->getPrefLang ());
 	}
 }
 ?>

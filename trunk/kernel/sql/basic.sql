@@ -5,5 +5,6 @@ CREATE TABLE %prefix%pages (
   shown_name varchar (50) NOT NULL,
   show_in_nav varchar (50) NOT NULL default 'Yes',
   show_in_user_nav varchar (50) NOT NULL default 'No',
+  /*parent varchar (50) NOT NULL default '__PARENT__',*/
   PRIMARY KEY  (name,language)
 );

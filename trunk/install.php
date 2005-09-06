@@ -110,7 +110,7 @@ if (empty ($_POST['submit'])) {
 			echo $language;
 			$languages->update ($language);
 			$tmpquery = file_get_contents ('kernel/sql/basicpages.sql');
-			$tmpquery = ereg_replace ('%language%',$language,$tmpquery);
+			$tmpquery = ereg_replace ('%language%',$lang->getPrefLangCode (),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_logout%',$languages->translate ('logout'),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_index%',$languages->translate ('Home'),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_registerform%',$languages->translate ('Register'),$tmpquery);

@@ -106,6 +106,7 @@ switch ($action) {
 				$mail['subject'] = $lang->translate ('Thanks for registering');
 				$mail['message'] = $lang->translate ('Hello %n. '.NL.'Thanks for registering on %s. '.NL.' We hope to see you soon on our website');
 			}
+			$mail['website'] = $config->getConfigByNameType ('general/sitename');
 			$webmastermail = $config->getConfigByNameType ('general/webmastermail',TYPE_STRING);
 			$user->register ($_POST[POST_NAME],$_POST[POST_PASSWORD1],
 				$_POST[POST_PASSWORD2],$_POST[POST_EMAIL],$mail,$webmastermail);

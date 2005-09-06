@@ -35,6 +35,7 @@ define ('FIELD_PAGES_IN_NAVIGATION','show_in_nav');
 define ('FIELD_PAGES_IN_USER_NAVIGATION','show_in_user_nav');
 define ('FIELD_PAGES_LINK','name');
 define ('FIELD_PAGES_SHOWN_NAME','shown_name');
+define ('FIELD_PAGES_PARENT','parent');
 
 
 define ('GET_OFFSET','offset');
