@@ -88,7 +88,7 @@ class CLang {
 	}
 
 	public function getPrefLang () {
-		return $this->prefLang ();
+		return $this->prefLang;
 	}
 
 	public function getPrefLangCode () {

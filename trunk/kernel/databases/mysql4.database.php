@@ -50,7 +50,7 @@ class Database_mysql implements IDatabase {
 	} /* function error () */
 
 	public function connect ($host,$user,$password,$database) {
-		mysql_connect ($host,$user,$password,$database);
+		$this->connection = mysql_connect ($host,$user,$password,$database);
 		if ($this->connection == false) {
 			throw new exceptionlist ("No database connection established", 
 				': '.$this->error ().': '.__FILE__.': '.__FUNCTION__.': '.

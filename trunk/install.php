@@ -61,8 +61,8 @@ if (empty ($_POST['submit'])) {
 	$config .= "\$config['general']['timeformat'] = 'H:i:s d/m/y';" . NL . TAB;
 	$config .= "\$config['general']['sitename'] = '$_POST[sitename]';" . NL . TAB;
 	$config .= "\$config['general']['description'] = '$_POST[description]';" . NL . TAB;
-	$config .= "\$config['general']['language'] = '$_POST[language]';" . NL . TAB;
-	$config .= "\$config['general']['langcode'] = 'en';" . NL . TAB;
+	$config .= "\$config['general']['contentlanguage'] = 'en';" . NL . TAB;
+	$config .= "\$config['general']['uilanguage'] = 'en';" . NL . TAB;
 	$config .= "\$config['general']['theme'] = 'moderngray';" . NL . TAB;
 	$config .= "\$config['general']['databasetype'] = '$_POST[databasetype]';" . NL . TAB;
 	$config .= "\$config['general']['webmastermail'] = '$_POST[rootermail]';" . NL . TAB;
@@ -80,12 +80,12 @@ if (empty ($_POST['submit'])) {
 	//$config .= "// user" . NL . TAB;
 	$activatemail = $_POST['activatemail'];
 	if ($activatemail == YES) {
-		$activatemail = 'true' . NL . TAB;
+		$activatemail = 'true';
 	} elseif ($activatemail == NO) {
-		$activatemail = 'false' . NL . TAB;
+		$activatemail = 'false';
 	} else {
 		// Can never happen
-		$activatemail = 'true'  . NL . TAB;
+		$activatemail = 'true';
 	}
 	$config .= "\$config['user']['activatemail'] = $activatemail;" . NL;
 	$config .= '?>';
@@ -110,7 +110,7 @@ if (empty ($_POST['submit'])) {
 			echo $language;
 			$languages->update ($language);
 			$tmpquery = file_get_contents ('kernel/sql/basicpages.sql');
-			$tmpquery = ereg_replace ('%language%',$lang->getPrefLangCode (),$tmpquery);
+			$tmpquery = ereg_replace ('%language%',$languages->getPrefLangCode (),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_logout%',$languages->translate ('logout'),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_index%',$languages->translate ('Home'),$tmpquery);
 			$tmpquery = ereg_replace ('%shown_registerform%',$languages->translate ('Register'),$tmpquery);
