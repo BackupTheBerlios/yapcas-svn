@@ -32,7 +32,7 @@ $this->items['thread.close'] = '</div>';
 $this->items['message.error'] = '<p class="note">{message error}</p>';
 $this->items['message.warning'] = '<p class="note">{message warning}</p>';
 $this->items['message.note'] = '<p class="note">{message note}</p>';
-$this->items['navigation.item'] = '<a href="{navigation link}">{navigation name}</a> ';
+$this->items['navigation.item'] = '<a href="{navigation link}">{navigation itemname}</a> ';
 $this->items['user.userform'] = '{include userform.html}';
 $this->items['poll.choice'] = '{choice text}: <input name="voted_on" type="radio" value="{choice number}" /><br />';
 $this->items['poll.result'] = '{choice text}: {choice resultprocent}% <br />' ;
@@ -51,6 +51,7 @@ $this->items['help.indexitem'] = '<div id="{helpindex id}">{helpindex name}<br /
 $this->items['help.indexquestion'] = '<a href="{indexquestion link}">{indexquestion question}</a>';
 $this->items['help.faqcategory'] = '<div id="{helpindex id}">{helpindex name}<br />{helpindex questions}<br />{helpindex categories}</div>';
 $this->items['help.faqquestion'] = '<div id="{indexquestion id}"><b>&lang.question;: </b>{indexquestion question}<br /><b>&lang.anwser;:</b> {indexquestion answer}</div>';
+$this->items['navigation.cat'] = '<div class="box"><h2>{navigation name}</h2><p>{navigation childs}</p></div>';
 $this->childsOfSideBar = '&poll.viewcurrentpoll;,&news.headlines;';
 $this->childsOfNavigation = '&site.navigation;,&user.userform;';
 $this->pages = array ();

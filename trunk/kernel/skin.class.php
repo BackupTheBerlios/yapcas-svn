@@ -390,10 +390,9 @@ class CSkin {
 
 	private function loadNavigation ($usernav = false) {
 		$lang = $this->config->getConfigByNameType ('general/contentlanguage',TYPE_STRING);
-		$sql = 'SELECT ' . FIELD_PAGES_SHOWN_NAME . ',' . FIELD_PAGES_LINK;
+		$sql = 'SELECT ' . FIELD_PAGES_SHOWN_NAME . ',' . FIELD_PAGES_LINK . ',' . FIELD_PAGES_PARENT;
 		$sql .= ' FROM '  . TBL_PAGES;
 		$sql .= ' WHERE ' . FIELD_PAGES_IN_NAVIGATION . '=\'' . YES . '\'';
-		$sql .= ' AND ' . FIELD_PAGES_PARENT . '=\'__PARENT__\'';
 		if ($usernav != true) {
 			$sql .= ' AND ' . FIELD_PAGES_IN_USER_NAVIGATION . '=\'' . NO . '\'';
 		} else {
@@ -401,11 +400,24 @@ class CSkin {
 		}
 		$sql .= ' AND ' . FIELD_PAGES_LANGUAGE . '=\'' . $lang . '\'';
 		$query = $this->database->query ($sql);
-		$output = NULL;
+		$cats = array ();
 		while ($item = $this->database->fetch_array ($query)) {
-			$output .= $this->items['navigation.item'];
-			$output = ereg_replace ('{navigation link}',$item[FIELD_PAGES_LINK],$output);
-			$output = ereg_replace ('{navigation name}',$item[FIELD_PAGES_SHOWN_NAME],$output);
+			$cats[$item[FIELD_PAGES_PARENT]][] = $item;
+		}
+		$output = NULL;
+		foreach ($cats as $name => $cat) {
+			$output .= $this->items['navigation.cat'];
+			$childs = NULL;
+			foreach ($cat as $child) {
+				$childs .= $this->items['navigation.item'];
+				$childs = ereg_replace ('{navigation link}',$child[FIELD_PAGES_LINK],$childs);
+				$childs = ereg_replace ('{navigation itemname}',$child[FIELD_PAGES_SHOWN_NAME],$childs);
+			}
+			$output = ereg_replace ('{navigation childs}',$childs,$output);
+			if ($name == '__PARENT__') {
+				$name = $this->lang->translate ('Navigation');
+			}
+			$output = ereg_replace ('{navigation name}',$name,$output);
 		}
 		return $output;
 	}
